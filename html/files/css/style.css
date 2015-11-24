@@ -20,3 +20,11 @@
 #item-room {
 	width: 100%;
 }
+
+	#item-room li {
+		float: left;
+		width: 200px;
+		height: 200px;
+		background: url(../img/img.png) no-repeat;
+		cursor: pointer;
+	}
