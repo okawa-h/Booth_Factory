@@ -1,0 +1,17 @@
+レイヤー
+
+
+HTML
+|
+--サイドメニュー/金額/下メニュー:z-index: 1000;
+|
+--メイン:z-index: 0;
+|	|
+|	--ポスター:z-index: 100;
+|	|
+|	--机:z-index: 300;
+
+
+
+border 6px #4c3410
+border-radius: 8px;

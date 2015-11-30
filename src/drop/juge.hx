@@ -5,35 +5,33 @@ import jp.saken.utils.Dom;
 
 class Juge {
 
-  public static function init(event:JqEvent,_jArea:JQuery,_jItem:JQuery):Void {
+  public static var price:Float;
 
-    getPrice(event,_jArea,_jItem);
+  public static function init(_jPrice:JQuery,_jItem:JQuery):Void {
+
+    _jPrice.on('mousedown',function(event:JqEvent) {
+      getPrice(event,_jPrice,_jItem);
+    });
 
   }
 
   /* =======================================================================
-  Start Drag
+  Get Price
   ========================================================================== */
-  public static function getPrice(event:JqEvent,_jArea:JQuery,_jItem:JQuery):Void {
-    trace(_jArea.offset().top);
+  public static function getPrice(event:JqEvent,_jPrice:JQuery,_jItem:JQuery):Void {
+    trace(_jItem.find('.drop').length);
 
-    var area_top   :Int = _jArea.offset().top;
-    var area_bottom:Int = area_top + _jArea.height();
-    var area_left  :Int = _jArea.offset().left;
-    var area_right :Int = area_left + _jArea.width();
+    var buyItem:JQuery = _jItem.find('.drop');
 
-    for (i in 0 ... _jItem.length) {
+    // for (i in 0 ... buyItem.length) {
 
-      var t:JQuery = _jItem.eq(i);
-      if (t.offset().top > area_top && t.offset().top + t.height() < area_bottom) {
-        if (t.offset().left > area_left && t.offset().left + t.width() < area_right) {
-          t.addClass('dropon');
-        }
-      }
+    //   var x:String = buyItem[i].getAttribute('price');
 
-    }
+    //   price = price + x;
+      
+    // }
 
-    trace(_jArea.find('dropon').length);
+    trace(price);
 
   }
 

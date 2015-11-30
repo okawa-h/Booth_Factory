@@ -17,14 +17,279 @@
 	border: 3px solid #eee;
 }
 
+	#play-room p {
+		cursor: pointer;
+	}
+
+	#play-room p:before {
+		display: block;
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+/*-------------------------------------------------------------------------
+	Contact
+/*-----------------------------------------------------------------------*/
+#contact {
+	position: absolute;
+	top: 20px;
+	right: 40px;
+}
+
+	#contact .contact-box {
+		padding: 14px 14px 14px 100px;
+		border: 6px solid #4c3410;
+		border-radius: 8px;
+		background: url(../img/icon/icon_price.png) no-repeat 15px 50% #fff;
+	}
+
+		#contact .contact-box #price {
+			float: left;
+			font-size: 50px;
+			font-weight: bold;
+		}
+
+		#contact .contact-box #contact-btn {
+			display: block;
+			float: left;
+			margin-left: 26px;
+			border-radius: 8px;
+			background: url(../img/icon/icon_contact.png) no-repeat 13px 50% #ff4200;
+		}
+
+			#contact .contact-box #contact-btn a {
+				display: block;
+				padding: 23px 15px 20px 80px;
+				font-size: 22px;
+				color: #fff;
+			}
+
+/*-------------------------------------------------------------------------
+	Sidemenu Left
+/*-----------------------------------------------------------------------*/
+#sidemenu-left {
+	position: absolute;
+	top: 25%;
+	left: 0;
+}
+
+	#sidemenu-left ul {
+		margin-left: -9px;
+	}
+
+		#sidemenu-left ul li {
+			margin-bottom: 30px;
+			border: 6px solid #4c3410;
+			border-radius: 8px;
+		}
+
+			#sidemenu-left ul li .item-name {
+				display: block;
+				padding: 8px 9px;
+				background-color: #1a580b;
+				color: #fff;
+				font-size: 16px;
+				text-align: center;
+			}
+
+			#sidemenu-left ul li .item-length {
+				display: block;
+				padding: 6px 0;
+				background-color: #529635;
+				color: #fff;
+				font-size: 18px;
+				text-align: center;
+			}
+
+				#sidemenu-left ul li .item-length span {
+					font-size: 140%;
+					font-weight: bold;
+				}
+
+/*-------------------------------------------------------------------------
+	Sidemenu Right
+/*-----------------------------------------------------------------------*/
+#sidemenu-right {
+	position: absolute;
+	top: 25%;
+	right: 40px;
+}
+
+	#sidemenu-right .item-set,
+	#sidemenu-right .set-config {
+		width: 90px;
+		margin-bottom: 20px;
+		border: 6px solid #4c3410;
+		border-radius: 8px;
+		background-color: #fff;
+	}
+
+		#sidemenu-right .item-set p {
+			margin-bottom: 20px;
+			padding: 10px 0 5px;
+			background-color: #1a580b;
+			color: #fff;
+			font-weight: bold;
+		}
+
+		#sidemenu-right .item-set ul {
+			text-align: center;
+		}
+
+			#sidemenu-right .item-set ul li {
+				margin-bottom: 10px;
+			}
+
+		#sidemenu-right .set-config ul {
+			padding: 10px 0;
+		}
+
+			#sidemenu-right .set-config ul li:first-child {
+				margin-bottom: 20px;
+			}
+
+/*-------------------------------------------------------------------------
+	Main Menu
+/*-----------------------------------------------------------------------*/
+#mainmenu {
+	position: fixed;
+	bottom: 43px;
+	left: 0px;
+	width: 100%;
+}
+
+	#mainmenu .inner {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+	}
+
+	#mainmenu #sale-accessory,
+	#mainmenu #sale-banar,
+	#mainmenu #sale-paper {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+    padding: 30px 0;
+    border-top: 6px solid #4c3410;
+    border-bottom: 6px solid #4c3410;
+	}
+
+	#mainmenu .current {
+		z-index: 50;
+	}
+
+	#mainmenu #sale-paper {
+		background: url(../img/mainmenu/bg_paper.jpg);
+	}
+
+	#mainmenu #sale-banar {
+		background: url(../img/mainmenu/bg_banar.jpg);
+	}
+
+	#mainmenu #sale-accessory {
+		background: url(../img/mainmenu/bg_accessory.jpg);
+	}
+		#mainmenu div .ttl {
+			position: absolute;
+			top: -81px;
+		}
+
+		#mainmenu #sale-accessory .ttl {
+			left: 60%;
+		}
+
+		#mainmenu #sale-banar .ttl {
+			left: 40%;
+		}
+
+		#mainmenu #sale-paper .ttl {
+			left: 30%;
+			margin-left: -236px;
+		}
+
+			#mainmenu div .ttl p {
+				z-index: 1;
+				padding: 10px 15px 10px;
+		    border-top: 6px solid #4c3410;
+		    border-left: 6px solid #4c3410;
+		    border-right: 6px solid #4c3410;
+		    border-radius: 8px 8px 8px 8px / 8px 8px 0px 0px;
+		    color: #4c3410;
+		    font-size: 20px;
+		    font-weight: bold;
+		    line-height: 42px;
+		    cursor: pointer;
+			}
+
+			#mainmenu #sale-paper .ttl p {
+				background: url(../img/mainmenu/bg_paper.jpg);
+			}
+
+			#mainmenu #sale-banar .ttl p {
+				background: url(../img/mainmenu/bg_banar.jpg);
+			}
+
+			#mainmenu #sale-accessory .ttl p {
+				background: url(../img/mainmenu/bg_accessory.jpg);
+			}
+
+		#mainmenu div .slider {
+			width: 9999px;
+		}
+
+			#mainmenu div .slider ul {
+				width: 100%;
+			}
+
+				#mainmenu div .slider ul li {
+					position: relative;
+					float: left;
+					margin-right: 30px;
+					border: 5px solid #fff000;
+					box-sizing: border-box;
+					background-color: #fff;
+					cursor: pointer;
+				}
+
+				#mainmenu div .slider ul li:before {
+					display: block;
+					content: "";
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+				}
+
+
+/*-------------------------------------------------------------------------
+	Contact
+/*-----------------------------------------------------------------------*/
 #item-room {
 	width: 100%;
 }
 
 	#item-room li {
+		position: relative;
 		float: left;
 		width: 200px;
 		height: 200px;
-		background: url(../img/img.png) no-repeat;
 		cursor: pointer;
+	}
+
+	#item-room li:before {
+		display: block;
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}

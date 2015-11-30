@@ -6,36 +6,28 @@ import src.drop.Juge;
 
 class Drop {
 
-	public static var _jItem : JQuery;
-  public static var _jArea : JQuery;
-  public static var _jPrice: JQuery;
-
   public static var _dx     : Float;
   public static var _dy     : Float;
-
   public static var _STATUS: Bool;
-
   public static var target  : JQuery;
+  public static var catchTarget  : JQuery;
+  public static var _Area  : JQuery;
 
-  public static function init():Void {
+  public static function init(_jItem:JQuery,_jArea:JQuery):Void {
 
     _STATUS = false;
+    _Area = _jArea;
 
-    _jItem  = new JQuery('#item-room').find('.test');
-    _jArea  = new JQuery('#play-room').find('a');
-    _jPrice = new JQuery('#price-room').find('h1');
-
-    _jItem.on({ 
-      'mousedown':getTarget
+    _jItem.find('img').on('mousedown',function(event:JqEvent) {
+      event.preventDefault();
+      return false;
     });
+
+    _jItem.on({ 'mousedown':getTarget });
 
     Dom.jWindow.on({
       'mousemove':moveDrag,
       'mouseup'  :leaveDrag
-    });
-
-    _jPrice.on('mousedown',function(event:JqEvent) {
-      Juge.init(event,_jArea,_jItem);
     });
 
   }
@@ -47,11 +39,30 @@ class Drop {
 
     _STATUS = true;
     target  = JQuery.cur;
-    //target.addClass('drop');
+    createImg(JQuery.cur);
+    target.addClass('drop');
     _dy = event.pageY - target.offset().top;
     _dx = event.pageX - target.offset().left;
-    trace(event.pageY,target.offset().top);
 
+  }
+
+  /* =======================================================================
+  Create Img
+  ========================================================================== */
+  public static function createImg(target:JQuery):Void {
+    var title:String = target.prop('title');
+    var html = '<p class="catch"><img src="files/img/drop_item/' + title + '.png"></p>';
+    _Area.append(html);
+    catchTarget = _Area.find('.catch');
+    trace(title);
+
+    _Area.find('p').on('mousedown',function(event:JqEvent) {
+      target  = JQuery.cur;
+      _dy = event.pageY - target.offset().top;
+      _dx = event.pageX - target.offset().left;
+      _STATUS = true;
+      catchTarget = JQuery.cur;
+    });
   }
 
   /* =======================================================================
@@ -60,7 +71,7 @@ class Drop {
   public static function moveDrag(event:JqEvent):Void {
 
     moveItem(event);
-    //target.removeClass('drop');
+    if (_STATUS)catchTarget.removeClass('catch');
 
   }
 
@@ -80,7 +91,7 @@ class Drop {
 
     if (_STATUS) {
 
-      target.css({
+      catchTarget.css({
         'position':'absolute',
         'top'     : event.pageY - _dy,
         'left'    : event.pageX - _dx
