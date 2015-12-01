@@ -9,28 +9,28 @@
 
 <link rel="stylesheet" href="files/css/style.css" />
 
-<title>format</title>
+<title>〜採用担当の駆け込み寺〜 まるごとブースファクトリー</title>
 </head>
 <body>
 	<div id="all">
 
 		<header id="header">
 			<h1><img src="files/img/logo.png" width="261" height="139" alt="採用担当の駆け込み寺 まるごとブースファクトリー"></h1>
+			<div id="contact">
+				<div class="contact-box">
+					<p id="price"><span>0</span>円</p><div id="contact-btn"><a href="">お問い合わせ</a></div>
+				</div>
+			</div>
 		</header>
+
 		<div id="main">
 			<div class="wrap">
 
-				<div id="contact">
-					<div class="contact-box">
-						<p id="price">10,000,000円</p><div id="contact-btn"><a href="">お問い合わせ</a></div>
-					</div>
-				</div>
-
 				<div id="sidemenu-left">
 					<ul>
-						<li id="length-accessory"><p class="item-name">小物・衣類</p><p class="item-length"><span>1</span>セット</p></li>
-						<li id="length-banar"><p class="item-name">看板・バナー</p><p class="item-length"><span>2</span>セット</p></li>
-						<li id="length-paper"><p class="item-name">紙・ポスター</p><p class="item-length"><span>3</span>セット</p></li>
+						<li id="length-accessory"><p class="item-name">小物・衣類</p><p class="item-length"><span>0</span>セット</p></li>
+						<li id="length-banar"><p class="item-name">看板・バナー</p><p class="item-length"><span>0</span>セット</p></li>
+						<li id="length-paper"><p class="item-name">紙・ポスター</p><p class="item-length"><span>0</span>セット</p></li>
 					</ul>
 				</div>
 
@@ -50,119 +50,156 @@
 					</div>
 				</div>
 
-				<div id="play-room">
+				<div id="mainboard">
+					<div id="layer-accessory">
+						<div class="human"><img src="files/img/bg/banar_board.png" width="145" height="373" alt=""></div>
+					</div>
+					<div id="layer-paper">
+						<div class="desk">
+							<img class="desk-table" src="files/img/bg/paper_board.png" width="431" height="51" alt="">
+							<img class="desk-left" src="files/img/bg/paper_board_left.png" width="16" height="106" alt="">
+							<img class="desk-right" src="files/img/bg/paper_board_right.png" width="29" height="106" alt="">
+						</div>
+					</div>
+					<div id="layer-banar"></div>
 				</div>
 
-			<div id="mainmenu" class="close">
+				<div id="mainmenu" class="close">
 
-				<div class="inner">
+					<div class="inner">
 
-					<div id="sale-paper">
-						<div class="ttl"><p class="sale-paper"><img src="files/img/mainmenu/icon_paper.png" width="57" height="55">紙・ポスター</p></div>
-						<div class="slider">
-							<ul>
-								<li title="utiwa">
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-								<li title="dodoria">
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-								<li title="star">
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-							</ul>
+						<div id="sale-paper">
+							<div class="ttl"><p class="sale-paper"><img src="files/img/mainmenu/icon_paper.png" width="57" height="55">紙・ポスター</p></div>
+							<div class="slider">
+								<ul>
+									<li title="utiwa" data-type="paper" data-price="100">
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li title="dodoria" data-type="banar" data-price="100">
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li title="star" data-type="accessory" data-price="100">
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li title="pepper" data-type="paper" data-price="100">
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li title="bay" data-type="banar" data-price="10000">
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li title="star">
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+								</ul>
+							</div>
 						</div>
+
+						<div id="sale-banar">
+							<div class="ttl"><p class="sale-banar"><img src="files/img/mainmenu/icon_banar.png" width="57" height="55"alt=""> 看板・バナー</p></div>
+							<div class="slider">
+								<ul>
+									<li>
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li>
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li>
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div id="sale-accessory">
+							<div class="ttl"><p class="sale-accessory"><img src="files/img/mainmenu/icon_accessory.png" width="57" height="55" alt=""> 小物・衣類</p></div>
+							<div class="slider">
+								<ul>
+									<li>
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length"><span>100</span>セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li>
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+									<li>
+										<div><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
+										<dl>
+											<dt>うちわハンディセンス</dt>
+											<dd class="length">100セット</dd>
+											<dd class="price"><span>1000</span>円</dd>
+										</dl>
+									</li>
+								</ul>
+							</div>
+						</div>
+
 					</div>
 
-					<div id="sale-banar">
-						<div class="ttl"><p class="sale-banar"><img src="files/img/mainmenu/icon_banar.png" width="57" height="55"alt=""> 看板・バナー</p></div>
-						<div class="slider">
-							<ul>
-								<li>
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-								<li>
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-								<li>
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-							</ul>
-						</div>
-					</div>
+				</div><!-- mainmenu -->
 
-					<div id="sale-accessory">
-						<div class="ttl"><p class="sale-accessory"><img src="files/img/mainmenu/icon_accessory.png" width="57" height="55" alt=""> 小物・衣類</p></div>
-						<div class="slider">
-							<ul>
-								<li>
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-								<li>
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-								<li>
-									<div><span class="new"></span><img src="files/img/prodct/product_paper_utiwa.png" height="111" width="127" alt=""></div>
-									<dl>
-										<dt>うちわハンディセンス</dt>
-										<dd class="length">100セット</dd>
-										<dd class="price"><span>1000</span>円</dd>
-									</dl>
-								</li>
-							</ul>
-						</div>
-					</div>
-
-				</div>
-
-			</div><!-- mainmenu -->
+				<div id="dashboard"></div>
 
 			</div><!-- wrap -->
 		</div><!-- main -->
 
 		<footer id="footer">
 			<div class="wrap">
-				<a href="">●「働く入社案内」つくりませんか？</a><a href="">● お問い合わせ</a>
+				<a href="#">●「働く入社案内」つくりませんか？</a><a href="#">● お問い合わせ</a>
 				<small id="copyright">(c) Graphic Co.,Ltd.</small>
 			</div>
 		</footer>

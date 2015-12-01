@@ -1,17 +1,28 @@
-レイヤー
-
-
-HTML
+body
 |
---サイドメニュー/金額/下メニュー:z-index: 1000;
+--header: z-index: 2000;
 |
---メイン:z-index: 0;
-|	|
-|	--ポスター:z-index: 100;
-|	|
-|	--机:z-index: 300;
+--price: z-index: 1000;
+|
+--mainmenu: z-index: 800;
+|
+--sidemenu: z-index: 600;
+|
+--footer: z-index: 1000;
+|
+--board: z-index: 0;
+	|	
+	--banar: z-index: 100;
+	|	
+	--paper: z-index: 300;
+	|
+	--accessory: z-index: 500;
 
 
 
 border 6px #4c3410
 border-radius: 8px;
+
+
+item status
+name,type,price,

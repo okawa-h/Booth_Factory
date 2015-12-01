@@ -2,8 +2,8 @@ package src;
 
 import js.JQuery;
 import src.drop.Drop;
-import src.drop.Juge;
-import src.animate.Menu;
+import src.judge.Judge;
+import src.animate.Animate;
 
 class Manager {
 
@@ -14,12 +14,12 @@ class Manager {
 	public static function init(event:JqEvent):Void {
 
     _jItem  = new JQuery('#mainmenu');
-    _jArea  = new JQuery('#play-room');
-    _jPrice = new JQuery('#price-room').find('h1');
+    _jArea  = new JQuery('#mainboard');
+    _jPrice = new JQuery('#contact').find('#price');
 
 		Drop.init(_jItem.find('.slider').find('li'),_jArea);
-		Juge.init(_jPrice,_jItem);
-		Menu.init();
+		Judge.init(_jArea,_jPrice);
+		Animate.init(_jItem);
 
 	}
 

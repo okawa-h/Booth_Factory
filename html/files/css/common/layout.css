@@ -8,6 +8,7 @@
 /*-----------------------------------------------------------------------*/
 body {
   width: 100%;
+  min-width: 980px;
   height: 100%;
 	background: url(../../img/bg/bg_main.gif);
 
@@ -17,25 +18,77 @@ body {
 	-khtml-user-select:none;
 	-webkit-user-drag:none;
 	-khtml-user-drag:none;
+	position: relative;
+}
+
+#all {
+  min-width: 980px;
 }
 	
 @media screen and (max-width:960px) {
 }
 
-#header {}
+/*-------------------------------------------------------------------------
+	Header
+/*-----------------------------------------------------------------------*/
+#header {
+	z-index: 2000;
+}
 
 	#header h1 {
-		position: absolute;
-		top: 10px;
-		left: 20px;
+		display: inline-block;
+		margin: 10px 0 0 10px;
 	}
 
+/*-------------------------------------------------------------------------
+	Contact
+/*-----------------------------------------------------------------------*/
+#contact {
+	float: right;
+	margin: 25px 25px 0 0;
+}
 
+	#contact .contact-box {
+		padding: 10px 10px 10px 100px;
+		border: 6px solid #4c3410;
+		border-radius: 8px;
+		background: url(../../img/icon/icon_price.png) no-repeat 15px 50% #fff;
+	}
+
+		#contact .contact-box #price {
+			float: left;
+			font-size: 46px;
+			font-weight: bold;
+		}
+
+		#contact .contact-box #contact-btn {
+			display: block;
+			float: left;
+			margin-left: 26px;
+		}
+
+			#contact .contact-box #contact-btn a {
+				display: block;
+				padding: 18px 15px 17px 80px;
+				border-radius: 8px;
+				background: url(../../img/icon/icon_contact.png) no-repeat 13px 50% #ff4200;
+				font-size: 22px;
+				color: #fff;
+			}
+
+			#contact .contact-box #contact-btn a:hover {
+				background: url(../../img/icon/icon_contact.png) no-repeat 13px 50% #ff6833;
+			}
+
+/*-------------------------------------------------------------------------
+	Footer
+/*-----------------------------------------------------------------------*/
 #footer {
 	width: 100%;
 	position: fixed;
 	bottom: 0;
 	background-color: #6f4809;
+	z-index: 1000;
 }
 
 	#footer .wrap {

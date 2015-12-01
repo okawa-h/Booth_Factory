@@ -3,17 +3,17 @@ package src.animate;
 import js.JQuery;
 import jp.saken.utils.Dom;
 
-class Menu {
+class Animate {
 
   public static var _jMenu: JQuery;
   public static var _jBtn : JQuery;
 
-  public static function init():Void {
+  public static function init(_jItem:JQuery):Void {
 
-    _jMenu = new JQuery('#mainmenu');
+    _jMenu = _jItem;
     _jBtn  = _jMenu.find('.ttl').find('p');
 
-    _jBtn.on('mousedown',function(event:JqEvent) {
+    _jBtn.on('click',function(event:JqEvent) {
       var jThis:JQuery = JQuery.cur;
       clickBtn(jThis,event,_jMenu,_jBtn);
     });
@@ -25,10 +25,9 @@ class Menu {
   }
 
   /* =======================================================================
-  Get Price
+  Click Btn
   ========================================================================== */
   public static function clickBtn(jThis:JQuery,event:JqEvent,_jMenu:JQuery,_jBtn:JQuery):Void {
-
 
     var cls:String = jThis.prop('class');
     var target:JQuery = _jMenu.find('.inner');
