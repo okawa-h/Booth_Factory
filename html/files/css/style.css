@@ -11,13 +11,6 @@
 	text-align: center;
 }
 
-#dashboard {
-	position: absolute;
-	top: 149px;
-	left: 220px;
-	z-index: 3000;
-}
-
 #mainboard {
 	position: relative;
 	width: 980px;
@@ -298,19 +291,25 @@
 					cursor: pointer;
 				}
 
-				#mainmenu div .slider ul li:before {
-					display: block;
-					content: "";
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-				}
-
-					#mainmenu div .slider ul li div {
-						padding: 5px 5px 0;
+					#mainmenu div .slider ul li .img-box {
+						width: 100%;
+						height: 110px;
+						background: url(../img/prodct/utiwa_bg.png) no-repeat center center;
 					}
+
+						#mainmenu div .slider ul li .img {
+							display: block;
+						}
+
+						#mainmenu div .slider ul li .img:before {
+							display: block;
+							content: "";
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+						}
 
 					#mainmenu div .slider ul li dl {
 						padding: 0 5px;

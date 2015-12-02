@@ -8,10 +8,13 @@ class Judge {
   public static var _jArea : JQuery;
   public static var _jPrice: JQuery;
 
-  public static function init(_jArea:JQuery,_jPrice:JQuery):Void {
+  public static function init(jArea:JQuery,jPrice:JQuery):Void {
+
+    _jArea  = jArea;
+    _jPrice = jPrice;
 
   	Dom.jWindow.on('mouseup',function(event:JqEvent) {
-  		getItemLength(_jArea,_jPrice);
+  		getItemLength();
   	});
 
   }
@@ -19,13 +22,13 @@ class Judge {
   /* =======================================================================
   Get Item Length
   ========================================================================== */
-  public static function getItemLength(_jArea:JQuery,_jPrice:JQuery):Void {
+  public static function getItemLength():Void {
 
   	var jItem:JQuery = _jArea.find('p');
-  	var length:Int = jItem.length;
+  	var length:Int   = jItem.length;
 
   	if (length > 0) {
-  		loop(jItem,length,_jPrice);
+  		loop(jItem,length);
   	}
 
   }
@@ -33,7 +36,7 @@ class Judge {
   /* =======================================================================
   Count Set
   ========================================================================== */
-  public static function loop(jItem:JQuery,length:Int,_jPrice:JQuery):Void {
+  public static function loop(jItem:JQuery,length:Int):Void {
 
   	var price:Int = 0;
   	var accessory_length:Int = 0;

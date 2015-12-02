@@ -8,14 +8,14 @@ class Animate {
   public static var _jMenu: JQuery;
   public static var _jBtn : JQuery;
 
-  public static function init(_jItem:JQuery):Void {
+  public static function init(jMenu:JQuery):Void {
 
-    _jMenu = _jItem;
+    _jMenu = jMenu;
     _jBtn  = _jMenu.find('.ttl').find('p');
 
     _jBtn.on('click',function(event:JqEvent) {
       var jThis:JQuery = JQuery.cur;
-      clickBtn(jThis,event,_jMenu,_jBtn);
+      clickBtn(jThis,event);
     });
 
     _jMenu.on('mouseleave',function(event:JqEvent) {
@@ -27,9 +27,9 @@ class Animate {
   /* =======================================================================
   Click Btn
   ========================================================================== */
-  public static function clickBtn(jThis:JQuery,event:JqEvent,_jMenu:JQuery,_jBtn:JQuery):Void {
+  public static function clickBtn(jThis:JQuery,event:JqEvent):Void {
 
-    var cls:String = jThis.prop('class');
+    var cls   :String = jThis.prop('class');
     var target:JQuery = _jMenu.find('.inner');
 
     var h:Int = target.find('#' + cls).outerHeight() * (-1) + 1;
