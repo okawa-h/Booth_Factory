@@ -1,6 +1,7 @@
 package src;
 
 import js.JQuery;
+import src.data.Data;
 import src.drop.Drop;
 import src.judge.Judge;
 import src.animate.Animate;
@@ -20,6 +21,12 @@ class Manager {
 		Drop.init(_jMenu,_jArea);
 		Judge.init(_jArea,_jPrice);
 		Animate.init(_jMenu);
+
+	}
+
+	public static function setItemList():Void {
+
+    var a = Data.item(); 
 
 	}
 

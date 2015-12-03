@@ -25,4 +25,4 @@ border-radius: 8px;
 
 
 item status
-name,type,price,
+id,name,type,price,img,bg_img,set

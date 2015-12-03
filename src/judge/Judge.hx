@@ -2,6 +2,7 @@ package src.judge;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import src.judge.Log;
 
 class Judge {
 
@@ -30,6 +31,8 @@ class Judge {
   	if (length > 0) {
   		loop(jItem,length);
   	}
+
+    Log.init(jItem,_jPrice);
 
   }
 
