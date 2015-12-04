@@ -1,23 +1,33 @@
 package src.data;
 
 import js.JQuery;
-import haxe.ds.ObjectMap;
+import haxe.Http;
+import haxe.Json;
+import src.data.Set;
+import src.Manager;
 
 class Data {
 
-  public static function item():Array<String, Dynamic> {
+  public static var _callback;
 
-    var array:Array<String, Dynamic> = new Array<String, Dynamic>();
+  public static function get(callback):Void {
 
-    array[0].set(
-      'id'   => 'utiwa',
-      'price'=> 100,
-      'type' => 'paper',
-      'img'  => 'utiwa'
-    );
+    _callback = callback;
 
-    return array;
+    var request:Http = new Http("files/data/data.json");
 
+    request.onError  = function( data:String ){ trace( "error!" ); }
+    request.onData   = onData;
+
+    request.request( false );
+
+  }
+
+  static function onData(data:Dynamic):Void {
+
+  	Manager._Data = Json.parse(data);
+    Set.init(_callback);
+    
   }
 
 }

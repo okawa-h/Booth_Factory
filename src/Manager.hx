@@ -1,9 +1,11 @@
 package src;
 
 import js.JQuery;
+import haxe.Json;
 import src.data.Data;
 import src.drop.Drop;
 import src.judge.Judge;
+import src.judge.Log;
 import src.animate.Animate;
 
 class Manager {
@@ -11,6 +13,7 @@ class Manager {
 	public static var _jMenu : JQuery;
   public static var _jArea : JQuery;
   public static var _jPrice: JQuery;
+  public static var _Data  : Json;
 
 	public static function init(event:JqEvent):Void {
 
@@ -18,16 +21,17 @@ class Manager {
     _jArea  = new JQuery('#mainboard');
     _jPrice = new JQuery('#contact').find('#price');
 
-		Drop.init(_jMenu,_jArea);
-		Judge.init(_jArea,_jPrice);
-		Animate.init(_jMenu);
+    Data.get(start);
 
 	}
 
-	public static function setItemList():Void {
+  public static function start():Void {
 
-    var a = Data.item(); 
+    Log.checkUrl();
+    Drop.init();
+    Judge.init();
+    Animate.init();
 
-	}
+  }
 
 }

@@ -3,16 +3,17 @@ package src.judge;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.judge.Log;
+import src.Manager;
 
 class Judge {
 
   public static var _jArea : JQuery;
   public static var _jPrice: JQuery;
 
-  public static function init(jArea:JQuery,jPrice:JQuery):Void {
+  public static function init():Void {
 
-    _jArea  = jArea;
-    _jPrice = jPrice;
+    _jArea  = Manager._jArea;
+    _jPrice = Manager._jPrice;
 
   	Dom.jWindow.on('mouseup',function(event:JqEvent) {
   		getItemLength();

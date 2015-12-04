@@ -2,15 +2,16 @@ package src.animate;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import src.Manager;
 
 class Animate {
 
   public static var _jMenu: JQuery;
   public static var _jBtn : JQuery;
 
-  public static function init(jMenu:JQuery):Void {
+  public static function init():Void {
 
-    _jMenu = jMenu;
+    _jMenu = Manager._jMenu;
     _jBtn  = _jMenu.find('.ttl').find('p');
 
     _jBtn.on('click',function(event:JqEvent) {

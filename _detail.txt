@@ -25,4 +25,13 @@ border-radius: 8px;
 
 
 item status
-id,name,type,price,img,bg_img,set
+{
+    "id"    : "utiwa",
+    "name"  : "うちわハンディセンス",
+    "price" : "100",
+    "length": "100セット",
+    "type"  : "paper",
+    "icon"  : "utiwa.png",
+    "img"   : "utiwa.png",
+    "bgImg" : "utiwa.png"
+}

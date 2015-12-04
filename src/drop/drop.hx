@@ -3,6 +3,7 @@ package src.drop;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.judge.Judge;
+import src.Manager;
 
 class Drop {
 
@@ -14,11 +15,11 @@ class Drop {
   public static var _jArea     : JQuery;
   public static var _jMenu     : JQuery;
 
-  public static function init(jMenu:JQuery,jArea:JQuery):Void {
+  public static function init():Void {
 
     _STATUS = false;
-    _jArea  = jArea;
-    _jMenu  = jMenu;
+    _jArea  = Manager._jArea;
+    _jMenu  = Manager._jMenu;
 
     _jMenu.find('.slider').find('li').find('img').on('mousedown',function(event:JqEvent) {
       event.preventDefault();
@@ -110,7 +111,7 @@ class Drop {
     var title:String = target.prop('title');
     var type :String = target.data('type');
     var price:Int    = target.data('price');
-    var html :String = '<p class="catch"';
+    var html :String = '<p class="' + title + '"';
     var h    :Int    = new JQuery('#header').height();
     var w    :Int    = _jArea.offset().left;
     var top  = untyped event.clientY - h - _dy;

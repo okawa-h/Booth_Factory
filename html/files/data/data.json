@@ -1,0 +1,67 @@
+{
+    "object": [
+        {
+            "id"   : "utiwa",
+            "name" : "うちわハンディセンス",
+            "price": "100",
+            "length": "100セット",
+            "type" : "paper",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }, {
+            "id"   : "dodoria",
+            "name" : "ドドリアさん",
+            "price": "100",
+            "length": "100セット",
+            "type" : "paper",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }, {
+            "id"   : "pepper",
+            "name" : "ペッパーくん",
+            "price": "100",
+            "length": "100セット",
+            "type" : "paper",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }, {
+            "id"   : "star",
+            "name" : "クローンとルーパー",
+            "price": "100",
+            "length": "100セット",
+            "type" : "banar",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }, {
+            "id"   : "utiwa",
+            "name" : "うちわハンディセンス",
+            "price": "100",
+            "length": "100セット",
+            "type" : "banar",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }, {
+            "id"   : "utiwa",
+            "name" : "うちわハンディセンス",
+            "price": "100",
+            "length": "100セット",
+            "type" : "accessory",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }, {
+            "id"   : "utiwa",
+            "name" : "うちわハンディセンス",
+            "price": "100",
+            "length": "100セット",
+            "type" : "accessory",
+            "icon" : "utiwa.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa.png"
+        }]
+}

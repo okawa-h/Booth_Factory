@@ -284,6 +284,7 @@
 				#mainmenu div .slider ul li {
 					position: relative;
 					float: left;
+					width: 160px;
 					margin-right: 30px;
 					border: 5px solid #fff000;
 					box-sizing: border-box;
