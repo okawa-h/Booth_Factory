@@ -20,7 +20,7 @@ class Animate {
     });
 
     _jMenu.on('mouseleave',function(event:JqEvent) {
-      animateClose();
+      animateCloseMenu();
     });
 
   }
@@ -32,12 +32,13 @@ class Animate {
 
     var cls   :String = jThis.prop('class');
     var target:JQuery = _jMenu.find('.inner');
-
-    var h:Int = target.find('#' + cls).outerHeight() * (-1) + 1;
+    var h     :Int    = target.find('#' + cls).outerHeight() * (-1) + 1;
 
     addCurrent(cls);
     if(_jMenu.prop('class') == 'close') {
-      animateOpen(target,h);
+
+      animateOpenMenu(target,h);
+
     }
 
   }
@@ -45,9 +46,10 @@ class Animate {
   /* =======================================================================
   Animate Open
   ========================================================================== */
-  public static function animateOpen(target:JQuery,h:Int):Void {
+  public static function animateOpenMenu(target:JQuery,h:Int):Void {
 
-    addOpen();
+    _jMenu.removeClass('close');
+    _jMenu.addClass('open');
     target.animate({ 'top': h + 'px' });
 
   }
@@ -55,11 +57,11 @@ class Animate {
   /* =======================================================================
   Animate Open
   ========================================================================== */
-  public static function animateClose():Void {
+  public static function animateCloseMenu():Void {
 
-    addClose();
-    var target:JQuery = _jMenu.find('.inner');
-    target.animate({ 'top': 0 + 'px' });
+    _jMenu.removeClass('open');
+    _jMenu.addClass('close');
+    _jMenu.find('.inner').animate({ 'top': 0 + 'px' });
 
   }
 
@@ -70,26 +72,6 @@ class Animate {
 
     _jMenu.find('div').removeClass('current');
     _jMenu.find('#' + cls).addClass('current');
-
-  }
-
-  /* =======================================================================
-  Add Open
-  ========================================================================== */
-  public static function addOpen():Void {
-
-    _jMenu.removeClass('close');
-    _jMenu.addClass('open');
-
-  }
-
-  /* =======================================================================
-  Add Close
-  ========================================================================== */
-  public static function addClose():Void {
-
-    _jMenu.removeClass('open');
-    _jMenu.addClass('close');
 
   }
 

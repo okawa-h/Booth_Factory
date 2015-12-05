@@ -4,6 +4,7 @@ import js.JQuery;
 import jp.saken.utils.Dom;
 import haxe.Json;
 import src.Manager;
+import src.judge.Judge;
 
 class Log {
 
@@ -92,7 +93,8 @@ class Log {
         
       } else if (item[0] == "price") {
 
-        Manager._jPrice.text(cast(item[1]));
+        Judge.init();
+        Judge.getItemLength();
 
       }
 
@@ -103,9 +105,7 @@ class Log {
   private static function makeHtml(string:String) {
 
     var target:Array<String> = string.split('|');
-    var _Data:Dynamic = Manager._Data;
-
-    trace(_Data.object);
+    var _Data :Dynamic       = Manager._Data;
 
     for (i in 0 ... _Data.object.length) {
       if (_Data.object[i].id == target[0]) {
@@ -118,7 +118,7 @@ class Log {
         var left = target[1];
         html += 'style="position:absolute;top:' + top + 'px;left:' + left + 'px"';
         html += 'data-type="' + type + '" data-price="'+ price +'">';
-        html += '<img src="files/img/drop_item/' + title + '.png">';
+        html += '<img src="files/img/product/icon/' + title + '.png">';
         html += '</p>';
 
         Manager._jArea.find('#layer-' + type).append(html);

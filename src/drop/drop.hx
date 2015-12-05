@@ -33,6 +33,8 @@ class Drop {
       'mouseup'  :leaveDrag
     });
 
+    dragIcon();
+
   }
 
   /* =======================================================================
@@ -94,6 +96,21 @@ class Drop {
     trace(html);
     _jArea.find('#layer-' + html[1]).append(html[0]);
 
+    // _jArea.find('p').on('mousedown',function(event:JqEvent) {
+    //   target  = JQuery.cur;
+    //   getDiff(event,target);
+    //   _STATUS = true;
+    //   catchTarget = JQuery.cur;
+    // });
+    dragIcon();
+
+  }
+
+  /* =======================================================================
+  Create Img
+  ========================================================================== */
+  public static function dragIcon():Void {
+
     _jArea.find('p').on('mousedown',function(event:JqEvent) {
       target  = JQuery.cur;
       getDiff(event,target);
@@ -118,7 +135,7 @@ class Drop {
     var left = untyped event.clientX - w - _dx;
     html += 'style="position:absolute;top:' + top + 'px;left:' + left + 'px"';
     html += 'data-type="' + type + '" data-price="'+ price +'">';
-    html += '<img src="files/img/drop_item/' + title + '.png">';
+    html += '<img src="files/img/product/icon/' + title + '.png">';
     html += '</p>';
 
     return [html,type];
@@ -142,7 +159,9 @@ class Drop {
 
     _STATUS = false;
 
-    if (catchTarget.parent().parent('li').length > 0) {
+    untyped if (catchTarget == undefined) {
+
+    } else if (catchTarget.parent().parent('li').length > 0) {
 
       createImg(catchTarget.parent().parent('li'),event);
       catchTarget.remove();

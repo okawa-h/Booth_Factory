@@ -114,6 +114,11 @@ haxe.Http.prototype = {
 	,onStatus: function(status) {
 	}
 };
+haxe.Log = function() { };
+haxe.Log.__name__ = true;
+haxe.Log.trace = function(v,infos) {
+	js.Boot.__trace(v,infos);
+};
 var js = {};
 var jp = {};
 jp.saken = {};
@@ -122,6 +127,25 @@ jp.saken.utils.Dom = function() { };
 jp.saken.utils.Dom.__name__ = true;
 js.Boot = function() { };
 js.Boot.__name__ = true;
+js.Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js.Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js.Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js.Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js.Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -208,6 +232,13 @@ src.Manager.init = function(event) {
 	src.Manager._jMenu = new js.JQuery("#mainmenu");
 	src.Manager._jArea = new js.JQuery("#mainboard");
 	src.Manager._jPrice = new js.JQuery("#contact").find("#price");
+	src.Manager._jBtnMatu = new js.JQuery("#set-name-matu");
+	src.Manager._jBtnTake = new js.JQuery("#set-name-take");
+	src.Manager._jBtnUme = new js.JQuery("#set-name-ume");
+	src.Manager._jBtnClear = new js.JQuery("#help-btn");
+	src.Manager._lengthAccessory = new js.JQuery("#length-accessory").find(".item-length").find("span");
+	src.Manager._lengthBanar = new js.JQuery("#length-Banar").find(".item-length").find("span");
+	src.Manager._lengthPaper = new js.JQuery("#length-Paper").find(".item-length").find("span");
 	src.data.Data.get(src.Manager.start);
 };
 src.Manager.start = function() {
@@ -215,6 +246,30 @@ src.Manager.start = function() {
 	src.drop.Drop.init();
 	src.judge.Judge.init();
 	src.animate.Animate.init();
+	src.Manager.setRightMenu();
+};
+src.Manager.setRightMenu = function() {
+	var data = src.Manager._Data;
+	src.Manager._jBtnMatu.on("click",function(event) {
+		src.Manager.setPacage(data.set[0].url);
+	});
+	src.Manager._jBtnTake.on("click",function(event1) {
+		src.Manager.setPacage(data.set[1].url);
+	});
+	src.Manager._jBtnUme.on("click",function(event2) {
+		src.Manager.setPacage(data.set[2].url);
+	});
+	src.Manager._jBtnClear.on("click",function(event3) {
+		src.Manager.setPacage("?");
+		src.operation.Change.changePrice(0);
+		src.operation.Change.changeProductLength(0,0,0);
+	});
+};
+src.Manager.setPacage = function(data) {
+	var url = jp.saken.utils.Dom.window.location.search;
+	if(url.indexOf("obj") > -1) src.operation.Clear.clearBoardObj();
+	src.operation.Change.changeURLParam(data);
+	src.judge.Log.checkUrl();
 };
 src.animate = {};
 src.animate.Animate = function() { };
@@ -227,7 +282,7 @@ src.animate.Animate.init = function() {
 		src.animate.Animate.clickBtn(jThis,event);
 	});
 	src.animate.Animate._jMenu.on("mouseleave",function(event1) {
-		src.animate.Animate.animateClose();
+		src.animate.Animate.animateCloseMenu();
 	});
 };
 src.animate.Animate.clickBtn = function(jThis,event) {
@@ -235,28 +290,21 @@ src.animate.Animate.clickBtn = function(jThis,event) {
 	var target = src.animate.Animate._jMenu.find(".inner");
 	var h = target.find("#" + cls).outerHeight() * -1 + 1;
 	src.animate.Animate.addCurrent(cls);
-	if(src.animate.Animate._jMenu.prop("class") == "close") src.animate.Animate.animateOpen(target,h);
+	if(src.animate.Animate._jMenu.prop("class") == "close") src.animate.Animate.animateOpenMenu(target,h);
 };
-src.animate.Animate.animateOpen = function(target,h) {
-	src.animate.Animate.addOpen();
+src.animate.Animate.animateOpenMenu = function(target,h) {
+	src.animate.Animate._jMenu.removeClass("close");
+	src.animate.Animate._jMenu.addClass("open");
 	target.animate({ top : h + "px"});
 };
-src.animate.Animate.animateClose = function() {
-	src.animate.Animate.addClose();
-	var target = src.animate.Animate._jMenu.find(".inner");
-	target.animate({ top : 0 + "px"});
+src.animate.Animate.animateCloseMenu = function() {
+	src.animate.Animate._jMenu.removeClass("open");
+	src.animate.Animate._jMenu.addClass("close");
+	src.animate.Animate._jMenu.find(".inner").animate({ top : 0 + "px"});
 };
 src.animate.Animate.addCurrent = function(cls) {
 	src.animate.Animate._jMenu.find("div").removeClass("current");
 	src.animate.Animate._jMenu.find("#" + cls).addClass("current");
-};
-src.animate.Animate.addOpen = function() {
-	src.animate.Animate._jMenu.removeClass("close");
-	src.animate.Animate._jMenu.addClass("open");
-};
-src.animate.Animate.addClose = function() {
-	src.animate.Animate._jMenu.removeClass("open");
-	src.animate.Animate._jMenu.addClass("close");
 };
 src.data = {};
 src.data.Data = function() { };
@@ -265,7 +313,7 @@ src.data.Data.get = function(callback) {
 	src.data.Data._callback = callback;
 	var request = new haxe.Http("files/data/data.json");
 	request.onError = function(data) {
-		console.log("error!");
+		haxe.Log.trace("error!",{ fileName : "Data.hx", lineNumber : 19, className : "src.data.Data", methodName : "get"});
 	};
 	request.onData = src.data.Data.onData;
 	request.request(false);
@@ -300,9 +348,9 @@ src.data.Set.makeHtml = function(target) {
 	html += "<li title=\"" + Std.string(target.id) + "\" ";
 	html += "data-type=\"" + Std.string(target.type) + "\" ";
 	html += "data-price=\"" + Std.string(target.price) + "\">";
-	html += "<div class=\"img-box\">";
+	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + Std.string(target.bgImg) + ") no-repeat center center;\">";
 	html += "<div class=\"img\">";
-	html += "<img src=\"files/img/prodct/" + Std.string(target.img) + "\">";
+	html += "<img src=\"files/img/product/image/" + Std.string(target.img) + "\">";
 	html += "</div>";
 	html += "</div>";
 	html += "<dl>";
@@ -326,6 +374,7 @@ src.drop.Drop.init = function() {
 	});
 	src.drop.Drop._jMenu.find(".slider").find("li").on({ mousedown : src.drop.Drop.getTarget});
 	jp.saken.utils.Dom.jWindow.on({ mousemove : src.drop.Drop.moveDrag, mouseup : src.drop.Drop.leaveDrag});
+	src.drop.Drop.dragIcon();
 };
 src.drop.Drop.getTarget = function(event) {
 	src.drop.Drop._STATUS = true;
@@ -351,11 +400,14 @@ src.drop.Drop.moveItem = function(event) {
 };
 src.drop.Drop.createImg = function(target,event) {
 	var html = src.drop.Drop.createHtml(target,event);
-	console.log(html);
+	haxe.Log.trace(html,{ fileName : "Drop.hx", lineNumber : 96, className : "src.drop.Drop", methodName : "createImg"});
 	src.drop.Drop._jArea.find("#layer-" + html[1]).append(html[0]);
-	src.drop.Drop._jArea.find("p").on("mousedown",function(event1) {
-		target = $(this);
-		src.drop.Drop.getDiff(event1,target);
+	src.drop.Drop.dragIcon();
+};
+src.drop.Drop.dragIcon = function() {
+	src.drop.Drop._jArea.find("p").on("mousedown",function(event) {
+		src.drop.Drop.target = $(this);
+		src.drop.Drop.getDiff(event,src.drop.Drop.target);
 		src.drop.Drop._STATUS = true;
 		src.drop.Drop.catchTarget = $(this);
 	});
@@ -371,7 +423,7 @@ src.drop.Drop.createHtml = function(target,event) {
 	var left = event.clientX - w - src.drop.Drop._dx;
 	html += "style=\"position:absolute;top:" + top + "px;left:" + left + "px\"";
 	html += "data-type=\"" + type + "\" data-price=\"" + price + "\">";
-	html += "<img src=\"files/img/drop_item/" + title + ".png\">";
+	html += "<img src=\"files/img/product/icon/" + title + ".png\">";
 	html += "</p>";
 	return [html,type];
 };
@@ -381,7 +433,8 @@ src.drop.Drop.moveDrag = function(event) {
 };
 src.drop.Drop.leaveDrag = function(event) {
 	src.drop.Drop._STATUS = false;
-	if(src.drop.Drop.catchTarget.parent().parent("li").length > 0) {
+	if(src.drop.Drop.catchTarget == undefined) {
+	} else if(src.drop.Drop.catchTarget.parent().parent("li").length > 0) {
 		src.drop.Drop.createImg(src.drop.Drop.catchTarget.parent().parent("li"),event);
 		src.drop.Drop.catchTarget.remove();
 		src.drop.Drop._jMenu.find(".drop").removeClass("drop");
@@ -408,8 +461,6 @@ src.judge.Judge.loop = function(jItem,length) {
 	var accessory_length = 0;
 	var banar_length = 0;
 	var paper_length = 0;
-	var jSideL = new js.JQuery("#sidemenu-left");
-	var jPrice = src.judge.Judge._jPrice.find("span");
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
@@ -420,10 +471,9 @@ src.judge.Judge.loop = function(jItem,length) {
 		if(type_data == "paper") paper_length++;
 		price += price_data;
 	}
-	jSideL.find("#length-accessory").find(".item-length").find("span").text(accessory_length);
-	jSideL.find("#length-banar").find(".item-length").find("span").text(banar_length);
-	jSideL.find("#length-paper").find(".item-length").find("span").text(paper_length);
-	jPrice.text(price);
+	haxe.Log.trace(accessory_length,{ fileName : "Judge.hx", lineNumber : 63, className : "src.judge.Judge", methodName : "loop", customParams : [banar_length,paper_length]});
+	src.operation.Change.changeProductLength(accessory_length,banar_length,paper_length);
+	src.operation.Change.changePrice(price);
 };
 src.judge.Log = function() { };
 src.judge.Log.__name__ = true;
@@ -466,13 +516,15 @@ src.judge.Log.remakeObject = function(param) {
 	while(_g1 < _g) {
 		var i = _g1++;
 		var item = _param[i].split("=");
-		if(item[0] == "obj") src.judge.Log.makeHtml(item[1]); else if(item[0] == "price") src.Manager._jPrice.text(item[1]);
+		if(item[0] == "obj") src.judge.Log.makeHtml(item[1]); else if(item[0] == "price") {
+			src.judge.Judge.init();
+			src.judge.Judge.getItemLength();
+		}
 	}
 };
 src.judge.Log.makeHtml = function(string) {
 	var target = string.split("|");
 	var _Data = src.Manager._Data;
-	console.log(_Data.object);
 	var _g1 = 0;
 	var _g = _Data.object.length;
 	while(_g1 < _g) {
@@ -486,11 +538,30 @@ src.judge.Log.makeHtml = function(string) {
 			var left = target[1];
 			html += "style=\"position:absolute;top:" + top + "px;left:" + left + "px\"";
 			html += "data-type=\"" + type + "\" data-price=\"" + price + "\">";
-			html += "<img src=\"files/img/drop_item/" + title + ".png\">";
+			html += "<img src=\"files/img/product/icon/" + title + ".png\">";
 			html += "</p>";
 			src.Manager._jArea.find("#layer-" + type).append(html);
 		}
 	}
+};
+src.operation = {};
+src.operation.Change = function() { };
+src.operation.Change.__name__ = true;
+src.operation.Change.changeURLParam = function(string) {
+	jp.saken.utils.Dom.window.history.replaceState("","",string);
+};
+src.operation.Change.changePrice = function($int) {
+	src.Manager._jPrice.find("span").text($int);
+};
+src.operation.Change.changeProductLength = function(accessory_length,banar_length,paper_length) {
+	src.Manager._lengthAccessory.text(accessory_length);
+	src.Manager._lengthBanar.text(banar_length);
+	src.Manager._lengthPaper.text(paper_length);
+};
+src.operation.Clear = function() { };
+src.operation.Clear.__name__ = true;
+src.operation.Clear.clearBoardObj = function() {
+	src.Manager._jArea.find("p").remove();
 };
 String.__name__ = true;
 Array.__name__ = true;

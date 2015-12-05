@@ -13,7 +13,7 @@ class Set {
 
   public static function loop(data:Dynamic,_callback):Void {
 
-  	var length         :Int = data.object.length;
+  	var length         :Int    = data.object.length;
   	var paper_array    :String = "";
   	var accessory_array:String = "";
   	var banar_array    :String = "";
@@ -23,11 +23,17 @@ class Set {
     	var obj = makeHtml(data.object[i]);
 
     	if (obj[1] == "paper") {
+
     		paper_array += obj[0];
+
     	} else if (obj[1] == "accessory") {
+
     		accessory_array += obj[0];
+
     	} else if (obj[1] == "banar") {
+
     		banar_array += obj[0];
+        
     	}
     	
     }
@@ -46,9 +52,9 @@ class Set {
 		html += '<li title="' + target.id + '" ';
 		html += 'data-type="' + target.type + '" ';
 		html += 'data-price="' + target.price + '">';
-		html +=	'<div class="img-box">';
+		html +=	'<div class="img-box" style="background: url(files/img/product/bg/' + target.bgImg + ') no-repeat center center;">';
 		html += '<div class="img">';
-		html += '<img src="files/img/prodct/' + target.img + '">';
+		html += '<img src="files/img/product/image/' + target.img + '">';
 		html +=	'</div>';
 		html +=	'</div>';
 		html +=	'<dl>';

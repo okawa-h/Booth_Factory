@@ -3,6 +3,7 @@ package src.judge;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.judge.Log;
+import src.operation.Change;
 import src.Manager;
 
 class Judge {
@@ -46,8 +47,6 @@ class Judge {
   	var accessory_length:Int = 0;
   	var banar_length:Int = 0;
   	var paper_length:Int = 0;
-  	var jSideL  = new JQuery('#sidemenu-left');
-  	var jPrice  = _jPrice.find('span');
 
   	for (i in 0 ... length) {
 
@@ -61,10 +60,10 @@ class Judge {
 
   	}
 
-  	jSideL.find('#length-accessory').find('.item-length').find('span').text(cast(accessory_length));
-  	jSideL.find('#length-banar').find('.item-length').find('span').text(cast(banar_length));
-  	jSideL.find('#length-paper').find('.item-length').find('span').text(cast(paper_length));
-  	jPrice.text(cast(price));
+    trace(accessory_length,banar_length,paper_length);
+
+    Change.changeProductLength(accessory_length,banar_length,paper_length);
+  	Change.changePrice(cast(price));
 
   }
 

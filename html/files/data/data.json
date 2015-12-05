@@ -8,16 +8,7 @@
             "type" : "paper",
             "icon" : "utiwa.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
-        }, {
-            "id"   : "dodoria",
-            "name" : "ドドリアさん",
-            "price": "100",
-            "length": "100セット",
-            "type" : "paper",
-            "icon" : "utiwa.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "bgImg": "utiwa_bg.png"
         }, {
             "id"   : "pepper",
             "name" : "ペッパーくん",
@@ -26,7 +17,7 @@
             "type" : "paper",
             "icon" : "utiwa.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "bgImg": "utiwa_bg.png"
         }, {
             "id"   : "star",
             "name" : "クローンとルーパー",
@@ -35,33 +26,45 @@
             "type" : "banar",
             "icon" : "utiwa.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "utiwa",
+            "id"   : "aacf",
             "name" : "うちわハンディセンス",
             "price": "100",
             "length": "100セット",
             "type" : "banar",
-            "icon" : "utiwa.png",
+            "icon" : "aacf.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "utiwa",
+            "id"   : "iruka",
             "name" : "うちわハンディセンス",
             "price": "100",
             "length": "100セット",
             "type" : "accessory",
-            "icon" : "utiwa.png",
+            "icon" : "iruka.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "utiwa",
+            "id"   : "mario",
             "name" : "うちわハンディセンス",
             "price": "100",
             "length": "100セット",
             "type" : "accessory",
-            "icon" : "utiwa.png",
+            "icon" : "mario.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "bgImg": "utiwa_bg.png"
+        }],
+
+    "set": [
+        {
+            "name": "matu",
+            "url" : "?obj=aacf|145|116&obj=aacf|379|163&obj=aacf|122|304&obj=aacf|246|324&obj=aacf|501|75&obj=aacf|360|334&obj=aacf|602|310&obj=aacf|178|-118&obj=aacf|569|-122&obj=aacf|840|317&obj=aacf|671|137&obj=aacf|747|-56&obj=aacf|-158|97&obj=aacf|347|-57&obj=aacf|893|50&price=1500"
+        }, {
+            "name": "take",
+            "url" : "?obj=mario|364.5|-19&obj=utiwa|211.5|396&obj=pepper|555.5|30&price=300"
+        }, {
+            "name": "ume",
+            "url" : "?obj=aacf|415|154&obj=star|611|119&price=200"
         }]
 }
