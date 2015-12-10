@@ -3,27 +3,30 @@ package src;
 import js.JQuery;
 import haxe.Json;
 import jp.saken.utils.Dom;
-import src.data.Data;
-import src.drop.Drop;
-import src.judge.Judge;
-import src.judge.Log;
-import src.operation.Clear;
-import src.operation.Change;
+import src.operation.Param;
+import src.operation.Drag;
+import src.view.ProductLength;
+import src.view.Price;
+import src.view.Data;
+import src.view.Log;
+import src.view.Board;
+import src.view.Trash;
+import src.view.Sidemenu;
 import src.animate.Animate;
+
+import src.operation.Drag;
 
 class Manager {
 
-	public static var _jMenu   : JQuery;
-  public static var _jArea   : JQuery;
-  public static var _jPrice  : JQuery;
-  public static var _jBtnMatu: JQuery;
-  public static var _jBtnTake: JQuery;
-  public static var _jBtnUme : JQuery;
-  public static var _jBtnClear: JQuery;
-  public static var _lengthAccessory: JQuery;
-  public static var _lengthBanar: JQuery;
-  public static var _lengthPaper: JQuery;
-  public static var _Data    : Json;
+  public static var _Data: Json;
+
+	private static var _jMenu    : JQuery;
+  private static var _jArea    : JQuery;
+  private static var _jAreaObj : JQuery;
+  private static var _jPrice   : JQuery;
+  private static var _lengthAccessory: JQuery;
+  private static var _lengthBanar    : JQuery;
+  private static var _lengthPaper    : JQuery;
 
 	public static function init(event:JqEvent):Void {
 
@@ -31,70 +34,56 @@ class Manager {
     _jArea  = new JQuery('#mainboard');
     _jPrice = new JQuery('#contact').find('#price');
 
-    _jBtnMatu = new JQuery('#set-name-matu');
-    _jBtnTake = new JQuery('#set-name-take');
-    _jBtnUme  = new JQuery('#set-name-ume');
-    _jBtnClear  = new JQuery('#help-btn');
-
     _lengthAccessory = new JQuery('#length-accessory').find('.item-length').find('span');
-    _lengthBanar = new JQuery('#length-Banar').find('.item-length').find('span');
-    _lengthPaper = new JQuery('#length-Paper').find('.item-length').find('span');
+    _lengthBanar     = new JQuery('#length-Banar').find('.item-length').find('span');
+    _lengthPaper     = new JQuery('#length-Paper').find('.item-length').find('span');
 
-    Data.get(start);
+    Data.get(_jMenu,start);//makeList
+    Log.write();
 
 	}
 
   public static function start():Void {
 
-    Log.checkUrl();
-    Drop.init();
-    Judge.init();
-    Animate.init();
-    setRightMenu();
+    Param.init(_jArea,_jAreaObj,_jPrice);
+    set(Board.init(_jArea,_jAreaObj));
+    Drag.init(_jArea,_jAreaObj,_jMenu);
 
-  }
+    Animate.init(_jMenu,_jArea);
 
-  public static function setRightMenu():Void {
+    Trash.init();
+    Sidemenu.init(_Data);
 
-    var data:Dynamic = _Data;
-
-    _jBtnMatu.on('click',function(event:JqEvent):Void {
-
-      setPacage(data.set[0].url);
-
+    Dom.jWindow.on('click',function(event:JqEvent) {
+      set(Board.count());
     });
-    _jBtnTake.on('click',function(event:JqEvent):Void {
 
-      setPacage(data.set[1].url);
-
-    });
-    _jBtnUme.on('click',function(event:JqEvent):Void {
-
-      setPacage(data.set[2].url);
-
-    });
-    _jBtnClear.on('click',function(event:JqEvent):Void {
-
-      setPacage('?');
-      Change.changePrice(0);
-      Change.changeProductLength(0,0,0);
-
+    Dom.jWindow.on('mouseup',function(event:JqEvent) {
+      set(Board.count());
+      Log.write();
+      Trash.none(Drag._catchTarget);
+      Drag.on();
     });
 
   }
 
-  private static function setPacage(data) {
+      /* =======================================================================
+      Set Price Length URL
+      ========================================================================== */
+      private static function set(array:Array<Int>):Void {
 
-      var url = Dom.window.location.search;
-      if (url.indexOf('obj') > -1) {
+        _jAreaObj = _jArea.find('p');
 
-        Clear.clearBoardObj(); 
+        var accessoryLength:Int = array[0];
+        var banarLength:Int = array[1];
+        var paperLength:Int = array[2];
+        var price:Int = array[3];
+
+        ProductLength.change(accessoryLength,banarLength,paperLength);
+        Price.change(price);
+        var param = Param.make(_jAreaObj,price);
+        Param.change('?' + param);
 
       }
-
-      Change.changeURLParam(data);
-      Log.checkUrl();
-
-  }
 
 }

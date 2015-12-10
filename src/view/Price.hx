@@ -1,17 +1,17 @@
-package src.operation;
+package src.view;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.Manager;
 
-class Clear {
+class Price {
 
   /* =======================================================================
-  Clear Board Object
+  Change
   ========================================================================== */
-  public static function clearBoardObj():Void {
+  public static function change(int:Int):Void {
 
-    Manager._jArea.find('p').remove();
+    new JQuery('#contact').find('#price').find('span').text(cast(int));
 
   }
 

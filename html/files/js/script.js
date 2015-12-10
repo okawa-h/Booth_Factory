@@ -1,6 +1,5 @@
 (function () { "use strict";
 var Lambda = function() { };
-Lambda.__name__ = true;
 Lambda.exists = function(it,f) {
 	var $it0 = it.iterator();
 	while( $it0.hasNext() ) {
@@ -9,12 +8,32 @@ Lambda.exists = function(it,f) {
 	}
 	return false;
 };
+Lambda.filter = function(it,f) {
+	var l = new List();
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		if(f(x)) l.add(x);
+	}
+	return l;
+};
 var List = function() {
 	this.length = 0;
 };
-List.__name__ = true;
 List.prototype = {
-	iterator: function() {
+	add: function(item) {
+		var x = [item];
+		if(this.h == null) this.h = x; else this.q[1] = x;
+		this.q = x;
+		this.length++;
+	}
+	,push: function(item) {
+		var x = [item,this.h];
+		this.h = x;
+		if(this.q == null) this.q = x;
+		this.length++;
+	}
+	,iterator: function() {
 		return { h : this.h, hasNext : function() {
 			return this.h != null;
 		}, next : function() {
@@ -25,12 +44,6 @@ List.prototype = {
 		}};
 	}
 };
-Math.__name__ = true;
-var Std = function() { };
-Std.__name__ = true;
-Std.string = function(s) {
-	return js.Boot.__string_rec(s,"");
-};
 var haxe = {};
 haxe.Http = function(url) {
 	this.url = url;
@@ -38,9 +51,15 @@ haxe.Http = function(url) {
 	this.params = new List();
 	this.async = true;
 };
-haxe.Http.__name__ = true;
 haxe.Http.prototype = {
-	request: function(post) {
+	setParameter: function(param,value) {
+		this.params = Lambda.filter(this.params,function(p) {
+			return p.param != param;
+		});
+		this.params.push({ param : param, value : value});
+		return this;
+	}
+	,request: function(post) {
 		var me = this;
 		me.responseData = null;
 		var r = this.req = js.Browser.createXMLHttpRequest();
@@ -114,107 +133,12 @@ haxe.Http.prototype = {
 	,onStatus: function(status) {
 	}
 };
-haxe.Log = function() { };
-haxe.Log.__name__ = true;
-haxe.Log.trace = function(v,infos) {
-	js.Boot.__trace(v,infos);
-};
 var js = {};
 var jp = {};
 jp.saken = {};
 jp.saken.utils = {};
 jp.saken.utils.Dom = function() { };
-jp.saken.utils.Dom.__name__ = true;
-js.Boot = function() { };
-js.Boot.__name__ = true;
-js.Boot.__unhtml = function(s) {
-	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
-};
-js.Boot.__trace = function(v,i) {
-	var msg;
-	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
-	msg += js.Boot.__string_rec(v,"");
-	if(i != null && i.customParams != null) {
-		var _g = 0;
-		var _g1 = i.customParams;
-		while(_g < _g1.length) {
-			var v1 = _g1[_g];
-			++_g;
-			msg += "," + js.Boot.__string_rec(v1,"");
-		}
-	}
-	var d;
-	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
-};
-js.Boot.__string_rec = function(o,s) {
-	if(o == null) return "null";
-	if(s.length >= 5) return "<...>";
-	var t = typeof(o);
-	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
-	switch(t) {
-	case "object":
-		if(o instanceof Array) {
-			if(o.__enum__) {
-				if(o.length == 2) return o[0];
-				var str = o[0] + "(";
-				s += "\t";
-				var _g1 = 2;
-				var _g = o.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
-				}
-				return str + ")";
-			}
-			var l = o.length;
-			var i1;
-			var str1 = "[";
-			s += "\t";
-			var _g2 = 0;
-			while(_g2 < l) {
-				var i2 = _g2++;
-				str1 += (i2 > 0?",":"") + js.Boot.__string_rec(o[i2],s);
-			}
-			str1 += "]";
-			return str1;
-		}
-		var tostr;
-		try {
-			tostr = o.toString;
-		} catch( e ) {
-			return "???";
-		}
-		if(tostr != null && tostr != Object.toString) {
-			var s2 = o.toString();
-			if(s2 != "[object Object]") return s2;
-		}
-		var k = null;
-		var str2 = "{\n";
-		s += "\t";
-		var hasp = o.hasOwnProperty != null;
-		for( var k in o ) {
-		if(hasp && !o.hasOwnProperty(k)) {
-			continue;
-		}
-		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
-			continue;
-		}
-		if(str2.length != 2) str2 += ", \n";
-		str2 += s + k + " : " + js.Boot.__string_rec(o[k],s);
-		}
-		s = s.substring(1);
-		str2 += "\n" + s + "}";
-		return str2;
-	case "function":
-		return "<function>";
-	case "string":
-		return o;
-	default:
-		return String(o);
-	}
-};
 js.Browser = function() { };
-js.Browser.__name__ = true;
 js.Browser.createXMLHttpRequest = function() {
 	if(typeof XMLHttpRequest != "undefined") return new XMLHttpRequest();
 	if(typeof ActiveXObject != "undefined") return new ActiveXObject("Microsoft.XMLHTTP");
@@ -222,349 +146,460 @@ js.Browser.createXMLHttpRequest = function() {
 };
 var src = {};
 src.Main = function() { };
-src.Main.__name__ = true;
 src.Main.main = function() {
 	new js.JQuery("document").ready(src.Manager.init);
 };
 src.Manager = function() { };
-src.Manager.__name__ = true;
 src.Manager.init = function(event) {
 	src.Manager._jMenu = new js.JQuery("#mainmenu");
 	src.Manager._jArea = new js.JQuery("#mainboard");
 	src.Manager._jPrice = new js.JQuery("#contact").find("#price");
-	src.Manager._jBtnMatu = new js.JQuery("#set-name-matu");
-	src.Manager._jBtnTake = new js.JQuery("#set-name-take");
-	src.Manager._jBtnUme = new js.JQuery("#set-name-ume");
-	src.Manager._jBtnClear = new js.JQuery("#help-btn");
 	src.Manager._lengthAccessory = new js.JQuery("#length-accessory").find(".item-length").find("span");
 	src.Manager._lengthBanar = new js.JQuery("#length-Banar").find(".item-length").find("span");
 	src.Manager._lengthPaper = new js.JQuery("#length-Paper").find(".item-length").find("span");
-	src.data.Data.get(src.Manager.start);
+	src.view.Data.get(src.Manager._jMenu,src.Manager.start);
+	src.view.Log.write();
 };
 src.Manager.start = function() {
-	src.judge.Log.checkUrl();
-	src.drop.Drop.init();
-	src.judge.Judge.init();
-	src.animate.Animate.init();
-	src.Manager.setRightMenu();
-};
-src.Manager.setRightMenu = function() {
-	var data = src.Manager._Data;
-	src.Manager._jBtnMatu.on("click",function(event) {
-		src.Manager.setPacage(data.set[0].url);
+	src.operation.Param.init(src.Manager._jArea,src.Manager._jAreaObj,src.Manager._jPrice);
+	src.Manager.set(src.view.Board.init(src.Manager._jArea,src.Manager._jAreaObj));
+	src.operation.Drag.init(src.Manager._jArea,src.Manager._jAreaObj,src.Manager._jMenu);
+	src.animate.Animate.init(src.Manager._jMenu,src.Manager._jArea);
+	src.view.Trash.init();
+	src.view.Sidemenu.init(src.Manager._Data);
+	jp.saken.utils.Dom.jWindow.on("click",function(event) {
+		src.Manager.set(src.view.Board.count());
 	});
-	src.Manager._jBtnTake.on("click",function(event1) {
-		src.Manager.setPacage(data.set[1].url);
-	});
-	src.Manager._jBtnUme.on("click",function(event2) {
-		src.Manager.setPacage(data.set[2].url);
-	});
-	src.Manager._jBtnClear.on("click",function(event3) {
-		src.Manager.setPacage("?");
-		src.operation.Change.changePrice(0);
-		src.operation.Change.changeProductLength(0,0,0);
+	jp.saken.utils.Dom.jWindow.on("mouseup",function(event1) {
+		src.Manager.set(src.view.Board.count());
+		src.view.Log.write();
+		src.view.Trash.none(src.operation.Drag._catchTarget);
+		src.operation.Drag.on();
 	});
 };
-src.Manager.setPacage = function(data) {
-	var url = jp.saken.utils.Dom.window.location.search;
-	if(url.indexOf("obj") > -1) src.operation.Clear.clearBoardObj();
-	src.operation.Change.changeURLParam(data);
-	src.judge.Log.checkUrl();
+src.Manager.set = function(array) {
+	src.Manager._jAreaObj = src.Manager._jArea.find("p");
+	var accessoryLength = array[0];
+	var banarLength = array[1];
+	var paperLength = array[2];
+	var price = array[3];
+	src.view.ProductLength.change(accessoryLength,banarLength,paperLength);
+	src.view.Price.change(price);
+	var param = src.operation.Param.make(src.Manager._jAreaObj,price);
+	src.operation.Param.change("?" + param);
 };
 src.animate = {};
 src.animate.Animate = function() { };
-src.animate.Animate.__name__ = true;
-src.animate.Animate.init = function() {
-	src.animate.Animate._jMenu = src.Manager._jMenu;
-	src.animate.Animate._jBtn = src.animate.Animate._jMenu.find(".ttl").find("p");
-	src.animate.Animate._jBtn.on("click",function(event) {
+src.animate.Animate.init = function(jMenu,jArea) {
+	src.animate.Animate._jMenu = jMenu;
+	src.animate.Animate._jArea = jArea;
+	src.animate.Mainmenu.init(src.animate.Animate._jMenu);
+	src.animate.Title.init();
+};
+src.animate.Animate.setup = function() {
+	var leftMenu = new js.JQuery("#sidemenu-left").find("li");
+	var rightMenu = new js.JQuery("#sidemenu-right").find("div");
+	var rightListMenu = new js.JQuery("#sidemenu-right").find("li");
+	TweenMax.staggerFromTo(leftMenu,1,{ x : -300},{ x : 0, ease : Elastic.easeInOut, onComplete : function() {
+		TweenMax.staggerFromTo(rightMenu,0.5,{ x : 300},{ x : 0, ease : Elastic.easeInOut},0.2);
+	}},0.2);
+};
+src.animate.Animate.vibrationItem = function(target) {
+	var timeline = new TimelineMax({ repeat : -1});
+	timeline.to(target,0.001,{ transform : "rotate(0.4deg) translate(1px,-1px)"});
+	timeline.to(target,0.001,{ transform : "rotate(0.8deg) translate(0px,1px)"});
+	timeline.to(target,0.001,{ transform : "rotate(0.4deg) translate(-1px,0)"});
+	timeline.to(target,0.001,{ transform : "rotate(0deg) translate(0,0)"});
+	timeline.to(target,0.001,{ transform : "rotate(-0.4deg) translate(1px,0)"});
+	timeline.to(target,0.001,{ transform : "rotate(-0.8deg) translate(0,1px)"});
+	timeline.to(target,0.001,{ transform : "rotate(-0.4deg) translate(-1px,-1px)"});
+	timeline.to(target,0.001,{ transform : "rotate(0deg) translate(0,0)"});
+	target.on("mouseup",function(event) {
+		timeline.pause();
+		timeline.to(target,0.001,{ transform : "rotate(0deg) translate(0,0)"});
+	});
+};
+src.animate.AnimationTrash = function() { };
+src.animate.AnimationTrash.init = function(jTrash,jTrashBox,jTrashArrow) {
+	src.animate.AnimationTrash._jTrash = jTrash;
+	src.animate.AnimationTrash._jTrashBox = jTrashBox;
+	src.animate.AnimationTrash._jTrashArrow = jTrashArrow;
+	src.animate.AnimationTrash.hover();
+};
+src.animate.AnimationTrash.hover = function() {
+	src.animate.AnimationTrash._jTrashBox.on("mouseover",function(event) {
+		TweenMax.to(src.animate.AnimationTrash._jTrash,1,{ scaleX : 1.3, scaleY : 1.3, ease : Elastic.easeOut});
+	});
+	src.animate.AnimationTrash._jTrashBox.on("mouseleave",function(event1) {
+		TweenMax.to(src.animate.AnimationTrash._jTrash,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut});
+	});
+};
+src.animate.AnimationTrash.hide = function() {
+	src.animate.AnimationTrash._jTrashBox.delay(3000).hide();
+};
+src.animate.AnimationTrash.deleteObj = function(target) {
+	TweenMax.to(target,0.6,{ scaleX : 3.0, scaleY : 3.0, ease : Elastic.easeOut, onComplete : function() {
+		target.remove();
+	}});
+};
+src.animate.Mainmenu = function() { };
+src.animate.Mainmenu.init = function(jMenu) {
+	src.animate.Mainmenu._jMenu = jMenu;
+	src.animate.Mainmenu._jBtn = src.animate.Mainmenu._jMenu.find(".ttl").find("p");
+	src.animate.Mainmenu._jBtn.on("click",function(event) {
 		var jThis = $(this);
-		src.animate.Animate.clickBtn(jThis,event);
+		src.animate.Mainmenu.clickBtn(jThis,event);
 	});
-	src.animate.Animate._jMenu.on("mouseleave",function(event1) {
-		src.animate.Animate.animateCloseMenu();
+	src.animate.Mainmenu._jMenu.on("mouseleave",function(event1) {
+		src.animate.Mainmenu.animateCloseMenu();
 	});
 };
-src.animate.Animate.clickBtn = function(jThis,event) {
+src.animate.Mainmenu.clickBtn = function(jThis,event) {
 	var cls = jThis.prop("class");
-	var target = src.animate.Animate._jMenu.find(".inner");
+	var target = src.animate.Mainmenu._jMenu.find(".inner");
 	var h = target.find("#" + cls).outerHeight() * -1 + 1;
-	src.animate.Animate.addCurrent(cls);
-	if(src.animate.Animate._jMenu.prop("class") == "close") src.animate.Animate.animateOpenMenu(target,h);
+	src.animate.Mainmenu.addCurrent(cls);
+	if(src.animate.Mainmenu._jMenu.prop("class") == "close") src.animate.Mainmenu.animateOpenMenu(target,h);
 };
-src.animate.Animate.animateOpenMenu = function(target,h) {
-	src.animate.Animate._jMenu.removeClass("close");
-	src.animate.Animate._jMenu.addClass("open");
+src.animate.Mainmenu.animateOpenMenu = function(target,h) {
+	src.animate.Mainmenu._jMenu.removeClass("close");
+	src.animate.Mainmenu._jMenu.addClass("open");
 	target.animate({ top : h + "px"});
 };
-src.animate.Animate.animateCloseMenu = function() {
-	src.animate.Animate._jMenu.removeClass("open");
-	src.animate.Animate._jMenu.addClass("close");
-	src.animate.Animate._jMenu.find(".inner").animate({ top : 0 + "px"});
+src.animate.Mainmenu.animateCloseMenu = function() {
+	src.animate.Mainmenu._jMenu.removeClass("open");
+	src.animate.Mainmenu._jMenu.addClass("close");
+	src.animate.Mainmenu._jMenu.find(".inner").animate({ top : 0 + "px"});
 };
-src.animate.Animate.addCurrent = function(cls) {
-	src.animate.Animate._jMenu.find("div").removeClass("current");
-	src.animate.Animate._jMenu.find("#" + cls).addClass("current");
+src.animate.Mainmenu.addCurrent = function(cls) {
+	src.animate.Mainmenu._jMenu.find("div").removeClass("current");
+	src.animate.Mainmenu._jMenu.find("#" + cls).addClass("current");
 };
-src.data = {};
-src.data.Data = function() { };
-src.data.Data.__name__ = true;
-src.data.Data.get = function(callback) {
-	src.data.Data._callback = callback;
-	var request = new haxe.Http("files/data/data.json");
-	request.onError = function(data) {
-		haxe.Log.trace("error!",{ fileName : "Data.hx", lineNumber : 19, className : "src.data.Data", methodName : "get"});
-	};
-	request.onData = src.data.Data.onData;
-	request.request(false);
+src.animate.Title = function() { };
+src.animate.Title.init = function() {
+	src.animate.Title._jTitle = new js.JQuery("#header").find("h1");
+	src.animate.Title.view();
 };
-src.data.Data.onData = function(data) {
-	src.Manager._Data = JSON.parse(data);
-	src.data.Set.init(src.data.Data._callback);
+src.animate.Title.view = function() {
+	TweenMax.to(src.animate.Title._jTitle,0.5,{ top : "-50px", repeat : 3, yoyo : true, ease : Circ.easeOut});
 };
-src.data.Set = function() { };
-src.data.Set.__name__ = true;
-src.data.Set.init = function(_callback) {
-	src.data.Set.loop(src.Manager._Data,_callback);
-};
-src.data.Set.loop = function(data,_callback) {
-	var length = data.object.length;
-	var paper_array = "";
-	var accessory_array = "";
-	var banar_array = "";
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		var obj = src.data.Set.makeHtml(data.object[i]);
-		if(obj[1] == "paper") paper_array += obj[0]; else if(obj[1] == "accessory") accessory_array += obj[0]; else if(obj[1] == "banar") banar_array += obj[0];
-	}
-	src.Manager._jMenu.find("#sale-paper").find(".slider").find("ul").append(paper_array);
-	src.Manager._jMenu.find("#sale-accessory").find(".slider").find("ul").append(accessory_array);
-	src.Manager._jMenu.find("#sale-banar").find(".slider").find("ul").append(banar_array);
-	_callback();
-};
-src.data.Set.makeHtml = function(target) {
+src.operation = {};
+src.operation.Create = function() { };
+src.operation.Create.makeObjHtml = function(id,top,left,type,price,src) {
 	var html = "";
-	html += "<li title=\"" + Std.string(target.id) + "\" ";
-	html += "data-type=\"" + Std.string(target.type) + "\" ";
-	html += "data-price=\"" + Std.string(target.price) + "\">";
-	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + Std.string(target.bgImg) + ") no-repeat center center;\">";
+	html += "<p class=\"" + id + "\"";
+	html += "style=\"position:absolute;top:" + top + "px;left:" + left + "px\"";
+	html += "data-type=\"" + type + "\" data-price=\"" + price + "\">";
+	html += "<img src=\"files/img/product/icon/" + src + ".png\">";
+	html += "</p>";
+	return html;
+};
+src.operation.Create.makeListHtml = function(id,type,price,bgImg,img,name,length) {
+	var html = "";
+	html += "<li title=\"" + id + "\" ";
+	html += "data-type=\"" + type + "\" ";
+	html += "data-price=\"" + price + "\">";
+	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + bgImg + ") no-repeat center center;\">";
 	html += "<div class=\"img\">";
-	html += "<img src=\"files/img/product/image/" + Std.string(target.img) + "\">";
+	html += "<img src=\"files/img/product/image/" + img + "\">";
 	html += "</div>";
 	html += "</div>";
 	html += "<dl>";
-	html += "<dt>" + Std.string(target.name) + "</dt>";
-	html += "<dd class=\"length\">" + Std.string(target.length) + "</dd>";
-	html += "<dd class=\"price\"><span>" + Std.string(target.price) + "</span>円</dd>";
+	html += "<dt>" + name + "</dt>";
+	html += "<dd class=\"length\">" + length + "</dd>";
+	html += "<dd class=\"price\"><span>" + price + "</span>円</dd>";
 	html += "</dl>";
 	html += "</li>";
-	return [html,target.type];
+	return html;
 };
-src.drop = {};
-src.drop.Drop = function() { };
-src.drop.Drop.__name__ = true;
-src.drop.Drop.init = function() {
-	src.drop.Drop._STATUS = false;
-	src.drop.Drop._jArea = src.Manager._jArea;
-	src.drop.Drop._jMenu = src.Manager._jMenu;
-	src.drop.Drop._jMenu.find(".slider").find("li").find("img").on("mousedown",function(event) {
+src.operation.Drag = function() { };
+src.operation.Drag.init = function(jArea,jAreaObj,jMenu) {
+	src.operation.Drag._STATUS = false;
+	src.operation.Drag._jArea = jArea;
+	src.operation.Drag._jAreaObj = jAreaObj;
+	src.operation.Drag._jMenu = jMenu;
+	src.operation.Drag._jMenu.find(".slider").find("li").find("img").on("mousedown",function(event) {
 		event.preventDefault();
 		return false;
 	});
-	src.drop.Drop._jMenu.find(".slider").find("li").on({ mousedown : src.drop.Drop.getTarget});
-	jp.saken.utils.Dom.jWindow.on({ mousemove : src.drop.Drop.moveDrag, mouseup : src.drop.Drop.leaveDrag});
-	src.drop.Drop.dragIcon();
+	src.operation.Drag._jMenu.find(".slider").find("li").on({ mousedown : src.operation.Drag.getListTarget});
+	jp.saken.utils.Dom.jWindow.on({ mousemove : src.operation.Drag.mousemove, mouseup : src.operation.Drag.mouseup});
+	src.operation.Drag.on();
 };
-src.drop.Drop.getTarget = function(event) {
-	src.drop.Drop._STATUS = true;
-	src.drop.Drop.target = $(this);
-	src.drop.Drop.getDiff(event,src.drop.Drop.target);
-	src.drop.Drop.target.addClass("drop");
-	src.drop.Drop.catchTarget = src.drop.Drop.target.find(".img");
+src.operation.Drag.getListTarget = function(event) {
+	src.operation.Drag._STATUS = true;
+	var target = $(this);
+	src.operation.Drag.getDiff(event,target);
+	target.addClass("drop");
+	src.operation.Drag._catchTarget = target.find(".img");
 };
-src.drop.Drop.getDiff = function(event,target) {
-	src.drop.Drop._dy = event.clientY - target.offset().top;
-	src.drop.Drop._dx = event.clientX - target.offset().left;
+src.operation.Drag.getDiff = function(event,target) {
+	src.operation.Drag._diffY = event.clientY - target.offset().top;
+	src.operation.Drag._diffX = event.clientX - target.offset().left;
 };
-src.drop.Drop.moveItem = function(event) {
-	if(src.drop.Drop._STATUS) {
-		var h = new js.JQuery("#header").height();
-		var w = src.drop.Drop._jArea.offset().left;
-		if(src.drop.Drop._jMenu.find(".drop").length > 0) {
-			h = src.drop.Drop._jMenu.find(".current").offset().top;
-			w = src.drop.Drop.catchTarget.parent().offset().left;
-		}
-		src.drop.Drop.catchTarget.css({ position : "absolute", top : event.clientY - h - src.drop.Drop._dy, left : event.clientX - w - src.drop.Drop._dx});
-	}
-};
-src.drop.Drop.createImg = function(target,event) {
-	var html = src.drop.Drop.createHtml(target,event);
-	haxe.Log.trace(html,{ fileName : "Drop.hx", lineNumber : 96, className : "src.drop.Drop", methodName : "createImg"});
-	src.drop.Drop._jArea.find("#layer-" + html[1]).append(html[0]);
-	src.drop.Drop.dragIcon();
-};
-src.drop.Drop.dragIcon = function() {
-	src.drop.Drop._jArea.find("p").on("mousedown",function(event) {
-		src.drop.Drop.target = $(this);
-		src.drop.Drop.getDiff(event,src.drop.Drop.target);
-		src.drop.Drop._STATUS = true;
-		src.drop.Drop.catchTarget = $(this);
+src.operation.Drag.on = function() {
+	src.operation.Drag._jAreaObj = src.operation.Drag._jArea.find("p");
+	src.operation.Drag._jAreaObj.on("mousedown",function(event) {
+		src.operation.Drag._catchTarget = $(this);
+		src.animate.Animate.vibrationItem(src.operation.Drag._catchTarget);
+		src.operation.Drag.getDiff(event,src.operation.Drag._catchTarget);
+		src.operation.Drag._STATUS = true;
+		src.view.Trash.view();
 	});
 };
-src.drop.Drop.createHtml = function(target,event) {
+src.operation.Drag.mousemove = function(event) {
+	if(src.operation.Drag._STATUS) {
+		var h = new js.JQuery("#header").height();
+		var w = src.operation.Drag._jArea.offset().left;
+		if(src.operation.Drag._jMenu.find(".drop").length > 0) {
+			h = src.operation.Drag._jMenu.find(".current").offset().top;
+			w = src.operation.Drag._catchTarget.parent().offset().left;
+		}
+		src.operation.Drag._catchTarget.css({ position : "absolute", top : event.clientY - h - src.operation.Drag._diffY, left : event.clientX - w - src.operation.Drag._diffX});
+	}
+};
+src.operation.Drag.mouseup = function(event) {
+	src.operation.Drag._STATUS = false;
+	src.view.Trash.objDelete(src.operation.Drag._catchTarget,event);
+	if(src.operation.Drag._catchTarget == undefined) {
+	} else if(src.operation.Drag._catchTarget.parent().parent("li").length > 0) {
+		src.operation.Drag.createListToObj(src.operation.Drag._catchTarget.parent().parent("li"),event);
+		src.operation.Drag._catchTarget.remove();
+		src.operation.Drag._jMenu.find(".drop").removeClass("drop");
+	}
+};
+src.operation.Drag.createListToObj = function(target,event) {
 	var title = target.prop("title");
 	var type = target.data("type");
 	var price = target.data("price");
-	var html = "<p class=\"" + title + "\"";
-	var h = new js.JQuery("#header").height();
-	var w = src.drop.Drop._jArea.offset().left;
-	var top = event.clientY - h - src.drop.Drop._dy;
-	var left = event.clientX - w - src.drop.Drop._dx;
-	html += "style=\"position:absolute;top:" + top + "px;left:" + left + "px\"";
-	html += "data-type=\"" + type + "\" data-price=\"" + price + "\">";
-	html += "<img src=\"files/img/product/icon/" + title + ".png\">";
-	html += "</p>";
-	return [html,type];
+	var top = event.clientY - new js.JQuery("#header").height() - src.operation.Drag._diffY;
+	var left = event.clientX - src.operation.Drag._jArea.offset().left - src.operation.Drag._diffX;
+	var html = src.operation.Create.makeObjHtml(title,top,left,type,price,title);
+	src.operation.Drag._jArea.find("#layer-" + type).append(html);
 };
-src.drop.Drop.moveDrag = function(event) {
-	src.drop.Drop.moveItem(event);
-	if(src.drop.Drop._STATUS) src.drop.Drop.catchTarget.removeClass("catch");
+src.operation.Param = function() { };
+src.operation.Param.init = function(jArea,jAreaObj,jPrice) {
+	src.operation.Param._jArea = jArea;
+	src.operation.Param._jAreaObj = jAreaObj;
+	src.operation.Param._jPrice = jPrice;
+	src.operation.Param.remakeObject();
 };
-src.drop.Drop.leaveDrag = function(event) {
-	src.drop.Drop._STATUS = false;
-	if(src.drop.Drop.catchTarget == undefined) {
-	} else if(src.drop.Drop.catchTarget.parent().parent("li").length > 0) {
-		src.drop.Drop.createImg(src.drop.Drop.catchTarget.parent().parent("li"),event);
-		src.drop.Drop.catchTarget.remove();
-		src.drop.Drop._jMenu.find(".drop").removeClass("drop");
+src.operation.Param.remakeObject = function() {
+	var url = jp.saken.utils.Dom.jWindow[0].location.search;
+	if(url.indexOf("?") > -1) {
+		var param = url.replace("?","");
+		src.operation.Param.createObject(param);
 	}
 };
-src.judge = {};
-src.judge.Judge = function() { };
-src.judge.Judge.__name__ = true;
-src.judge.Judge.init = function() {
-	src.judge.Judge._jArea = src.Manager._jArea;
-	src.judge.Judge._jPrice = src.Manager._jPrice;
-	jp.saken.utils.Dom.jWindow.on("mouseup",function(event) {
-		src.judge.Judge.getItemLength();
-	});
-};
-src.judge.Judge.getItemLength = function() {
-	var jItem = src.judge.Judge._jArea.find("p");
-	var length = jItem.length;
-	if(length > 0) src.judge.Judge.loop(jItem,length);
-	src.judge.Log.init(jItem,src.judge.Judge._jPrice);
-};
-src.judge.Judge.loop = function(jItem,length) {
-	var price = 0;
-	var accessory_length = 0;
-	var banar_length = 0;
-	var paper_length = 0;
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		var type_data = jItem.eq(i).data("type");
-		var price_data = jItem.eq(i).data("price");
-		if(type_data == "accessory") accessory_length++;
-		if(type_data == "banar") banar_length++;
-		if(type_data == "paper") paper_length++;
-		price += price_data;
+src.operation.Param.createObject = function(param) {
+	var paramArray = param.split("&");
+	var data = src.Manager._Data;
+	var _g1 = 0;
+	var _g = paramArray.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var item = paramArray[i].split("=");
+		if(item[0] == "obj") src.operation.Param.addHtml(item[1],data);
 	}
-	haxe.Log.trace(accessory_length,{ fileName : "Judge.hx", lineNumber : 63, className : "src.judge.Judge", methodName : "loop", customParams : [banar_length,paper_length]});
-	src.operation.Change.changeProductLength(accessory_length,banar_length,paper_length);
-	src.operation.Change.changePrice(price);
 };
-src.judge.Log = function() { };
-src.judge.Log.__name__ = true;
-src.judge.Log.init = function(jTarget,jPrice) {
-	src.judge.Log._jPrice = jPrice;
-	var string = "";
+src.operation.Param.addHtml = function(string,data) {
+	var target = string.split("|");
+	var _g1 = 0;
+	var _g = data.object.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		if(data.object[i].id == target[0]) {
+			var title = target[0];
+			var type = data.object[i].type;
+			var price = data.object[i].price;
+			var top = target[2];
+			var left = target[1];
+			var html = src.operation.Create.makeObjHtml(title,top,left,type,price,title);
+			src.operation.Param._jArea.find("#layer-" + type).append(html);
+		}
+	}
+};
+src.operation.Param.make = function(jTarget,price) {
+	var param = "";
 	var _g1 = 0;
 	var _g = jTarget.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		var tex;
-		if(i == jTarget.length - 1) tex = ""; else tex = "&";
-		string += src.judge.Log.makeObjectParam(jTarget.eq(i)) + tex;
+		var str;
+		if(i == jTarget.length - 1) str = ""; else str = "&";
+		param += src.operation.Param.makeObjectParam(jTarget.eq(i)) + str;
 	}
-	string += "&" + src.judge.Log.makePriceParam();
-	jp.saken.utils.Dom.window.history.replaceState("","","?" + string);
+	param += "&" + src.operation.Param.makePriceParam(price);
+	return param;
 };
-src.judge.Log.makeObjectParam = function(jTarget) {
+src.operation.Param.makeObjectParam = function(jTarget) {
 	var id = jTarget.prop("class");
 	var x = jTarget.css("left").replace("px","");
 	var y = jTarget.css("top").replace("px","");
 	return "obj=" + id + "|" + x + "|" + y;
 };
-src.judge.Log.makePriceParam = function() {
-	var jPrice = src.judge.Log._jPrice.find("span").text();
-	return "price=" + jPrice;
+src.operation.Param.makePriceParam = function(price) {
+	return "price=" + price;
 };
-src.judge.Log.checkUrl = function() {
-	var url;
-	url = jp.saken.utils.Dom.jWindow[0].location.search;
-	if(url.indexOf("?") > -1) {
-		var param = url.replace("?","");
-		src.judge.Log.remakeObject(param);
-	}
-};
-src.judge.Log.remakeObject = function(param) {
-	var _param = param.split("&");
-	var _g1 = 0;
-	var _g = _param.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var item = _param[i].split("=");
-		if(item[0] == "obj") src.judge.Log.makeHtml(item[1]); else if(item[0] == "price") {
-			src.judge.Judge.init();
-			src.judge.Judge.getItemLength();
-		}
-	}
-};
-src.judge.Log.makeHtml = function(string) {
-	var target = string.split("|");
-	var _Data = src.Manager._Data;
-	var _g1 = 0;
-	var _g = _Data.object.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		if(_Data.object[i].id == target[0]) {
-			var title = target[0];
-			var type = _Data.object[i].type;
-			var price = _Data.object[i].price;
-			var html = "<p class=\"" + title + "\"";
-			var top = target[2];
-			var left = target[1];
-			html += "style=\"position:absolute;top:" + top + "px;left:" + left + "px\"";
-			html += "data-type=\"" + type + "\" data-price=\"" + price + "\">";
-			html += "<img src=\"files/img/product/icon/" + title + ".png\">";
-			html += "</p>";
-			src.Manager._jArea.find("#layer-" + type).append(html);
-		}
-	}
-};
-src.operation = {};
-src.operation.Change = function() { };
-src.operation.Change.__name__ = true;
-src.operation.Change.changeURLParam = function(string) {
+src.operation.Param.change = function(string) {
 	jp.saken.utils.Dom.window.history.replaceState("","",string);
 };
-src.operation.Change.changePrice = function($int) {
-	src.Manager._jPrice.find("span").text($int);
+src.view = {};
+src.view.Board = function() { };
+src.view.Board.init = function(jArea,jAreaObj) {
+	src.view.Board._jArea = jArea;
+	src.view.Board._jAreaObj = jAreaObj;
+	return src.view.Board.count();
 };
-src.operation.Change.changeProductLength = function(accessory_length,banar_length,paper_length) {
-	src.Manager._lengthAccessory.text(accessory_length);
-	src.Manager._lengthBanar.text(banar_length);
-	src.Manager._lengthPaper.text(paper_length);
+src.view.Board.clear = function() {
+	src.view.Board._jArea.find("p").remove();
 };
-src.operation.Clear = function() { };
-src.operation.Clear.__name__ = true;
-src.operation.Clear.clearBoardObj = function() {
-	src.Manager._jArea.find("p").remove();
+src.view.Board.count = function() {
+	var jAreaObj = src.view.Board._jArea.find("p");
+	var length = jAreaObj.length;
+	var array = [0,0,0,0];
+	if(length > 0) array = src.view.Board.loop(jAreaObj,length);
+	return array;
 };
-String.__name__ = true;
-Array.__name__ = true;
+src.view.Board.loop = function(jItem,length) {
+	var price = 0;
+	var accessoryLength = 0;
+	var banarLength = 0;
+	var paperLength = 0;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var typeData = jItem.eq(i).data("type");
+		var priceData = jItem.eq(i).data("price");
+		if(typeData == "accessory") accessoryLength++;
+		if(typeData == "banar") banarLength++;
+		if(typeData == "paper") paperLength++;
+		price += priceData;
+	}
+	return [accessoryLength,banarLength,paperLength,price];
+};
+src.view.Data = function() { };
+src.view.Data.get = function(jMenu,callback) {
+	src.view.Data._jMenu = jMenu;
+	src.view.Data._callback = callback;
+	var request = new haxe.Http("files/data/data.json");
+	request.onError = function(data) {
+	};
+	request.onData = src.view.Data.onData;
+	request.request(false);
+};
+src.view.Data.onData = function(data) {
+	src.Manager._Data = JSON.parse(data);
+	src.view.Data.loop(src.Manager._Data);
+};
+src.view.Data.loop = function(data) {
+	var length = data.object.length;
+	var accessoryHtml = "";
+	var banarHtml = "";
+	var paperHtml = "";
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var t = data.object[i];
+		var html = src.operation.Create.makeListHtml(t.id,t.type,t.price,t.bgImg,t.img,t.name,t.length);
+		if(t.type == "paper") paperHtml += html; else if(t.type == "accessory") accessoryHtml += html; else if(t.type == "banar") banarHtml += html;
+	}
+	src.view.Data.setHTML(accessoryHtml,banarHtml,paperHtml);
+};
+src.view.Data.setHTML = function(accessoryHtml,banarHtml,paperHtml) {
+	src.view.Data._jMenu.find("#sale-accessory").find(".slider").find("ul").append(accessoryHtml);
+	src.view.Data._jMenu.find("#sale-banar").find(".slider").find("ul").append(banarHtml);
+	src.view.Data._jMenu.find("#sale-paper").find(".slider").find("ul").append(paperHtml);
+	src.view.Data._callback();
+};
+src.view.Log = function() { };
+src.view.Log.write = function() {
+	var request = new haxe.Http("files/php/history.php");
+	var param = jp.saken.utils.Dom.jWindow[0].location.search;
+	request.onError = function(data) {
+	};
+	request.onData = src.view.Log.onData;
+	request.setParameter("act","write");
+	request.setParameter("param",param);
+	request.request(true);
+};
+src.view.Log.onData = function(data) {
+};
+src.view.Price = function() { };
+src.view.Price.change = function($int) {
+	new js.JQuery("#contact").find("#price").find("span").text($int);
+};
+src.view.ProductLength = function() { };
+src.view.ProductLength.change = function(accessoryLength,banarLength,paperLength) {
+	new js.JQuery("#length-accessory").find(".item-length").find("span").text(accessoryLength);
+	new js.JQuery("#length-banar").find(".item-length").find("span").text(banarLength);
+	new js.JQuery("#length-paper").find(".item-length").find("span").text(paperLength);
+};
+src.view.Sidemenu = function() { };
+src.view.Sidemenu.init = function(data) {
+	src.view.Sidemenu._jBtnMatu = new js.JQuery("#set-name-matu");
+	src.view.Sidemenu._jBtnTake = new js.JQuery("#set-name-take");
+	src.view.Sidemenu._jBtnUme = new js.JQuery("#set-name-ume");
+	src.view.Sidemenu._jBtnClear = new js.JQuery("#help-btn");
+	src.view.Sidemenu.onRightMenu(data);
+};
+src.view.Sidemenu.onRightMenu = function(data) {
+	src.view.Sidemenu._jBtnMatu.on("click",function(event) {
+		src.view.Sidemenu.setPacage(data.set[0].url);
+	});
+	src.view.Sidemenu._jBtnTake.on("click",function(event1) {
+		src.view.Sidemenu.setPacage(data.set[1].url);
+	});
+	src.view.Sidemenu._jBtnUme.on("click",function(event2) {
+		src.view.Sidemenu.setPacage(data.set[2].url);
+	});
+	src.view.Sidemenu._jBtnClear.on("click",function(event3) {
+		src.view.Sidemenu.setPacage("?");
+		src.view.Price.change(0);
+		src.view.ProductLength.change(0,0,0);
+	});
+};
+src.view.Sidemenu.setPacage = function(data) {
+	var url = jp.saken.utils.Dom.window.location.search;
+	if(url.indexOf("obj") > -1) src.view.Board.clear();
+	src.operation.Param.change(data);
+	src.operation.Param.remakeObject();
+	src.operation.Drag.on();
+};
+src.view.Trash = function() { };
+src.view.Trash.init = function() {
+	src.view.Trash._jTrash = new js.JQuery("#trash");
+	src.view.Trash._jTrashBox = src.view.Trash._jTrash.find(".trash-box");
+	src.view.Trash._jTrashArrow = src.view.Trash._jTrash.find(".trash-arrow");
+	src.animate.AnimationTrash.init(src.view.Trash._jTrash,src.view.Trash._jTrashBox,src.view.Trash._jTrashArrow);
+};
+src.view.Trash.view = function() {
+	src.view.Trash._jTrashBox.fadeIn();
+	src.view.Trash._jTrashArrow.fadeIn(null,function() {
+		TweenMax.to(src.view.Trash._jTrashArrow,0.5,{ top : "-25%", repeat : -1, yoyo : true, ease : Circ.easeOut});
+	});
+};
+src.view.Trash.none = function(target) {
+	if(target == null) src.view.Trash._jTrashBox.hide(); else src.animate.AnimationTrash.hide();
+	src.view.Trash._jTrashArrow.hide();
+};
+src.view.Trash.objDelete = function(target,event) {
+	var judge = src.view.Trash.judgeDelete(event);
+	if(judge) src.animate.AnimationTrash.deleteObj(target);
+};
+src.view.Trash.judgeDelete = function(event) {
+	var y = 0;
+	var x = 0;
+	y = event.clientY;
+	x = event.clientX;
+	var top = src.view.Trash._jTrashBox.offset().top;
+	var left = src.view.Trash._jTrashBox.offset().left;
+	var bottom = top + src.view.Trash._jTrashBox.height();
+	var right = left + src.view.Trash._jTrashBox.width();
+	var judge;
+	if(y > top && bottom > y && x > left && right > x) judge = true; else judge = false;
+	return judge;
+};
 var q = window.jQuery;
 js.JQuery = q;
 jp.saken.utils.Dom.document = window.document;

@@ -4,6 +4,8 @@ body
 |
 --price: z-index: 1000;
 |
+--trash: z-index: 900;
+|
 --mainmenu: z-index: 800;
 |
 --sidemenu: z-index: 600;
