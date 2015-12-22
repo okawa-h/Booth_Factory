@@ -9,9 +9,18 @@ class Price {
   /* =======================================================================
   Change
   ========================================================================== */
-  public static function change(int:Int):Void {
+  public static function change(price:Int):Void {
 
-    new JQuery('#contact').find('#price').find('span').text(cast(int));
+    new JQuery('#contact').find('#price').find('span').text(Std.string(price));
+
+  }
+
+  /* =======================================================================
+  Clear
+  ========================================================================== */
+  public static function clear():Void {
+
+    new JQuery('#contact').find('#price').find('span').text('0');
 
   }
 

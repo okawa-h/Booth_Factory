@@ -2,7 +2,7 @@ body
 |
 --header: z-index: 2000;
 |
---price: z-index: 1000;
+--price: z-index: 2000;
 |
 --trash: z-index: 900;
 |

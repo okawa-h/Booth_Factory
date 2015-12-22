@@ -3,21 +3,15 @@ package src.operation;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.Manager;
-import src.view.Board;
+import src.view.Mainmenu;
 
 class Param {
 
-  private static var _jArea   : JQuery;
-  private static var _jAreaObj: JQuery;
-  private static var _jPrice  : JQuery;
+  private static var _jArea : JQuery;
 
-  public static function init(jArea:JQuery,jAreaObj:JQuery,jPrice:JQuery):Void {
+  public static function init(jArea:JQuery):Void {
 
     _jArea    = jArea;
-    _jAreaObj = jAreaObj;
-    _jPrice   = jPrice;
-
-    remakeObject();
 
   }
 
@@ -26,17 +20,17 @@ class Param {
   ========================================================================== */
   public static function remakeObject():Void {
 
-    var url = untyped Dom.jWindow[0].location.search;
+    var url = untyped Dom.jWindow[0].location;
+        url = Std.string(url);
 
     if (url.indexOf('?') > -1) {
 
-      var param:String = url.replace('?','');
+      var param:Array<String> = url.split('?');
 
       //var res = Dom.window.confirm('履歴があります。復元しますか？');
       //if( res == true ) {
 
-        createObject(param);
-		    
+        createObject(param[1]);
 
       //}
       
@@ -50,9 +44,10 @@ class Param {
 		  private static function createObject(param:String):Void {
 
 		    var paramArray:Array<String> = param.split('&');
+		    var length    :Int           = paramArray.length;
 		    var data      :Dynamic       = Manager._Data;
 
-		    for (i in 0 ... paramArray.length) {
+		    for (i in 0 ... length) {
 
 		      var item:Array<String> = paramArray[i].split('=');
 
@@ -71,40 +66,48 @@ class Param {
 		  ========================================================================== */
 		  private static function addHtml(string:String,data:Dynamic) {
 
-		    var target:Array<String> = string.split('|');
+		    var target:Array<String> = string.split('-');
+		    var length:Int    = data.object.length;
+		    var html  :String = "";
+		    var id    :String = "";
 
-		    for (i in 0 ... data.object.length) {
+		    for (i in 0 ... length) {
+		    	
 		      if (data.object[i].id == target[0]) {
 
-		        var title:String = target[0];
+		        id = target[0];
 		        var type :String = data.object[i].type;
+		        var cat  :String = data.object[i].cat;
+		        var icon :String = data.object[i].icon;
 		        var price:Int    = data.object[i].price;
-		        var top  :Float  = cast(target[2]);
-		        var left :Float  = cast(target[1]);
-		        var html :String = Create.makeObjHtml(title,top,left,type,price,title);
-
-		        _jArea.find('#layer-' + type).append(html);
+		        var top  :Float  = Std.parseFloat(target[2]);
+		        var left :Float  = Std.parseFloat(target[1]);
+		        html += Create.makeObjHtml(id,top,left,type,cat,price,icon);
+		        Mainmenu.addDrop(id);
 
 		      }
 		    }
+
+		    _jArea.find('.board').append(html);
 
 		  }
 
   /* =======================================================================
   Make URL Param
   ========================================================================== */
-  public static function make(jTarget:JQuery,price:Int):String {
+  public static function make(jTarget:JQuery,length:Int,price:Int):String {
 
     var param :String = "";
 
-    for (i in 0 ... jTarget.length) {
+    for (i in 0 ... length) {
 
-      var str:String = if (i == jTarget.length - 1) '' else '&';
+      var str:String = (i == length - 1) ? '' : '&';
       param += makeObjectParam(jTarget.eq(i)) + str;
       
     }
 
     param += '&' + makePriceParam(price);
+
     return param;
 
   }
@@ -114,11 +117,11 @@ class Param {
 		  ========================================================================== */
 		  private static function makeObjectParam(jTarget:JQuery):String {
 
-		    var id:String = jTarget.prop('class');
-		    var x :String = untyped jTarget.css('left').replace('px','');
-		    var y :String = untyped jTarget.css('top').replace('px','');
+		    var id:String = jTarget.data('id');
+		    var x :String = jTarget.css('left').split('px').join('');
+		    var y :String = jTarget.css('top').split('px').join('');
 
-		    return 'obj=' + id + '|' + x + '|' + y;
+		    return 'obj=' + id + '-' + x + '-' + y;
 
 		  }
 
@@ -135,8 +138,9 @@ class Param {
   Change Param
   ========================================================================== */
   public static function change(string:String):Void {
-
-    Dom.window.history.replaceState('','',string);
+  	
+    // Dom.window.history.replaceState('','',string);
+    untyped History.replaceState('','',string);//ie
 
   }
 

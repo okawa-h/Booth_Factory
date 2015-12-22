@@ -2,10 +2,7 @@ package src.view;
 
 import js.JQuery;
 import haxe.Http;
-import haxe.Json;
 import jp.saken.utils.Dom;
-import src.Manager;
-import src.operation.Create;
 
 class Log {
 

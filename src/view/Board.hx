@@ -6,17 +6,14 @@ import jp.saken.utils.Dom;
 class Board {
 
   private static var _jArea   : JQuery;
-  private static var _jAreaObj: JQuery;
 
   /* =======================================================================
   init
   ========================================================================== */
-  public static function init(jArea:JQuery,jAreaObj:JQuery):Array<Int> {
+  public static function init(jArea:JQuery):Void {
 
-    _jArea    = jArea;
-  	_jAreaObj = jAreaObj;
+    _jArea = jArea;
 
-    return count();
   }
 
   /* =======================================================================
@@ -24,26 +21,25 @@ class Board {
   ========================================================================== */
   public static function clear():Void {
 
-    _jArea.find('p').remove();
+    _jArea.find('.object').remove();
 
   }
 
   /* =======================================================================
   Count Board Object
   ========================================================================== */
-  public static function count():Array<Int> {
+  public static function count(_jAreaObj:JQuery,length:Int):Array<Int> {
 
-  	var jAreaObj:JQuery     = _jArea.find('p');
-  	var length  :Int        = untyped jAreaObj.length;
-  	var array   :Array<Int> = [0,0,0,0];
+  	var jAreaObj   :JQuery     = _jAreaObj;
+  	var lengthArray:Array<Int> = [0,0,0,0];
 
   	if (length > 0) {
 
-  		array = loop(jAreaObj,length);
+  		lengthArray = loop(jAreaObj,length);
 
   	}
 
-    return array;
+    return lengthArray;
   }
 
 		  /* =======================================================================
@@ -58,8 +54,8 @@ class Board {
 
 		  	for (i in 0 ... length) {
 
-		  		var typeData:String  = jItem.eq(i).data('type');
-		  		var priceData:Int = jItem.eq(i).data('price');
+		  		var typeData :String = jItem.eq(i).data('cat');
+		  		var priceData:Int    = jItem.eq(i).data('price');
 
 		  		if (typeData == "accessory") accessoryLength++;
 		  		if (typeData == "banar") banarLength++;

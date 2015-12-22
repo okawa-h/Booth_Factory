@@ -2,8 +2,10 @@ package src.view;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import src.Manager;
 import src.operation.Param;
 import src.operation.Drag;
+import src.view.Mainmenu;
 
 class Sidemenu {
 
@@ -22,35 +24,39 @@ class Sidemenu {
     _jBtnUme   = new JQuery('#set-name-ume');
     _jBtnClear = new JQuery('#help-btn');
 
-    onRightMenu(data);
+    setRightMenu(data);
 
   }
 
       /* =======================================================================
       On right Menu
       ========================================================================== */
-      private static function onRightMenu(data:Dynamic):Void {
+      private static function setRightMenu(data:Dynamic):Void {
 
-        _jBtnMatu.on('click',function(event:JqEvent):Void {
+        _jBtnMatu.on('mousedown',function(event:JqEvent):Void {
 
           setPacage(data.set[0].url);
 
         });
-        _jBtnTake.on('click',function(event:JqEvent):Void {
+
+        _jBtnTake.on('mousedown',function(event:JqEvent):Void {
 
           setPacage(data.set[1].url);
 
         });
-        _jBtnUme.on('click',function(event:JqEvent):Void {
+
+        _jBtnUme.on('mousedown',function(event:JqEvent):Void {
 
           setPacage(data.set[2].url);
 
         });
-        _jBtnClear.on('click',function(event:JqEvent):Void {
+
+        _jBtnClear.on('mousedown',function(event:JqEvent):Void {
 
           setPacage('?');
-          Price.change(0);
-          ProductLength.change(0,0,0);
+          Price.clear();
+          ProductLength.clear();
+          Mainmenu.clearDrop('all');
 
         });
 
@@ -61,16 +67,18 @@ class Sidemenu {
       ========================================================================== */
       private static function setPacage(data:String) {
 
-          var url = Dom.window.location.search;
-          if (url.indexOf('obj') > -1) {
+        var url = untyped Dom.jWindow[0].location;
+            url = Std.string(url);
 
-            Board.clear(); 
+        if (url.indexOf('obj') > -1) {
 
-          }
+          Board.clear(); 
 
-          Param.change(data);
-          Param.remakeObject();
-          Drag.on();
+        }
+
+        Param.change(data);
+        Param.remakeObject();
+        Drag.getObject();
 
       }
 

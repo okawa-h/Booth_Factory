@@ -3,57 +3,99 @@ package src.operation;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.operation.Create;
+import src.Manager;
 import src.view.Trash;
 import src.animate.Animate;
 
 class Drag {
 
-  private static var _diffX      : Float;
-  private static var _diffY      : Float;
-  private static var _STATUS     : Bool;
-  public static var _catchTarget: JQuery;
-  private static var _jArea      : JQuery;
-  private static var _jAreaObj   : JQuery;
-  private static var _jMenu      : JQuery;
+  private static var _diffX    : Float;
+  private static var _diffY    : Float;
+  private static var _Status   : Bool;
+  private static var _jArea    : JQuery;
+  private static var _jAreaObj : JQuery;
+  private static var _jMenu    : JQuery;
 
   public static function init(jArea:JQuery,jAreaObj:JQuery,jMenu:JQuery):Void {
 
-    _STATUS   = false;
+    _Status   = false;
     _jArea    = jArea;
     _jAreaObj = jAreaObj;
     _jMenu    = jMenu;
 
+//     _jArea.find('.object').find('img').on('mousedown',function(event:JqEvent) {
+// js.Lib.alert('ok');
+//       event.preventDefault();
+//       return false;
+
+//     });
+
     _jMenu.find('.slider').find('li').find('img').on('mousedown',function(event:JqEvent) {
+
       event.preventDefault();
       return false;
+
     });
 
-    _jMenu.find('.slider').find('li').on({ 'mousedown':getListTarget });
+    _jMenu.find('.slider').find('li').on({ 'mousedown' : grabList });
 
     Dom.jWindow.on({
+
       'mousemove':mousemove,
       'mouseup'  :mouseup
+
     });
 
-    on();
+    _jAreaObj.on('mousedown',function(event:JqEvent) {
 
-  }
+      grabObject(JQuery.cur,event);
 
-  /* =======================================================================
-  List Drag
-  ========================================================================== */
-  private static function getListTarget(event:JqEvent):Void {
-
-    _STATUS = true;
-    var target:JQuery = JQuery.cur;
-    getDiff(event,target);
-    target.addClass('drop');
-    _catchTarget = target.find('.img');
+    });
 
   }
 
       /* =======================================================================
-      Position Diff
+      Grab
+      ========================================================================== */
+      private static function grabList(event:JqEvent):Void {
+
+        var target : JQuery = JQuery.cur;
+
+        if (target.hasClass('drop')) return;
+
+        Manager._DragObj = target.find('.img');
+        Manager._DragObj.addClass('grab');
+        _Status  = true;
+        getDiff(event,target);
+
+      }
+
+  /* =======================================================================
+  Drag Img
+  ========================================================================== */
+  public static function grabObject(target:JQuery,event:JqEvent):Void {
+
+    Manager._DragObj = target;
+    Manager._DragObj.addClass('grab');
+    getDiff(event,Manager._DragObj);
+    _Status = true;
+    var h = new JQuery('#header').height();
+    var w = _jArea.offset().left;
+
+    Manager._DragObj.css({
+
+      'top'     : untyped event.clientY + h - _diffY,//タッチ位置からヘッダーの大きさ引く差分
+      'left'    : untyped event.clientX + w - _diffX
+
+    });
+
+    //Animate.vibrationObj(Manager._DragObj);
+    Trash.show();
+
+  }
+
+      /* =======================================================================
+      Get Diff
       ========================================================================== */
       private static function getDiff(event:JqEvent,target:JQuery):Void {
 
@@ -62,46 +104,28 @@ class Drag {
 
       }
 
-  /* =======================================================================
-  Drag Img
-  ========================================================================== */
-  public static function on():Void {
-
-    _jAreaObj = _jArea.find('p');
-
-    _jAreaObj.on('mousedown',function(event:JqEvent) {
-
-      _catchTarget  = JQuery.cur;
-      Animate.vibrationItem(_catchTarget);
-      getDiff(event,_catchTarget);
-      _STATUS = true;
-      Trash.view();
-      
-    });
-
-  }
-
       /* =======================================================================
       Mouse Move
       ========================================================================== */
       private static function mousemove(event:JqEvent):Void {
 
-        if (_STATUS) {
+        if (_Status) {
 
-          var h:Int   = new JQuery('#header').height();
-          var w:Float = _jArea.offset().left;
+          var h:Int   = 0;
+          var w:Float = 0;
 
-          if (_jMenu.find('.drop').length > 0) {
+          if (Manager._DragObj.hasClass('object')) {
 
-            h = _jMenu.find('.current').offset().top;
-            w = _catchTarget.parent().offset().left;
+            h = new JQuery('#header').height();
+            w = _jArea.offset().left;
 
           }
 
-          _catchTarget.css({
-            'position':'absolute',
-            'top'     : untyped event.clientY - h - _diffY,//タッチ位置からヘッダーの大きさ引く差分
-            'left'    : untyped event.clientX - w - _diffX
+          Manager._DragObj.css({
+
+            'top'     : untyped event.clientY + h - _diffY,//タッチ位置からヘッダーの大きさ引く差分
+            'left'    : untyped event.clientX + w - _diffX
+
           });
 
         }
@@ -113,20 +137,70 @@ class Drag {
       ========================================================================== */
       private static function mouseup(event:JqEvent):Void {
 
-        _STATUS = false;
+        _Status = false;
 
-        Trash.objDelete(_catchTarget,event);
+        if (Manager._DragObj == null) return;
 
-        untyped if (_catchTarget == undefined) {
+        if (Manager._DragObj.hasClass('grab')) {
 
-        } else if (_catchTarget.parent().parent('li').length > 0) {
+          var h : Int = new JQuery('#header').height();
 
-          createListToObj(_catchTarget.parent().parent('li'),event);
-          _catchTarget.remove();
-          _jMenu.find('.drop').removeClass('drop');
+          Manager._DragObj.css({
+
+            'top'     : untyped event.clientY - _diffY,
+            'left'    : untyped event.clientX - _diffX
+
+          });
+
+          Manager._DragObj.removeClass('grab');
+          //Animate.stopTimeline(_DragObj);
 
         }
 
+        if (Manager._DragObj.parent().parent('li').length > 0) {
+
+          if (_jMenu.prop('class') != 'open') {
+
+            Manager._DragObj.parent().parent('li').addClass('drop');
+            createListToObj(Manager._DragObj.parent().parent('li'),event);
+
+            _jAreaObj = _jArea.find('.object');
+            untyped _jAreaObj.off('mousedown');
+            _jAreaObj.on('mousedown',function(event:JqEvent) {
+
+              grabObject(JQuery.cur,event);
+
+            });
+
+          }
+
+        }
+
+        judgeArea(Manager._DragObj);
+        Manager._DragObj = null;
+      }
+
+      /* =======================================================================
+      Judge Area
+      ========================================================================== */
+      private static function judgeArea(jTarget:JQuery):Void {
+
+        var top    : String = jTarget.css('top').split('px').join('');
+        var left   : String = jTarget.css('left').split('px').join('');
+        var t      : Int    = Std.parseInt(top);
+        var l      : Int    = Std.parseInt(left);
+        var bottom : Int    = t + jTarget.height();
+        var right  : Int    = l + jTarget.width();
+        var areaB  : Int    = _jArea.height();
+        var areaR  : Int    = _jArea.width();
+
+        if (top.indexOf('-') == 0)  t = 0;
+        if (left.indexOf('-') == 0) l = 0;
+        if (bottom > areaB) t = areaB - jTarget.height();
+        if (right > areaR)  l = areaR - jTarget.width();
+
+        jTarget.animate({ top: t, left : l },200);
+      
       }
 
       /* =======================================================================
@@ -134,16 +208,33 @@ class Drag {
       ========================================================================== */
       private static function createListToObj(target:JQuery,event:JqEvent):Void {
 
-        var title:String = target.prop('title');
-        var type :String = target.data('type');
-        var price:Int    = target.data('price');
+        var id   : String = target.data('id');
+        var type : String = target.data('type');
+        var cat  : String = target.data('cat');
+        var icon : String = target.data('icon');
+        var price: Int    = target.data('price');
         var top  = untyped event.clientY - new JQuery('#header').height() - _diffY;
         var left = untyped event.clientX - _jArea.offset().left - _diffX;
         
-        var html:String = Create.makeObjHtml(title,cast(top),cast(left),type,price,title);
+        var html:String = Create.makeObjHtml(id,top,left,type,cat,price,icon);
 
-        _jArea.find('#layer-' + type).append(html);
+        _jArea.find('.board').append(html);
+        Manager._DragObj = _jArea.find('.board').find('.object.' + id);
 
       }
+
+  /* =======================================================================
+  Get Obj
+  ========================================================================== */
+  public static function getObject():Void {
+
+    _jAreaObj = _jArea.find('.object');
+    _jAreaObj.on('mousedown',function(event:JqEvent) {
+
+      grabObject(JQuery.cur,event);
+
+    });
+
+  }
 
 }

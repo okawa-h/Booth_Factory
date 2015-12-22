@@ -8,8 +8,8 @@ import src.operation.Create;
 
 class Data {
 
-  private static var _callback;
   private static var _jMenu;
+  private static var _callback;
 
   public static function get(jMenu,callback):Void {
 
@@ -41,19 +41,18 @@ class Data {
 
         for (i in 0 ... length) {
 
-          var t = data.object[i];
+          var t   :Dynamic= data.object[i];
+          var html:String = Create.makeListHtml(t.id,t.type,t.cat,t.icon,t.price,t.bgImg,t.img,t.name,t.length);
 
-          var html = Create.makeListHtml(t.id,t.type,t.price,t.bgImg,t.img,t.name,t.length);
-
-          if (t.type == "paper") {
+          if (t.cat == "paper") {
 
             paperHtml += html;
 
-          } else if (t.type == "accessory") {
+          } else if (t.cat == "accessory") {
 
             accessoryHtml += html;
 
-          } else if (t.type == "banar") {
+          } else if (t.cat == "banar") {
 
             banarHtml += html;
             

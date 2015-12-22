@@ -11,6 +11,7 @@ import src.view.Data;
 import src.view.Log;
 import src.view.Board;
 import src.view.Trash;
+import src.view.Mainmenu;
 import src.view.Sidemenu;
 import src.animate.Animate;
 
@@ -18,7 +19,8 @@ import src.operation.Drag;
 
 class Manager {
 
-  public static var _Data: Json;
+  public static var _Data      : Json;
+  public static var _DragObj   : JQuery;
 
 	private static var _jMenu    : JQuery;
   private static var _jArea    : JQuery;
@@ -45,45 +47,57 @@ class Manager {
 
   public static function start():Void {
 
-    Param.init(_jArea,_jAreaObj,_jPrice);
-    set(Board.init(_jArea,_jAreaObj));
+    Param.init(_jArea);
+    Animate.init(_jMenu,_jArea);
+    Board.init(_jArea);
+    Mainmenu.init(_jMenu);
+    Sidemenu.init(_Data);
+    ProductLength.init();
+    Trash.init();
+
+    Param.remakeObject();
+    setCounter();
     Drag.init(_jArea,_jAreaObj,_jMenu);
 
-    Animate.init(_jMenu,_jArea);
 
-    Trash.init();
-    Sidemenu.init(_Data);
-
-    Dom.jWindow.on('click',function(event:JqEvent) {
-      set(Board.count());
-    });
 
     Dom.jWindow.on('mouseup',function(event:JqEvent) {
-      set(Board.count());
+
+      setCounter();
       Log.write();
-      Trash.none(Drag._catchTarget);
-      Drag.on();
+      Trash.hide(_DragObj);
+
     });
 
   }
 
-      /* =======================================================================
-      Set Price Length URL
-      ========================================================================== */
-      private static function set(array:Array<Int>):Void {
+  /* =======================================================================
+  Set Price Length URL パラメタ書き換え、左サイド書き換え
+  ========================================================================== */
+  public static function setCounter():Void {
 
-        _jAreaObj = _jArea.find('p');
+    _jAreaObj = _jArea.find('.object');
 
-        var accessoryLength:Int = array[0];
-        var banarLength:Int = array[1];
-        var paperLength:Int = array[2];
-        var price:Int = array[3];
+    var length : Int = (_jAreaObj == null) ? 0 : _jAreaObj.length;
+    var lengthArray  = Board.count(_jAreaObj,length);
 
-        ProductLength.change(accessoryLength,banarLength,paperLength);
-        Price.change(price);
-        var param = Param.make(_jAreaObj,price);
-        Param.change('?' + param);
+    for (i in 0 ... length) {
 
-      }
+      Mainmenu.addDrop(_jAreaObj.eq(i).data('id'));
+
+    }
+
+    var accessoryLength : Int = lengthArray[0];
+    var banarLength     : Int = lengthArray[1];
+    var paperLength     : Int = lengthArray[2];
+    var price           : Int = lengthArray[3];
+
+    ProductLength.change(accessoryLength,banarLength,paperLength);
+    Price.change(price);
+    var param : String = Param.make(_jAreaObj,length,price);
+    Param.change('?' + param);
+    Animate.hoverObject(_jAreaObj);
+
+  }
 
 }

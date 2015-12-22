@@ -4,8 +4,9 @@ import js.JQuery;
 import jp.saken.utils.Dom;
 import tween.TweenMaxHaxe;
 import tween.easing.Circ;
+import tween.easing.Elastic;
 import src.Manager;
-import src.animate.AnimationTrash;
+import src.view.Mainmenu;
 
 
 class Trash {
@@ -23,18 +24,36 @@ class Trash {
     _jTrashBox   = _jTrash.find('.trash-box');
     _jTrashArrow = _jTrash.find('.trash-arrow');
 
-    AnimationTrash.init(_jTrash,_jTrashBox,_jTrashArrow);
+    _jTrashBox.on('mouseover',function(event:JqEvent) {
+
+      TweenMaxHaxe.to(_jTrash, 1, {scaleX:1.3, scaleY:1.3, ease:Elastic.easeOut});
+
+      untyped _jTrashBox.off('mouseup');
+
+      _jTrashBox.on('mouseup',function(event:JqEvent) {
+
+        deleteObj(Manager._DragObj,event);
+
+      });
+
+    });
+
+     _jTrashBox.on('mouseleave',function(event:JqEvent) {
+
+      TweenMaxHaxe.to(_jTrash, 1, {scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut});
+
+    });
 
   }
 
   /* =======================================================================
   View
   ========================================================================== */
-  public static function view():Void {
+  public static function show():Void {
 
-    _jTrashBox.fadeIn();
-    _jTrashArrow.fadeIn(function() {
-    	TweenMaxHaxe.to(_jTrashArrow , 0.5 , {top:"-25%",repeat: -1,yoyo : true,ease: Circ.easeOut});
+    _jTrashBox.show();
+    _jTrashArrow.show(function() {
+    	//TweenMaxHaxe.to(_jTrashArrow , 0.5 , {top:"-25%",repeat: -1,yoyo : true,ease: Circ.easeOut});
     });
 
   }
@@ -42,12 +61,16 @@ class Trash {
   /* =======================================================================
   None
   ========================================================================== */
-  public static function none(target:JQuery = null):Void {
+  public static function hide(target:JQuery = null):Void {
 
     if (target == null) {
+
       _jTrashBox.hide();
+
     } else {
-      AnimationTrash.hide();
+
+      _jTrashBox.delay(3000).hide();
+
     }
     
     _jTrashArrow.hide();
@@ -55,12 +78,22 @@ class Trash {
   }
 
   /* =======================================================================
-  Object Delete
+  Delete Object
   ========================================================================== */
-  public static function objDelete(target:JQuery,event:JqEvent):Void {
+  public static function deleteObj(target:JQuery,event:JqEvent):Void {
 
   	var judge:Bool = judgeDelete(event);
-  	if (judge) AnimationTrash.deleteObj(target);
+    
+  	if (judge) {
+
+      var id : String = target.data('id');
+      Mainmenu.clearDrop(id);
+
+      //TweenMaxHaxe.to(target, 0.6, {scaleX:2.0, scaleY:2.0, ease:Elastic.easeOut,onComplete:function() {
+        target.remove();
+      //}});
+
+    }
 
   }
 

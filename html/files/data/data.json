@@ -1,57 +1,223 @@
 {
     "object": [
         {
-            "id"   : "utiwa",
-            "name" : "うちわハンディセンス",
-            "price": "100",
-            "length": "100セット",
+            "id"   : "poster_a0",
+            "name" : "A0・ポスター",
+            "price": "10000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_a0.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_a1",
+            "name" : "A1・ポスター",
+            "price": "8000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_a1.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_a2",
+            "name" : "A2・ポスター",
+            "price": "6000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_a2.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_a3",
+            "name" : "A3・ポスター",
+            "price": "5000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_a3.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_a4",
+            "name" : "A4・ポスター",
+            "price": "3000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_a4.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_a5",
+            "name" : "A5・ポスター",
+            "price": "1000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_a5.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_b0",
+            "name" : "B0・ポスター",
+            "price": "10000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_b0.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_b1",
+            "name" : "B1・ポスター",
+            "price": "8000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_b1.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_b2",
+            "name" : "B2・ポスター",
+            "price": "6000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_b2.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_b3",
+            "name" : "B3・ポスター",
+            "price": "5000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_b3.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_b4",
+            "name" : "B4・ポスター",
+            "price": "3000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_b4.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "poster_b5",
+            "name" : "B5・ポスター",
+            "price": "1000",
+            "length": "10セット",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "poster_b5.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "booklet_a4",
+            "name" : "A4・冊子",
+            "price": "10000",
+            "length": "10000セット",
             "type" : "paper",
-            "icon" : "utiwa.png",
+            "cat"  : "paper",
+            "icon" : "booklet_a4.png",
             "img"  : "utiwa.png",
             "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "pepper",
-            "name" : "ペッパーくん",
-            "price": "100",
-            "length": "100セット",
+            "id"   : "file_a4",
+            "name" : "A4・クリアファイル",
+            "price": "10000",
+            "length": "10000セット",
             "type" : "paper",
-            "icon" : "utiwa.png",
+            "cat"  : "paper",
+            "icon" : "file_a4.png",
             "img"  : "utiwa.png",
             "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "star",
-            "name" : "クローンとルーパー",
-            "price": "100",
-            "length": "100セット",
-            "type" : "banar",
-            "icon" : "utiwa.png",
+            "id"   : "folder_a4",
+            "name" : "A4・フォルダー",
+            "price": "10000",
+            "length": "10000セット",
+            "type" : "paper",
+            "cat"  : "paper",
+            "icon" : "folder_a4.png",
             "img"  : "utiwa.png",
             "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "aacf",
-            "name" : "うちわハンディセンス",
-            "price": "100",
-            "length": "100セット",
-            "type" : "banar",
-            "icon" : "aacf.png",
+            "id"   : "paper_a4",
+            "name" : "A4・チラシ",
+            "price": "10000",
+            "length": "10000セット",
+            "type" : "paper",
+            "cat"  : "paper",
+            "icon" : "paper_a4.png",
             "img"  : "utiwa.png",
             "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "iruka",
-            "name" : "うちわハンディセンス",
-            "price": "100",
-            "length": "100セット",
-            "type" : "accessory",
-            "icon" : "iruka.png",
+            "id"   : "banar_b1",
+            "name" : "B1・バナー",
+            "price": "8000",
+            "length": "3セット",
+            "type" : "poster",
+            "cat"  : "banar",
+            "icon" : "banar_b1.png",
             "img"  : "utiwa.png",
             "bgImg": "utiwa_bg.png"
         }, {
-            "id"   : "mario",
-            "name" : "うちわハンディセンス",
-            "price": "100",
-            "length": "100セット",
-            "type" : "accessory",
-            "icon" : "mario.png",
+            "id"   : "board_a",
+            "name" : "A型看板",
+            "price": "10000",
+            "length": "1セット",
+            "type" : "panel",
+            "cat"  : "banar",
+            "icon" : "board_a.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "table_2",
+            "name" : "机の上におくやつ",
+            "price": "3000",
+            "length": "10セット",
+            "type" : "paper",
+            "cat" : "accessory",
+            "icon" : "table_2.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "table_3",
+            "name" : "机の上におくやつ2",
+            "price": "3000",
+            "length": "10セット",
+            "type" : "paper",
+            "cat" : "accessory",
+            "icon" : "table_3.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "table_tisuue",
+            "name" : "鼻セレブ",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "paper",
+            "cat" : "accessory",
+            "icon" : "table_tisuue.png",
+            "img"  : "utiwa.png",
+            "bgImg": "utiwa_bg.png"
+        }, {
+            "id"   : "table_pop",
+            "name" : "卓上ポップ",
+            "price": "3000",
+            "length": "10セット",
+            "type" : "paper",
+            "cat" : "accessory",
+            "icon" : "table_pop.png",
             "img"  : "utiwa.png",
             "bgImg": "utiwa_bg.png"
         }],
@@ -59,12 +225,12 @@
     "set": [
         {
             "name": "matu",
-            "url" : "?obj=aacf|145|116&obj=aacf|379|163&obj=aacf|122|304&obj=aacf|246|324&obj=aacf|501|75&obj=aacf|360|334&obj=aacf|602|310&obj=aacf|178|-118&obj=aacf|569|-122&obj=aacf|840|317&obj=aacf|671|137&obj=aacf|747|-56&obj=aacf|-158|97&obj=aacf|347|-57&obj=aacf|893|50&price=1500"
+            "url" : "?obj=poster_a0-591-73&obj=poster_a1-393-65&price=1094000"
         }, {
             "name": "take",
-            "url" : "?obj=mario|364.5|-19&obj=utiwa|211.5|396&obj=pepper|555.5|30&price=300"
+            "url" : "?obj=poster_a1-655-76&obj=poster_a0-182-72&obj=board_a-861-358&obj=banar_b1-405-75&obj=table_pop-797-325&obj=table_tisuue-620-336&obj=table_3-446-305&price=1042000"
         }, {
             "name": "ume",
-            "url" : "?obj=aacf|415|154&obj=star|611|119&price=200"
+            "url" : "?obj=board_a-861-347&obj=banar_b1-634-73&obj=table_pop-796-321&obj=table_2-440-283&obj=poster_a0-186-73&price=34000"
         }]
 }
