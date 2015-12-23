@@ -241,11 +241,11 @@
 				background: url(../img/icon/icon_ume.png) no-repeat center center;
 			}
 
-		#sidemenu-right .set-config ul {
+		#sidemenu-right .set-config > ul {
 			padding: 10px 0;
 		}
 
-			#sidemenu-right .set-config ul li {
+			#sidemenu-right .set-config > ul > li {
 				width: 60px;
 				height: 61px;
 				margin: 0 auto;
@@ -256,11 +256,46 @@
 				background: url(../img/icon/icon_color.png) no-repeat center center;
 			}
 
+				#sidemenu-right .set-config ul #color-btn ul {
+					display: none;
+					position: absolute;
+					left: 0px;
+					width: 0;
+				}
+
+					#sidemenu-right .set-config ul #color-btn ul li {
+						float: left;
+						width: 30px;
+						height: 30px;
+						margin-right: 5px;
+						border-radius: 50%;
+					}
+
+					#sidemenu-right .set-config ul #color-btn ul li.current {
+						border: 1px solid #000;
+					}
+
+					#sidemenu-right .set-config ul #color-btn ul li.red {
+						background-color: red;
+					}
+
+					#sidemenu-right .set-config ul #color-btn ul li.blue {
+						background-color: blue;
+					}
+
+					#sidemenu-right .set-config ul #color-btn ul li.green {
+						background-color: green;
+					}
+
+					#sidemenu-right .set-config ul #color-btn ul li.yellow {
+						background-color: yellow;
+					}
+
 			#sidemenu-right .set-config ul #help-btn {
 				background: url(../img/icon/icon_help.png) no-repeat center center;
 			}
 
-			#sidemenu-right .set-config ul li:first-child {
+			#sidemenu-right .set-config > ul > li:first-child {
 				margin-bottom: 20px;
 			}
 

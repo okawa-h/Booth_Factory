@@ -26,7 +26,7 @@ class Trash {
 
     _jTrashBox.on('mouseover',function(event:JqEvent) {
 
-      TweenMaxHaxe.to(_jTrash, 1, {scaleX:1.3, scaleY:1.3, ease:Elastic.easeOut});
+      TweenMaxHaxe.to(_jTrash, 1, {scaleX:1.2, scaleY:1.2, ease:Elastic.easeOut});
 
       untyped _jTrashBox.off('mouseup');
 

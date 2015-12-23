@@ -20,7 +20,8 @@ body
 	|
 	--accessory: z-index: 500;
 
-
+pram
+obj=id-x-y-color
 
 border 6px #4c3410
 border-radius: 8px;

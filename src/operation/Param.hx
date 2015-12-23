@@ -1,6 +1,7 @@
 package src.operation;
 
 import js.JQuery;
+import js.html.History;
 import jp.saken.utils.Dom;
 import src.Manager;
 import src.view.Mainmenu;
@@ -11,7 +12,7 @@ class Param {
 
   public static function init(jArea:JQuery):Void {
 
-    _jArea    = jArea;
+    _jArea = jArea;
 
   }
 
@@ -43,9 +44,10 @@ class Param {
 		  ========================================================================== */
 		  private static function createObject(param:String):Void {
 
-		    var paramArray:Array<String> = param.split('&');
-		    var length    :Int           = paramArray.length;
-		    var data      :Dynamic       = Manager._Data;
+		    var paramArray : Array<String> = param.split('&');
+		    var length     : Int           = paramArray.length;
+		    var data       : Dynamic       = Manager._Data;
+		    var color      : String  			 = makeColorParam().split('color=').join('');
 
 		    for (i in 0 ... length) {
 
@@ -53,7 +55,7 @@ class Param {
 
 		      if (item[0] == "obj") {
 
-		        addHtml(item[1],data);
+		        addHtml(item[1],data,color);
 		        
 		      }
 
@@ -64,7 +66,7 @@ class Param {
 			/* =======================================================================
 		  Make HTML
 		  ========================================================================== */
-		  private static function addHtml(string:String,data:Dynamic) {
+		  private static function addHtml(string:String,data:Dynamic,color:String) {
 
 		    var target:Array<String> = string.split('-');
 		    var length:Int    = data.object.length;
@@ -82,7 +84,7 @@ class Param {
 		        var price:Int    = data.object[i].price;
 		        var top  :Float  = Std.parseFloat(target[2]);
 		        var left :Float  = Std.parseFloat(target[1]);
-		        html += Create.makeObjHtml(id,top,left,type,cat,price,icon);
+		        html += Create.makeObjHtml(id,top,left,type,cat,price,icon,color);
 		        Mainmenu.addDrop(id);
 
 		      }
@@ -99,7 +101,11 @@ class Param {
 
     var param :String = "";
 
+    param += makeColorParam();
+
     for (i in 0 ... length) {
+
+    	if (i == 0) param += "&";
 
       var str:String = (i == length - 1) ? '' : '&';
       param += makeObjectParam(jTarget.eq(i)) + str;
@@ -134,6 +140,16 @@ class Param {
 
 		  }
 
+		  /* =======================================================================
+		  Make Color Param
+		  ========================================================================== */
+		  private static function makeColorParam():String {
+
+		  	var color = new JQuery('#color-btn').prop('class');
+		    return 'color=' + color;
+
+		  }
+
   /* =======================================================================
   Change Param
   ========================================================================== */
@@ -141,6 +157,41 @@ class Param {
   	
     // Dom.window.history.replaceState('','',string);
     untyped History.replaceState('','',string);//ie
+
+  }
+
+  /* =======================================================================
+  Get
+  ========================================================================== */
+  public static function get():History {
+  	
+  	var param : History = Dom.window.history;
+    return param;
+
+  }
+
+  /* =======================================================================
+  Get Param Option
+  ========================================================================== */
+  public static function getParamOption(string:String = 'price'):Dynamic {
+  	
+  	string += '=';
+  	var option  : Array<String> = Dom.window.location.search.split(string);
+  	var option2 : String = option[1];
+  	var option3 : String = "";
+
+  	if (option2.indexOf('&') != -1) {
+
+  		option  = option2.split('&');
+  		option3 = option[0];
+
+  	} else {
+
+  		option3 = option2;
+  		
+  	}
+
+    return option3;
 
   }
 

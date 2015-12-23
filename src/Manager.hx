@@ -60,7 +60,6 @@ class Manager {
     Drag.init(_jArea,_jAreaObj,_jMenu);
 
 
-
     Dom.jWindow.on('mouseup',function(event:JqEvent) {
 
       setCounter();

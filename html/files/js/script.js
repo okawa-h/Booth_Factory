@@ -236,7 +236,7 @@ src.animate.Animate.stopTimeline = function(target) {
 };
 src.animate.Animate.hoverObject = function(_jAreaObj) {
 	_jAreaObj.on("mouseover",function(event) {
-		TweenMax.to($(this),1,{ scaleX : 1.05, scaleY : 1.05, ease : Expo.easeOut});
+		TweenMax.to($(this),1,{ scaleX : 1.05, scaleY : 1.05, ease : Elastic.easeOut});
 	});
 	_jAreaObj.on("mouseleave",function(event1) {
 		TweenMax.to($(this),0,{ scaleX : 1, scaleY : 1, ease : Expo.easeOut});
@@ -252,12 +252,12 @@ src.animate.Title.view = function() {
 };
 src.operation = {};
 src.operation.Create = function() { };
-src.operation.Create.makeObjHtml = function(id,top,left,type,cat,price,src) {
+src.operation.Create.makeObjHtml = function(id,top,left,type,cat,price,src,color) {
 	var html = "";
 	html += "<p class=\"object " + id + " " + type + "\"";
 	html += "style=\"top:" + top + "px;left:" + left + "px\"";
 	html += "data-id=\"" + id + "\" data-cat=\"" + cat + "\" data-price=\"" + price + "\">";
-	html += "<img src=\"files/img/product/icon/" + src + "\">";
+	html += "<img src=\"files/img/product/icon/" + color + "/" + src + "\">";
 	html += "</p>";
 	return html;
 };
@@ -305,46 +305,38 @@ src.operation.Drag.grabList = function(event) {
 	src.Manager._DragObj.addClass("grab");
 	src.operation.Drag._Status = true;
 	src.operation.Drag.getDiff(event,target);
+	src.operation.Drag.mousemove(event);
 };
 src.operation.Drag.grabObject = function(target,event) {
 	src.Manager._DragObj = target;
 	src.Manager._DragObj.addClass("grab");
 	src.operation.Drag.getDiff(event,src.Manager._DragObj);
 	src.operation.Drag._Status = true;
-	var h = new js.JQuery("#header").height();
-	var w = src.operation.Drag._jArea.offset().left;
-	src.Manager._DragObj.css({ top : event.clientY + h - src.operation.Drag._diffY, left : event.clientX + w - src.operation.Drag._diffX});
+	src.Manager._DragObj.css({ top : event.clientY - src.operation.Drag._diffY, left : event.clientX - src.operation.Drag._diffX});
 	src.view.Trash.show();
 };
 src.operation.Drag.getDiff = function(event,target) {
-	src.operation.Drag._diffY = event.clientY - target.offset().top;
-	src.operation.Drag._diffX = event.clientX - target.offset().left;
+	src.operation.Drag._diffY = event.offsetY;
+	src.operation.Drag._diffX = event.offsetX;
 };
 src.operation.Drag.mousemove = function(event) {
-	if(src.operation.Drag._Status) {
-		var h = 0;
-		var w = 0;
-		if(src.Manager._DragObj.hasClass("object")) {
-			h = new js.JQuery("#header").height();
-			w = src.operation.Drag._jArea.offset().left;
-		}
-		src.Manager._DragObj.css({ top : event.clientY + h - src.operation.Drag._diffY, left : event.clientX + w - src.operation.Drag._diffX});
-	}
+	if(src.operation.Drag._Status) src.Manager._DragObj.css({ top : event.clientY - src.operation.Drag._diffY, left : event.clientX - src.operation.Drag._diffX});
 };
 src.operation.Drag.mouseup = function(event) {
 	src.operation.Drag._Status = false;
 	if(src.Manager._DragObj == null) return;
 	if(src.Manager._DragObj.hasClass("grab")) {
 		var h = new js.JQuery("#header").height();
-		src.Manager._DragObj.css({ top : event.clientY - src.operation.Drag._diffY, left : event.clientX - src.operation.Drag._diffX});
+		var w = src.operation.Drag._jArea.offset().left;
+		src.Manager._DragObj.css({ top : event.pageY - h - src.operation.Drag._diffY, left : event.pageX - w - src.operation.Drag._diffX});
 		src.Manager._DragObj.removeClass("grab");
 	}
 	if(src.Manager._DragObj.parent().parent("li").length > 0) {
-		if(src.operation.Drag._jMenu.prop("class") != "open") {
+		if(src.operation.Drag._jMenu.find(".current").offset().top > event.pageY) {
 			src.Manager._DragObj.parent().parent("li").addClass("drop");
 			src.operation.Drag.createListToObj(src.Manager._DragObj.parent().parent("li"),event);
-			src.operation.Drag._jAreaObj = src.operation.Drag._jArea.find(".object");
 			src.operation.Drag._jAreaObj.off("mousedown");
+			src.operation.Drag._jAreaObj = src.operation.Drag._jArea.find(".object");
 			src.operation.Drag._jAreaObj.on("mousedown",function(event1) {
 				src.operation.Drag.grabObject($(this),event1);
 			});
@@ -353,7 +345,21 @@ src.operation.Drag.mouseup = function(event) {
 	src.operation.Drag.judgeArea(src.Manager._DragObj);
 	src.Manager._DragObj = null;
 };
+src.operation.Drag.createListToObj = function(target,event) {
+	var id = target.data("id");
+	var type = target.data("type");
+	var cat = target.data("cat");
+	var icon = target.data("icon");
+	var price = target.data("price");
+	var color = src.operation.Param.getParamOption("color");
+	var top = event.pageY - new js.JQuery("#header").height() - src.operation.Drag._diffY;
+	var left = event.pageX - src.operation.Drag._jArea.offset().left - src.operation.Drag._diffX;
+	var html = src.operation.Create.makeObjHtml(id,top,left,type,cat,price,icon,color);
+	src.operation.Drag._jArea.find(".board").append(html);
+	src.Manager._DragObj = src.operation.Drag._jArea.find(".board").find(".object." + id);
+};
 src.operation.Drag.judgeArea = function(jTarget) {
+	var SPEED = 200;
 	var top = jTarget.css("top").split("px").join("");
 	var left = jTarget.css("left").split("px").join("");
 	var t = Std.parseInt(top);
@@ -366,19 +372,7 @@ src.operation.Drag.judgeArea = function(jTarget) {
 	if(left.indexOf("-") == 0) l = 0;
 	if(bottom > areaB) t = areaB - jTarget.height();
 	if(right > areaR) l = areaR - jTarget.width();
-	jTarget.animate({ top : t, left : l},200);
-};
-src.operation.Drag.createListToObj = function(target,event) {
-	var id = target.data("id");
-	var type = target.data("type");
-	var cat = target.data("cat");
-	var icon = target.data("icon");
-	var price = target.data("price");
-	var top = event.clientY - new js.JQuery("#header").height() - src.operation.Drag._diffY;
-	var left = event.clientX - src.operation.Drag._jArea.offset().left - src.operation.Drag._diffX;
-	var html = src.operation.Create.makeObjHtml(id,top,left,type,cat,price,icon);
-	src.operation.Drag._jArea.find(".board").append(html);
-	src.Manager._DragObj = src.operation.Drag._jArea.find(".board").find(".object." + id);
+	jTarget.animate({ top : t, left : l},SPEED);
 };
 src.operation.Drag.getObject = function() {
 	src.operation.Drag._jAreaObj = src.operation.Drag._jArea.find(".object");
@@ -402,14 +396,15 @@ src.operation.Param.createObject = function(param) {
 	var paramArray = param.split("&");
 	var length = paramArray.length;
 	var data = src.Manager._Data;
+	var color = src.operation.Param.makeColorParam().split("color=").join("");
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
 		var item = paramArray[i].split("=");
-		if(item[0] == "obj") src.operation.Param.addHtml(item[1],data);
+		if(item[0] == "obj") src.operation.Param.addHtml(item[1],data,color);
 	}
 };
-src.operation.Param.addHtml = function(string,data) {
+src.operation.Param.addHtml = function(string,data,color) {
 	var target = string.split("-");
 	var length = data.object.length;
 	var html = "";
@@ -425,7 +420,7 @@ src.operation.Param.addHtml = function(string,data) {
 			var price = data.object[i].price;
 			var top = Std.parseFloat(target[2]);
 			var left = Std.parseFloat(target[1]);
-			html += src.operation.Create.makeObjHtml(id,top,left,type,cat,price,icon);
+			html += src.operation.Create.makeObjHtml(id,top,left,type,cat,price,icon,color);
 			src.view.Mainmenu.addDrop(id);
 		}
 	}
@@ -433,9 +428,11 @@ src.operation.Param.addHtml = function(string,data) {
 };
 src.operation.Param.make = function(jTarget,length,price) {
 	var param = "";
+	param += src.operation.Param.makeColorParam();
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
+		if(i == 0) param += "&";
 		var str;
 		if(i == length - 1) str = ""; else str = "&";
 		param += src.operation.Param.makeObjectParam(jTarget.eq(i)) + str;
@@ -452,8 +449,28 @@ src.operation.Param.makeObjectParam = function(jTarget) {
 src.operation.Param.makePriceParam = function(price) {
 	return "price=" + price;
 };
+src.operation.Param.makeColorParam = function() {
+	var color = new js.JQuery("#color-btn").prop("class");
+	return "color=" + color;
+};
 src.operation.Param.change = function(string) {
 	History.replaceState("","",string);
+};
+src.operation.Param.get = function() {
+	var param = jp.saken.utils.Dom.window.history;
+	return param;
+};
+src.operation.Param.getParamOption = function(string) {
+	if(string == null) string = "price";
+	string += "=";
+	var option = jp.saken.utils.Dom.window.location.search.split(string);
+	var option2 = option[1];
+	var option3 = "";
+	if(option2.indexOf("&") != -1) {
+		option = option2.split("&");
+		option3 = option[0];
+	} else option3 = option2;
+	return option3;
 };
 src.view = {};
 src.view.Board = function() { };
@@ -612,6 +629,8 @@ src.view.Sidemenu.init = function(data) {
 	src.view.Sidemenu._jBtnMatu = new js.JQuery("#set-name-matu");
 	src.view.Sidemenu._jBtnTake = new js.JQuery("#set-name-take");
 	src.view.Sidemenu._jBtnUme = new js.JQuery("#set-name-ume");
+	src.view.Sidemenu._jBtnColor = new js.JQuery("#color-btn");
+	src.view.Sidemenu._jColorList = src.view.Sidemenu._jBtnColor.find(".color-list");
 	src.view.Sidemenu._jBtnClear = new js.JQuery("#help-btn");
 	src.view.Sidemenu.setRightMenu(data);
 };
@@ -625,7 +644,13 @@ src.view.Sidemenu.setRightMenu = function(data) {
 	src.view.Sidemenu._jBtnUme.on("mousedown",function(event2) {
 		src.view.Sidemenu.setPacage(data.set[2].url);
 	});
-	src.view.Sidemenu._jBtnClear.on("mousedown",function(event3) {
+	src.view.Sidemenu._jBtnColor.on("mousedown",function(event3) {
+		src.view.Sidemenu.showChangeColor();
+	});
+	src.view.Sidemenu._jColorList.find("li").on("mousedown",function(event4) {
+		src.view.Sidemenu.changeColor($(this));
+	});
+	src.view.Sidemenu._jBtnClear.on("mousedown",function(event5) {
 		src.view.Sidemenu.setPacage("?");
 		src.view.Price.clear();
 		src.view.ProductLength.clear();
@@ -640,13 +665,33 @@ src.view.Sidemenu.setPacage = function(data) {
 	src.operation.Param.remakeObject();
 	src.operation.Drag.getObject();
 };
+src.view.Sidemenu.showChangeColor = function() {
+	if(src.view.Sidemenu._jColorList.hasClass("open")) {
+		src.view.Sidemenu._jColorList.animate({ width : "0px", 'margin-left' : "0px"},null,function() {
+			src.view.Sidemenu._jColorList.hide();
+		});
+		src.view.Sidemenu._jColorList.removeClass("open");
+		return;
+	}
+	src.view.Sidemenu._jColorList.show();
+	src.view.Sidemenu._jColorList.addClass("open");
+	src.view.Sidemenu._jColorList.animate({ width : "200px", 'margin-left' : "-150px"});
+};
+src.view.Sidemenu.changeColor = function(target) {
+	if(target.hasClass("current")) return;
+	var cls = target.prop("class");
+	src.view.Sidemenu._jBtnColor.removeClass();
+	src.view.Sidemenu._jBtnColor.addClass(cls);
+	src.view.Sidemenu._jColorList.find("li").removeClass("current");
+	target.addClass("current");
+};
 src.view.Trash = function() { };
 src.view.Trash.init = function() {
 	src.view.Trash._jTrash = new js.JQuery("#trash");
 	src.view.Trash._jTrashBox = src.view.Trash._jTrash.find(".trash-box");
 	src.view.Trash._jTrashArrow = src.view.Trash._jTrash.find(".trash-arrow");
 	src.view.Trash._jTrashBox.on("mouseover",function(event) {
-		TweenMax.to(src.view.Trash._jTrash,1,{ scaleX : 1.3, scaleY : 1.3, ease : Elastic.easeOut});
+		TweenMax.to(src.view.Trash._jTrash,1,{ scaleX : 1.2, scaleY : 1.2, ease : Elastic.easeOut});
 		src.view.Trash._jTrashBox.off("mouseup");
 		src.view.Trash._jTrashBox.on("mouseup",function(event1) {
 			src.view.Trash.deleteObj(src.Manager._DragObj,event1);

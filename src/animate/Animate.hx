@@ -80,7 +80,7 @@ class Animate {
 
     _jAreaObj.on('mouseover',function(event:JqEvent) {
 
-      TweenMaxHaxe.to(JQuery.cur, 1, {scaleX:1.05, scaleY:1.05, ease:Expo.easeOut});
+      TweenMaxHaxe.to(JQuery.cur, 1, {scaleX:1.05, scaleY:1.05, ease:Elastic.easeOut});
 
     });
 

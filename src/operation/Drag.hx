@@ -67,6 +67,7 @@ class Drag {
         Manager._DragObj.addClass('grab');
         _Status  = true;
         getDiff(event,target);
+        mousemove(event);
 
       }
 
@@ -79,13 +80,11 @@ class Drag {
     Manager._DragObj.addClass('grab');
     getDiff(event,Manager._DragObj);
     _Status = true;
-    var h = new JQuery('#header').height();
-    var w = _jArea.offset().left;
 
     Manager._DragObj.css({
 
-      'top'     : untyped event.clientY + h - _diffY,//タッチ位置からヘッダーの大きさ引く差分
-      'left'    : untyped event.clientX + w - _diffX
+      'top'     : untyped event.clientY - _diffY,//タッチ位置からヘッダーの大きさ引く差分
+      'left'    : untyped event.clientX - _diffX
 
     });
 
@@ -99,8 +98,8 @@ class Drag {
       ========================================================================== */
       private static function getDiff(event:JqEvent,target:JQuery):Void {
 
-        untyped _diffY = event.clientY - target.offset().top;//画像トップとタッチの差分
-        untyped _diffX = event.clientX - target.offset().left;
+        untyped _diffY = event.offsetY;
+        untyped _diffX = event.offsetX;
 
       }
 
@@ -111,23 +110,12 @@ class Drag {
 
         if (_Status) {
 
-          var h:Int   = 0;
-          var w:Float = 0;
-
-          if (Manager._DragObj.hasClass('object')) {
-
-            h = new JQuery('#header').height();
-            w = _jArea.offset().left;
-
-          }
-
           Manager._DragObj.css({
 
-            'top'     : untyped event.clientY + h - _diffY,//タッチ位置からヘッダーの大きさ引く差分
-            'left'    : untyped event.clientX + w - _diffX
+            'top'     : untyped event.clientY - _diffY,
+            'left'    : untyped event.clientX - _diffX
 
           });
-
         }
 
       }
@@ -144,36 +132,35 @@ class Drag {
         if (Manager._DragObj.hasClass('grab')) {
 
           var h : Int = new JQuery('#header').height();
+          var w : Int = _jArea.offset().left;
 
           Manager._DragObj.css({
 
-            'top'     : untyped event.clientY - _diffY,
-            'left'    : untyped event.clientX - _diffX
+            'top'     : event.pageY - h - _diffY,
+            'left'    : event.pageX - w - _diffX
 
           });
 
           Manager._DragObj.removeClass('grab');
-          //Animate.stopTimeline(_DragObj);
+          //Animate.stopTimeline(Manager._DragObj);
 
         }
 
         if (Manager._DragObj.parent().parent('li').length > 0) {
 
-          if (_jMenu.prop('class') != 'open') {
+          if (_jMenu.find('.current').offset().top > event.pageY) {
 
             Manager._DragObj.parent().parent('li').addClass('drop');
             createListToObj(Manager._DragObj.parent().parent('li'),event);
 
-            _jAreaObj = _jArea.find('.object');
             untyped _jAreaObj.off('mousedown');
+            _jAreaObj = _jArea.find('.object');
             _jAreaObj.on('mousedown',function(event:JqEvent) {
 
               grabObject(JQuery.cur,event);
 
             });
-
           }
-
         }
 
         judgeArea(Manager._DragObj);
@@ -181,9 +168,32 @@ class Drag {
       }
 
       /* =======================================================================
+      Create Img
+      ========================================================================== */
+      private static function createListToObj(target:JQuery,event:JqEvent):Void {
+
+        var id    : String = target.data('id');
+        var type  : String = target.data('type');
+        var cat   : String = target.data('cat');
+        var icon  : String = target.data('icon');
+        var price : Int    = target.data('price');
+        var color : String = Param.getParamOption('color');
+        var top  = event.pageY - new JQuery('#header').height() - _diffY;
+        var left = event.pageX - _jArea.offset().left - _diffX;
+        
+        var html:String = Create.makeObjHtml(id,top,left,type,cat,price,icon,color);
+
+        _jArea.find('.board').append(html);
+        Manager._DragObj = _jArea.find('.board').find('.object.' + id);
+
+      }
+
+      /* =======================================================================
       Judge Area
       ========================================================================== */
       private static function judgeArea(jTarget:JQuery):Void {
+
+        var SPEED  : Int    = 200;
 
         var top    : String = jTarget.css('top').split('px').join('');
         var left   : String = jTarget.css('left').split('px').join('');
@@ -199,28 +209,8 @@ class Drag {
         if (bottom > areaB) t = areaB - jTarget.height();
         if (right > areaR)  l = areaR - jTarget.width();
 
-        jTarget.animate({ top: t, left : l },200);
+        jTarget.animate({ top: t, left : l }, SPEED);
       
-      }
-
-      /* =======================================================================
-      Create Img
-      ========================================================================== */
-      private static function createListToObj(target:JQuery,event:JqEvent):Void {
-
-        var id   : String = target.data('id');
-        var type : String = target.data('type');
-        var cat  : String = target.data('cat');
-        var icon : String = target.data('icon');
-        var price: Int    = target.data('price');
-        var top  = untyped event.clientY - new JQuery('#header').height() - _diffY;
-        var left = untyped event.clientX - _jArea.offset().left - _diffX;
-        
-        var html:String = Create.makeObjHtml(id,top,left,type,cat,price,icon);
-
-        _jArea.find('.board').append(html);
-        Manager._DragObj = _jArea.find('.board').find('.object.' + id);
-
       }
 
   /* =======================================================================
