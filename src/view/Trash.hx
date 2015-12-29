@@ -11,9 +11,9 @@ import src.view.Mainmenu;
 
 class Trash {
 
-	private static var _jTrash     :JQuery;
-	private static var _jTrashBox  :JQuery;
-	private static var _jTrashArrow:JQuery;
+	private static var _jTrash      : JQuery;
+	private static var _jTrashBox   : JQuery;
+	private static var _jTrashArrow : JQuery;
 
   /* =======================================================================
   Init
@@ -59,7 +59,7 @@ class Trash {
   }
 
   /* =======================================================================
-  None
+  Hide
   ========================================================================== */
   public static function hide(target:JQuery = null):Void {
 
@@ -77,43 +77,45 @@ class Trash {
 
   }
 
-  /* =======================================================================
-  Delete Object
-  ========================================================================== */
-  public static function deleteObj(target:JQuery,event:JqEvent):Void {
+      /* =======================================================================
+      Delete Object
+      ========================================================================== */
+      private static function deleteObj(target:JQuery,event:JqEvent):Void {
 
-  	var judge:Bool = judgeDelete(event);
-    
-  	if (judge) {
+      	var judge:Bool = judgeDelete(event);
+        
+      	if (judge) {
 
-      var id : String = target.data('id');
-      Mainmenu.clearDrop(id);
+          var id : String = target.data('id');
+          Mainmenu.clearDrop(id);
 
-      //TweenMaxHaxe.to(target, 0.6, {scaleX:2.0, scaleY:2.0, ease:Elastic.easeOut,onComplete:function() {
-        target.remove();
-      //}});
+          TweenMaxHaxe.to(target, 0.6, {scaleX:2.0, scaleY:2.0, ease:Elastic.easeOut,onComplete:function() {
 
-    }
+            target.remove();
 
-  }
+          }});
+
+        }
+
+      }
 
 		  /* =======================================================================
 		  Object Delete
 		  ========================================================================== */
 		  private static function judgeDelete(event:JqEvent):Bool {
 
-		  	var y:Float = 0;
-		  	var x:Float = 0;
+		  	var y : Float = 0;
+		  	var x : Float = 0;
 
 		  	untyped y = event.clientY;
 		  	untyped x = event.clientX;
 
-		    var top   :Float = _jTrashBox.offset().top;
-		    var left  :Float = _jTrashBox.offset().left;
-		    var bottom:Float = top + _jTrashBox.height();
-		    var right :Float = left + _jTrashBox.width();
+		    var top    : Float = _jTrashBox.offset().top;
+		    var left   : Float = _jTrashBox.offset().left;
+		    var bottom : Float = top + _jTrashBox.height();
+		    var right  : Float = left + _jTrashBox.width();
 
-		    var judge = if (y > top && bottom > y && x > left && right > x ) true else false;
+		    var judge : Bool = (y > top && bottom > y && x > left && right > x ) ? true : false;
 
 		    return judge;
 		  }

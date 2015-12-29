@@ -3,9 +3,9 @@ package src.view;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.Manager;
-import src.operation.Param;
-import src.operation.Drag;
 import src.view.Mainmenu;
+import src.utils.Param;
+import src.utils.Drag;
 
 class Sidemenu {
 
@@ -21,12 +21,12 @@ class Sidemenu {
   ========================================================================== */
   public static function init(data:Dynamic):Void {
 
-    _jBtnMatu  = new JQuery('#set-name-matu');
-    _jBtnTake  = new JQuery('#set-name-take');
-    _jBtnUme   = new JQuery('#set-name-ume');
-    _jBtnColor = new JQuery('#color-btn');
-    _jColorList= _jBtnColor.find('.color-list');
-    _jBtnClear = new JQuery('#help-btn');
+    _jBtnMatu   = new JQuery('#set-name-matu');
+    _jBtnTake   = new JQuery('#set-name-take');
+    _jBtnUme    = new JQuery('#set-name-ume');
+    _jBtnColor  = new JQuery('#color-btn');
+    _jColorList = _jBtnColor.find('.color-list');
+    _jBtnClear  = new JQuery('#help-btn');
 
     setRightMenu(data);
 

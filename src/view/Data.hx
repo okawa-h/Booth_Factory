@@ -4,19 +4,19 @@ import js.JQuery;
 import haxe.Http;
 import haxe.Json;
 import src.Manager;
-import src.operation.Create;
+import src.utils.Html;
 
 class Data {
 
   private static var _jMenu;
   private static var _callback;
 
-  public static function get(jMenu,callback):Void {
+  public static function set(jMenu,callback):Void {
 
     _jMenu    = jMenu;
     _callback = callback;
 
-    var request:Http = new Http("files/data/data.json");
+    var request : Http = new Http("files/data/data.json");
 
     request.onError  = function( data:String ){  }
     request.onData   = onData;
@@ -34,15 +34,16 @@ class Data {
 
       private static function loop(data:Dynamic):Void {
 
-        var length        :Int    = data.object.length;
-        var accessoryHtml :String = "";
-        var banarHtml     :String = "";
-        var paperHtml     :String = "";
+        var length        : Int    = data.object.length;
+        var accessoryHtml : String = "";
+        var bannerHtml    : String = "";
+        var paperHtml     : String = "";
 
         for (i in 0 ... length) {
 
-          var t   :Dynamic= data.object[i];
-          var html:String = Create.makeListHtml(t.id,t.type,t.cat,t.icon,t.price,t.bgImg,t.img,t.name,t.length);
+          var t    : Dynamic = data.object[i];
+          var abs  : String  = (t.type == "accessory") ? t.abs : "";
+          var html : String  = Html.getList(t.id,t.type,t.cat,t.icon,t.price,t.bgImg,t.img,t.name,t.length,abs);
 
           if (t.cat == "paper") {
 
@@ -52,22 +53,22 @@ class Data {
 
             accessoryHtml += html;
 
-          } else if (t.cat == "banar") {
+          } else if (t.cat == "banner") {
 
-            banarHtml += html;
+            bannerHtml += html;
             
           }
           
         }
 
-        setHTML(accessoryHtml,banarHtml,paperHtml);
+        setHTML(accessoryHtml,bannerHtml,paperHtml);
 
       }
 
-      private static function setHTML(accessoryHtml:String,banarHtml:String,paperHtml:String):Void {
+      private static function setHTML(accessoryHtml:String,bannerHtml:String,paperHtml:String):Void {
 
         _jMenu.find('#sale-accessory').find('.slider').find('ul').append(accessoryHtml);
-        _jMenu.find('#sale-banar').find('.slider').find('ul').append(banarHtml);
+        _jMenu.find('#sale-banner').find('.slider').find('ul').append(bannerHtml);
         _jMenu.find('#sale-paper').find('.slider').find('ul').append(paperHtml);
 
         _callback();

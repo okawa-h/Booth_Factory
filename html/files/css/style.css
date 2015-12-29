@@ -107,7 +107,7 @@
 	#mainboard .board .human {
 		position: absolute;
 		top: 146px;
-		left: 0;
+		left: 6px;
 		width: 145px;
 		height: 373px;
 		border-radius: 65px 70px 15px 12px / 130px 160px 40px 130px;
@@ -252,8 +252,21 @@
 				cursor: pointer;
 			}
 
-			#sidemenu-right .set-config ul #color-btn {
-				background: url(../img/icon/icon_color.png) no-repeat center center;
+			#sidemenu-right .set-config ul #color-btn,
+			#sidemenu-right .set-config ul #color-btn.blue {
+				background: url(../img/icon/icon_color_blue.png) no-repeat center center;
+			}
+
+			#sidemenu-right .set-config ul #color-btn.red {
+				background: url(../img/icon/icon_color_red.png) no-repeat center center;
+			}
+
+			#sidemenu-right .set-config ul #color-btn.green {
+				background: url(../img/icon/icon_color_green.png) no-repeat center center;
+			}
+
+			#sidemenu-right .set-config ul #color-btn.yellow {
+				background: url(../img/icon/icon_color_yellow.png) no-repeat center center;
 			}
 
 				#sidemenu-right .set-config ul #color-btn ul {
@@ -319,7 +332,7 @@
 	}
 
 	#mainmenu #sale-accessory,
-	#mainmenu #sale-banar,
+	#mainmenu #sale-banner,
 	#mainmenu #sale-paper {
 		position: absolute;
 		left: 0;
@@ -338,8 +351,8 @@
 		background: url(../img/mainmenu/bg_paper.jpg);
 	}
 
-	#mainmenu #sale-banar {
-		background: url(../img/mainmenu/bg_banar.jpg);
+	#mainmenu #sale-banner {
+		background: url(../img/mainmenu/bg_banner.jpg);
 	}
 
 	#mainmenu #sale-accessory {
@@ -353,9 +366,10 @@
 
 		#mainmenu #sale-paper .ttl {
 			margin-left: -356px;
+			background: url(../img/mainmenu/icon_paper.png) no-repeat center 30px;
 		}
 
-		#mainmenu #sale-banar .ttl {
+		#mainmenu #sale-banner .ttl {
 			margin-left: -114px;
 		}
 
@@ -381,21 +395,37 @@
 				background: url(../img/mainmenu/bg_paper.jpg);
 			}
 
-			#mainmenu #sale-banar .ttl p {
-				background: url(../img/mainmenu/bg_banar.jpg);
+			#mainmenu #sale-banner .ttl p {
+				background: url(../img/mainmenu/bg_banner.jpg);
 			}
 
 			#mainmenu #sale-accessory .ttl p {
 				background: url(../img/mainmenu/bg_accessory.jpg);
 			}
 
+			#mainmenu div .slider-up {
+				width: 10px;
+				height: 10px;
+				background-color: red;
+				cursor: pointer;
+			}
+
+			#mainmenu div .slider-down {
+				width: 10px;
+				height: 10px;
+				background-color: green;
+				cursor: pointer;
+			}
+
 		#mainmenu div .slider {
-			overflow: auto;
+			overflow-y: scroll;
+			/*overflow: hidden;*/
+			height: 240px;
 		}
 
 			#mainmenu div .slider ul {
 				width: 100%;
-				overflow: auto;
+				text-align: center;
 			}
 
 /*-------------------------------------------------------------------------
@@ -403,10 +433,10 @@
 /*-----------------------------------------------------------------------*/
 
 				#mainmenu div .slider ul li {
+					display: inline-block;
 					position: relative;
-					float: left;
 					width: 160px;
-					margin-right: 30px;
+					margin: 0 10px 20px;
 					border: 5px solid #fff000;
 					box-sizing: border-box;
 					background-color: #fff;

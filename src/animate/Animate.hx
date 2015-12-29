@@ -1,19 +1,20 @@
 package src.animate;
 
 import js.JQuery;
-import src.operation.Drag;
-import src.animate.Title;
+import jp.saken.utils.Dom;
+import src.utils.Drag;
 import tween.TweenMaxHaxe;
 import tween.TimelineMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Expo;
-import jp.saken.utils.Dom;
+import tween.easing.Circ;
 
 class Animate {
 
   private static var _jMenu: JQuery;
   private static var _jArea: JQuery;
   private static var _jBtn : JQuery;
+  private static var _jTitle : JQuery;
 
   private static var _timeline: TimelineMaxHaxe;
 
@@ -22,8 +23,10 @@ class Animate {
     _jMenu = jMenu;
     _jArea = jArea;
 
+    _jTitle = new JQuery('#header').find('h1');
+    //TweenMaxHaxe.to(_jTitle , 0.5 , {top:"-50px",repeat: 3,yoyo : true,ease: Circ.easeOut});
+
     //setup();
-    // Title.init();
 
   }
 
@@ -32,9 +35,9 @@ class Animate {
       ========================================================================== */
       private static function setup():Void {
 
-      	var leftMenu     :JQuery = new JQuery('#sidemenu-left').find('li');
-      	var rightMenu    :JQuery = new JQuery('#sidemenu-right').find('div');
-      	var rightListMenu:JQuery = new JQuery('#sidemenu-right').find('li');
+      	var leftMenu      : JQuery = new JQuery('#sidemenu-left').find('li');
+      	var rightMenu     : JQuery = new JQuery('#sidemenu-right').find('div');
+      	var rightListMenu : JQuery = new JQuery('#sidemenu-right').find('li');
 
         TweenMaxHaxe.staggerFromTo(cast(leftMenu), 1 , {x:-300} , {x:0,ease : Elastic.easeInOut,
           onComplete:function(){
@@ -80,12 +83,15 @@ class Animate {
 
     _jAreaObj.on('mouseover',function(event:JqEvent) {
 
+      if (JQuery.cur.hasClass('accessory')) return;
+
       TweenMaxHaxe.to(JQuery.cur, 1, {scaleX:1.05, scaleY:1.05, ease:Elastic.easeOut});
 
     });
 
     _jAreaObj.on('mouseleave',function(event:JqEvent) {
 
+      if (JQuery.cur.hasClass('accessory')) return;
       TweenMaxHaxe.to(JQuery.cur, 0, {scaleX:1, scaleY:1, ease:Expo.easeOut});
 
     });

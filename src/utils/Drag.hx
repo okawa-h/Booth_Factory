@@ -1,8 +1,8 @@
-package src.operation;
+package src.utils;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
-import src.operation.Create;
+import src.utils.Html;
 import src.Manager;
 import src.view.Trash;
 import src.animate.Animate;
@@ -22,20 +22,6 @@ class Drag {
     _jArea    = jArea;
     _jAreaObj = jAreaObj;
     _jMenu    = jMenu;
-
-//     _jArea.find('.object').find('img').on('mousedown',function(event:JqEvent) {
-// js.Lib.alert('ok');
-//       event.preventDefault();
-//       return false;
-
-//     });
-
-    _jMenu.find('.slider').find('li').find('img').on('mousedown',function(event:JqEvent) {
-
-      event.preventDefault();
-      return false;
-
-    });
 
     _jMenu.find('.slider').find('li').on({ 'mousedown' : grabList });
 
@@ -59,9 +45,11 @@ class Drag {
       ========================================================================== */
       private static function grabList(event:JqEvent):Void {
 
+        event.preventDefault();
+
         var target : JQuery = JQuery.cur;
 
-        if (target.hasClass('drop')) return;
+        //if (target.hasClass('drop')) return;
 
         Manager._DragObj = target.find('.img');
         Manager._DragObj.addClass('grab');
@@ -76,7 +64,12 @@ class Drag {
   ========================================================================== */
   public static function grabObject(target:JQuery,event:JqEvent):Void {
 
+    event.preventDefault();
+
     Manager._DragObj = target;
+
+    if (Manager._DragObj.hasClass('accessory')) return;
+
     Manager._DragObj.addClass('grab');
     getDiff(event,Manager._DragObj);
     _Status = true;
@@ -178,10 +171,16 @@ class Drag {
         var icon  : String = target.data('icon');
         var price : Int    = target.data('price');
         var color : String = Param.getParamOption('color');
-        var top  = event.pageY - new JQuery('#header').height() - _diffY;
-        var left = event.pageX - _jArea.offset().left - _diffX;
+        var top   : Float  = event.pageY - new JQuery('#header').height() - _diffY;
+        var left  : Float  = event.pageX - _jArea.offset().left - _diffX;
+
+        if (type == "accessory") {
+          var abs : Array<String> = target.data('abs').split(',');
+          top  = Std.parseFloat(abs[0]);
+          left = Std.parseFloat(abs[1]);
+        }
         
-        var html:String = Create.makeObjHtml(id,top,left,type,cat,price,icon,color);
+        var html:String = Html.getObj(id,top,left,type,cat,price,icon,color);
 
         _jArea.find('.board').append(html);
         Manager._DragObj = _jArea.find('.board').find('.object.' + id);
@@ -192,6 +191,8 @@ class Drag {
       Judge Area
       ========================================================================== */
       private static function judgeArea(jTarget:JQuery):Void {
+
+        if (jTarget.hasClass('accessory')) return;
 
         var SPEED  : Int    = 200;
 

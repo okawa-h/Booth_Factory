@@ -8,8 +8,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a0.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_a1",
             "name" : "A1・ポスター",
@@ -18,8 +18,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a1.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_a2",
             "name" : "A2・ポスター",
@@ -28,8 +28,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a2.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_a3",
             "name" : "A3・ポスター",
@@ -38,8 +38,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a3.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_a4",
             "name" : "A4・ポスター",
@@ -48,8 +48,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a4.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_a5",
             "name" : "A5・ポスター",
@@ -58,8 +58,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a5.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_b0",
             "name" : "B0・ポスター",
@@ -68,8 +68,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b0.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_b1",
             "name" : "B1・ポスター",
@@ -78,8 +78,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b1.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_b2",
             "name" : "B2・ポスター",
@@ -88,8 +88,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b2.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_b3",
             "name" : "B3・ポスター",
@@ -98,8 +98,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b3.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_b4",
             "name" : "B4・ポスター",
@@ -108,8 +108,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b4.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "poster_b5",
             "name" : "B5・ポスター",
@@ -118,8 +118,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b5.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "poster.png",
+            "bgImg": "poster.png"
         }, {
             "id"   : "booklet_a4",
             "name" : "A4・冊子",
@@ -129,7 +129,7 @@
             "cat"  : "paper",
             "icon" : "booklet_a4.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "bgImg": "utiwa.png"
         }, {
             "id"   : "file_a4",
             "name" : "A4・クリアファイル",
@@ -138,8 +138,8 @@
             "type" : "paper",
             "cat"  : "paper",
             "icon" : "file_a4.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "clearfile.png",
+            "bgImg": "clearfile.png"
         }, {
             "id"   : "folder_a4",
             "name" : "A4・フォルダー",
@@ -148,8 +148,8 @@
             "type" : "paper",
             "cat"  : "paper",
             "icon" : "folder_a4.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "folder.png",
+            "bgImg": "folder.png"
         }, {
             "id"   : "paper_a4",
             "name" : "A4・チラシ",
@@ -159,27 +159,27 @@
             "cat"  : "paper",
             "icon" : "paper_a4.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "bgImg": "utiwa.png"
         }, {
-            "id"   : "banar_b1",
+            "id"   : "banner_b1",
             "name" : "B1・バナー",
             "price": "8000",
             "length": "3セット",
             "type" : "poster",
-            "cat"  : "banar",
-            "icon" : "banar_b1.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "cat"  : "banner",
+            "icon" : "banner_b1.png",
+            "img"  : "banner_b1.png",
+            "bgImg": "banner_b1.png"
         }, {
             "id"   : "board_a",
             "name" : "A型看板",
             "price": "10000",
             "length": "1セット",
             "type" : "panel",
-            "cat"  : "banar",
+            "cat"  : "banner",
             "icon" : "board_a.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "banner.png",
+            "bgImg": "banner.png"
         }, {
             "id"   : "table_2",
             "name" : "机の上におくやつ",
@@ -188,8 +188,8 @@
             "type" : "paper",
             "cat" : "accessory",
             "icon" : "table_2.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "table_pop_2.png",
+            "bgImg": "table_pop_2.png"
         }, {
             "id"   : "table_3",
             "name" : "机の上におくやつ2",
@@ -198,8 +198,8 @@
             "type" : "paper",
             "cat" : "accessory",
             "icon" : "table_3.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "table_pop_3.png",
+            "bgImg": "table_pop_3.png"
         }, {
             "id"   : "table_tisuue",
             "name" : "鼻セレブ",
@@ -208,8 +208,8 @@
             "type" : "paper",
             "cat" : "accessory",
             "icon" : "table_tisuue.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "img"  : "tissue.png",
+            "bgImg": "tissue.png"
         }, {
             "id"   : "table_pop",
             "name" : "卓上ポップ",
@@ -218,19 +218,96 @@
             "type" : "paper",
             "cat" : "accessory",
             "icon" : "table_pop.png",
+            "img"  : "table_pop.png",
+            "bgImg": "table_pop.png"
+        }, {
+            "id"   : "best",
+            "name" : "ベスト",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["230","6"],
+            "cat" : "accessory",
+            "icon" : "best.png",
+            "img"  : "best.png",
+            "bgImg": "best.png"
+        }, {
+            "id"   : "buruzon",
+            "name" : "ブルゾン",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["230","5"],
+            "cat" : "accessory",
+            "icon" : "buruzon.png",
+            "img"  : "buruzon.png",
+            "bgImg": "buruzon.png"
+        }, {
+            "id"   : "hapi",
+            "name" : "法被",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["232","0"],
+            "cat" : "accessory",
+            "icon" : "hapi.png",
+            "img"  : "hapi.png",
+            "bgImg": "hapi.png"
+        }, {
+            "id"   : "hat",
+            "name" : "帽子",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["135","43"],
+            "cat" : "accessory",
+            "icon" : "hat.png",
+            "img"  : "hat.png",
+            "bgImg": "hat.png"
+        }, {
+            "id"   : "megaphone",
+            "name" : "メガホン",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["224","-14"],
+            "cat" : "accessory",
+            "icon" : "megaphone.png",
+            "img"  : "megaphone.png",
+            "bgImg": "megaphone.png"
+        }, {
+            "id"   : "tshirts",
+            "name" : "T-シャツ",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["233","6"],
+            "cat" : "accessory",
+            "icon" : "tshirts.png",
+            "img"  : "tshirts.png",
+            "bgImg": "tshirts.png"
+        }, {
+            "id"   : "utiwa",
+            "name" : "うちわ",
+            "price": "1000000",
+            "length": "10000セット",
+            "type" : "accessory",
+            "abs" : ["218","100"],
+            "cat" : "accessory",
+            "icon" : "utiwa.png",
             "img"  : "utiwa.png",
-            "bgImg": "utiwa_bg.png"
+            "bgImg": "utiwa.png"
         }],
 
     "set": [
         {
             "name": "matu",
-            "url" : "?obj=poster_a0-591-73&obj=poster_a1-393-65&price=1094000"
+            "url" : "?obj=poster_a0-591-73&obj=poster_a1-393-65&price=18000"
         }, {
             "name": "take",
-            "url" : "?obj=poster_a1-655-76&obj=poster_a0-182-72&obj=board_a-861-358&obj=banar_b1-405-75&obj=table_pop-797-325&obj=table_tisuue-620-336&obj=table_3-446-305&price=1042000"
+            "url" : "?obj=poster_a0-406.5-83&price=10000"
         }, {
             "name": "ume",
-            "url" : "?obj=board_a-861-347&obj=banar_b1-634-73&obj=table_pop-796-321&obj=table_2-440-283&obj=poster_a0-186-73&price=34000"
+            "url" : "?obj=board_a-861-347&obj=banner_b1-634-73&obj=table_pop-796-321&obj=table_2-440-283&obj=poster_a0-186-73&price=34000"
         }]
 }

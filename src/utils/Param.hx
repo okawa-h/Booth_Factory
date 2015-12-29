@@ -1,10 +1,11 @@
-package src.operation;
+package src.utils;
 
 import js.JQuery;
 import js.html.History;
 import jp.saken.utils.Dom;
 import src.Manager;
 import src.view.Mainmenu;
+import src.utils.Html;
 
 class Param {
 
@@ -21,12 +22,12 @@ class Param {
   ========================================================================== */
   public static function remakeObject():Void {
 
-    var url = untyped Dom.jWindow[0].location;
+    var url : String = untyped Dom.jWindow[0].location;
         url = Std.string(url);
 
     if (url.indexOf('?') > -1) {
 
-      var param:Array<String> = url.split('?');
+      var param : Array<String> = url.split('?');
 
       //var res = Dom.window.confirm('履歴があります。復元しますか？');
       //if( res == true ) {
@@ -47,11 +48,11 @@ class Param {
 		    var paramArray : Array<String> = param.split('&');
 		    var length     : Int           = paramArray.length;
 		    var data       : Dynamic       = Manager._Data;
-		    var color      : String  			 = makeColorParam().split('color=').join('');
+		    var color      : String  			 = getColorParam().split('color=').join('');
 
 		    for (i in 0 ... length) {
 
-		      var item:Array<String> = paramArray[i].split('=');
+		      var item : Array<String> = paramArray[i].split('=');
 
 		      if (item[0] == "obj") {
 
@@ -78,13 +79,14 @@ class Param {
 		      if (data.object[i].id == target[0]) {
 
 		        id = target[0];
-		        var type :String = data.object[i].type;
-		        var cat  :String = data.object[i].cat;
-		        var icon :String = data.object[i].icon;
-		        var price:Int    = data.object[i].price;
-		        var top  :Float  = Std.parseFloat(target[2]);
-		        var left :Float  = Std.parseFloat(target[1]);
-		        html += Create.makeObjHtml(id,top,left,type,cat,price,icon,color);
+		        var type  : String = data.object[i].type;
+		        var cat   : String = data.object[i].cat;
+		        var icon  : String = data.object[i].icon;
+		        var price : Int    = data.object[i].price;
+		        var top   : Float  = Std.parseFloat(target[2]);
+		        var left  : Float  = Std.parseFloat(target[1]);
+
+		        html += Html.getObj(id,top,left,type,cat,price,icon,color);
 		        Mainmenu.addDrop(id);
 
 		      }
@@ -101,51 +103,51 @@ class Param {
 
     var param :String = "";
 
-    param += makeColorParam();
+    param += getColorParam();
 
     for (i in 0 ... length) {
 
     	if (i == 0) param += "&";
 
       var str:String = (i == length - 1) ? '' : '&';
-      param += makeObjectParam(jTarget.eq(i)) + str;
+      param += getObjectParam(jTarget.eq(i)) + str;
       
     }
 
-    param += '&' + makePriceParam(price);
+    param += '&' + getPriceParam(price);
 
     return param;
 
   }
 
   	  /* =======================================================================
-		  Make Object Param
+		  Get Object Param
 		  ========================================================================== */
-		  private static function makeObjectParam(jTarget:JQuery):String {
+		  private static function getObjectParam(jTarget:JQuery):String {
 
-		    var id:String = jTarget.data('id');
-		    var x :String = jTarget.css('left').split('px').join('');
-		    var y :String = jTarget.css('top').split('px').join('');
+		    var id : String = jTarget.data('id');
+		    var x  : String = jTarget.css('left').split('px').join('');
+		    var y  : String = jTarget.css('top').split('px').join('');
 
 		    return 'obj=' + id + '-' + x + '-' + y;
 
 		  }
 
 		  /* =======================================================================
-		  Make Price Param
+		  Get Price Param
 		  ========================================================================== */
-		  private static function makePriceParam(price:Int):String {
+		  private static function getPriceParam(price:Int):String {
 
 		    return 'price=' + price;
 
 		  }
 
 		  /* =======================================================================
-		  Make Color Param
+		  Get Color Param
 		  ========================================================================== */
-		  private static function makeColorParam():String {
+		  private static function getColorParam():String {
 
-		  	var color = new JQuery('#color-btn').prop('class');
+		  	var color : String = new JQuery('#color-btn').prop('class');
 		    return 'color=' + color;
 
 		  }
@@ -176,23 +178,24 @@ class Param {
   public static function getParamOption(string:String = 'price'):Dynamic {
   	
   	string += '=';
-  	var option  : Array<String> = Dom.window.location.search.split(string);
-  	var option2 : String = option[1];
-  	var option3 : String = "";
+    var url    : Array<String> = Dom.window.location.toString().split('/');
+    var search : String        = url[url.length - 1];
+  	var option : Array<String> = search.split(string);
+  	var str    : String        = option[1];
+  	var param  : String        = "";
 
-  	if (option2.indexOf('&') != -1) {
+  	if (str.indexOf('&') != -1) {
 
-  		option  = option2.split('&');
-  		option3 = option[0];
+  		option = str.split('&');
+  		param  = option[0];
 
   	} else {
 
-  		option3 = option2;
+  		param = str;
   		
   	}
 
-    return option3;
-
+    return param;
   }
 
 }

@@ -8,15 +8,17 @@ import tween.easing.Back;
 
 class Mainmenu {
 
-  private static var _jMenu: JQuery;
-  private static var _jBtn : JQuery;
+  private static var _jMenu     : JQuery;
+  private static var _jBtn      : JQuery;
+  private static var _jScrollUp : JQuery;
+  private static var _jScrollDw : JQuery;
 
   public static function init(jMenu):Void {
 
-    _jMenu = jMenu;
-    _jBtn  = _jMenu.find('.ttl').find('p');
-
-    setListSize(jMenu);
+    _jMenu     = jMenu;
+    _jBtn      = _jMenu.find('.ttl').find('p');
+    _jScrollUp = jMenu.find('.slider-up');
+    _jScrollDw = jMenu.find('.slider-down');
 
     _jBtn.on('mousedown',function(event:JqEvent) {
 
@@ -30,23 +32,26 @@ class Mainmenu {
 
     });
 
+    _jScrollUp.on('mousedown',function(event:JqEvent) {
+
+      scroll(JQuery.cur,'-=165px');
+
+    });
+
+    _jScrollDw.on('mousedown',function(event:JqEvent) {
+
+      scroll(JQuery.cur,'165px');
+
+    });
+
   }
       /* =======================================================================
-      Set List Size
+      scroll
       ========================================================================== */
-      private static function setListSize(jMenu:JQuery) {
+      private static function scroll(jThis:JQuery,param:String) {
 
-        jMenu.find('.slider').find('ul').each(function() {
-
-          var jThis :JQuery = JQuery.cur;
-          var jList :JQuery = jThis.find('li');
-          // var right :String = jList.css('margin-right').split('px').join('');
-          var right :String = untyped (jList.css('margin-right'))?jList.css('margin-right').replace('px','') : '0';
-          var length:Int    = jList.length;
-          var width :Int    = jList.width();
-          jThis.width((width + Std.parseInt(right) + 10) * length);
-
-        });
+        var jTarget : JQuery = jThis.prev('.slider').find('ul');
+        jTarget.animate({'margin-top': param});
 
       }
 

@@ -1,13 +1,13 @@
-package src.operation;
+package src.utils;
 
 import js.JQuery;
 
-class Create {
+class Html {
 
   /* =======================================================================
-  Make Object HTML
+  Object HTML
   ========================================================================== */
-  public static function makeObjHtml(id:String,top:Float,left:Float,type:String,cat:String,price:Int,src:String,color:String):String {
+  public static function getObj(id:String,top:Float,left:Float,type:String,cat:String,price:Int,src:String,color:String):String {
 
     var html :String = "";
     html += '<p class="object ' + id + ' ' + type + '"';
@@ -20,14 +20,15 @@ class Create {
   }
 
   /* =======================================================================
-  Make List HTML
+  List HTML
   ========================================================================== */
-  public static function makeListHtml(id:String,type:String,cat:String,icon:String,price:Int,bgImg:String,img:String,name:String,length:String):String {
+  public static function getList(id:String,type:String,cat:String,icon:String,price:Int,bgImg:String,img:String,name:String,length:String,abs:String):String {
 
     var html:String = "";
     html += '<li id="' + id + '" title="' + name + '" ';
     html += 'data-id="' + id + '" ';
     html += 'data-type="' + type + '" ';
+    html += 'data-abs="' + abs + '" ';
     html += 'data-cat="' + cat + '" ';
     html += 'data-icon="' + icon + '" ';
     html += 'data-price="' + price + '">';
