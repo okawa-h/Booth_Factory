@@ -82,7 +82,7 @@ class Trash {
       ========================================================================== */
       private static function deleteObj(target:JQuery,event:JqEvent):Void {
 
-      	var judge:Bool = judgeDelete(event);
+      	var judge : Bool = judgeDelete(event);
         
       	if (judge) {
 
@@ -92,11 +92,10 @@ class Trash {
           TweenMaxHaxe.to(target, 0.6, {scaleX:2.0, scaleY:2.0, ease:Elastic.easeOut,onComplete:function() {
 
             target.remove();
+            Manager.setCounter();
 
           }});
-
         }
-
       }
 
 		  /* =======================================================================

@@ -38,6 +38,12 @@ class Drag {
 
     });
 
+    _jAreaObj.on('mouseover',function(event:JqEvent) {
+
+      hoverObject(JQuery.cur);
+
+    });
+
   }
 
       /* =======================================================================
@@ -49,11 +55,11 @@ class Drag {
 
         var target : JQuery = JQuery.cur;
 
-        //if (target.hasClass('drop')) return;
+        if (target.hasClass('drop')) return;
 
         Manager._DragObj = target.find('.img');
         Manager._DragObj.addClass('grab');
-        _Status  = true;
+        _Status = true;
         getDiff(event,target);
         mousemove(event);
 
@@ -76,8 +82,8 @@ class Drag {
 
     Manager._DragObj.css({
 
-      'top'     : untyped event.clientY - _diffY,//タッチ位置からヘッダーの大きさ引く差分
-      'left'    : untyped event.clientX - _diffX
+      'top'  : untyped event.clientY - _diffY,
+      'left' : untyped event.clientX - _diffX
 
     });
 
@@ -129,8 +135,8 @@ class Drag {
 
           Manager._DragObj.css({
 
-            'top'     : event.pageY - h - _diffY,
-            'left'    : event.pageX - w - _diffX
+            'top'  : event.pageY - h - _diffY,
+            'left' : event.pageX - w - _diffX
 
           });
 
@@ -151,6 +157,12 @@ class Drag {
             _jAreaObj.on('mousedown',function(event:JqEvent) {
 
               grabObject(JQuery.cur,event);
+
+            });
+
+            _jAreaObj.on('mouseover',function(event:JqEvent) {
+
+              hoverObject(JQuery.cur);
 
             });
           }
@@ -194,7 +206,7 @@ class Drag {
 
         if (jTarget.hasClass('accessory')) return;
 
-        var SPEED  : Int    = 200;
+        var sPEED  : Int    = 200;
 
         var top    : String = jTarget.css('top').split('px').join('');
         var left   : String = jTarget.css('left').split('px').join('');
@@ -210,7 +222,7 @@ class Drag {
         if (bottom > areaB) t = areaB - jTarget.height();
         if (right > areaR)  l = areaR - jTarget.width();
 
-        jTarget.animate({ top: t, left : l }, SPEED);
+        jTarget.animate({ top: t, left : l }, sPEED);
       
       }
 
@@ -227,5 +239,30 @@ class Drag {
     });
 
   }
+
+    /* =======================================================================
+    Hover Obj
+    ========================================================================== */
+    private static function hoverObject(target:JQuery):Void {
+
+      if (target.hasClass('accessory')) {
+
+        target.append('<div class="removebtn"></div>');
+
+      }
+
+      new JQuery('.removebtn').on('mousedown',function(event:JqEvent) {
+
+        target.remove();
+
+      });
+
+      target.on('mouseout',function(event:JqEvent) {
+
+        target.find('.removebtn').remove();
+
+      });
+
+    }
 
 }

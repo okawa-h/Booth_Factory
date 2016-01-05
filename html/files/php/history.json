@@ -1,7 +1,14 @@
-{
-    "user": {
+[
+    {
         "id": "192.168.0.68",
-        "data": "2015\/12\/28 17:24:03",
-        "param": "?color=blue&price=0"
+        "point": 1,
+        "data": "2016\/01\/05 19:08:05",
+        "param": "?color=blue&obj=board_a-861-347&obj=banner_b1-530-157&obj=table_pop-723-147&obj=table_2-440-283&obj=poster_a0-259-196&price=34000"
+    },
+    {
+        "id": "192.168.0.68",
+        "point": 10,
+        "data": "2016\/01\/05 19:08:18",
+        "param": "?color=blue&obj=board_a-861-347&obj=banner_b1-580-114&obj=table_pop-739-196&obj=table_2-474-199&obj=poster_a0-209-157&price=34000"
     }
-}
+]

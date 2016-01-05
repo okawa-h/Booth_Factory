@@ -1,9 +1,10 @@
-package src.view;
+package src.view.sidemenu;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.Manager;
 import src.view.Mainmenu;
+import src.view.sidemenu.Lightbox;
 import src.utils.Param;
 import src.utils.Drag;
 
@@ -14,7 +15,11 @@ class Sidemenu {
   private static var _jBtnUme   : JQuery;
   private static var _jBtnColor : JQuery;
   private static var _jColorList: JQuery;
-  private static var _jBtnClear : JQuery;
+  private static var _jBtnHelp  : JQuery;
+  private static var _jLightBox : JQuery;
+
+  public function new() {
+  }
 
   /* =======================================================================
   init
@@ -26,14 +31,16 @@ class Sidemenu {
     _jBtnUme    = new JQuery('#set-name-ume');
     _jBtnColor  = new JQuery('#color-btn');
     _jColorList = _jBtnColor.find('.color-list');
-    _jBtnClear  = new JQuery('#help-btn');
+    _jBtnHelp   = new JQuery('#help-btn');
+    _jLightBox  = new JQuery('#lightbox');
+    Lightbox.init(_jLightBox);
 
     setRightMenu(data);
 
   }
 
       /* =======================================================================
-      On right Menu
+      Set right Menu
       ========================================================================== */
       private static function setRightMenu(data:Dynamic):Void {
 
@@ -57,17 +64,17 @@ class Sidemenu {
 
         _jBtnColor.on('mousedown',function(event:JqEvent):Void {
 
-          showChangeColor();
+          Lightbox.show('color',JQuery.cur);
 
         });
 
-        _jColorList.find('li').on('mousedown',function(event:JqEvent) {
+        _jBtnHelp.on('mousedown',function(event:JqEvent) {
 
-          changeColor(JQuery.cur);
+          Lightbox.show('help',JQuery.cur);
 
         });
 
-        _jBtnClear.on('mousedown',function(event:JqEvent):Void {
+        new JQuery('#contact-btn').find('a').on('mousedown',function(event:JqEvent):Void {
 
           setPacage('?');
           Price.clear();
@@ -95,53 +102,6 @@ class Sidemenu {
         Param.change(data);
         Param.remakeObject();
         Drag.getObject();
-
-      }
-
-      /* =======================================================================
-      Show Change Color
-      ========================================================================== */
-      private static function showChangeColor():Void {
-
-        if (_jColorList.hasClass('open')) {
-          _jColorList.animate({
-
-            width:'0px',
-            'margin-left':'0px'
-
-          },function() {
-            _jColorList.hide();
-          });
-          _jColorList.removeClass('open');
-
-          return;
-        }
-
-        _jColorList.show();
-        _jColorList.addClass('open');
-
-        _jColorList.animate({
-
-          width:'200px',
-          'margin-left':'-150px'
-
-        });
-
-      }
-
-      /* =======================================================================
-      Show Change Color
-      ========================================================================== */
-      private static function changeColor(target:JQuery):Void {
-
-        if (target.hasClass('current')) return;
-
-        var cls : String = target.prop('class');
-
-        _jBtnColor.removeClass();
-        _jBtnColor.addClass(cls);
-        _jColorList.find('li').removeClass('current');
-        target.addClass('current');
 
       }
 

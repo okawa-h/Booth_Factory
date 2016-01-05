@@ -34,24 +34,51 @@ class Mainmenu {
 
     _jScrollUp.on('mousedown',function(event:JqEvent) {
 
-      scroll(JQuery.cur,'-=165px');
+      scroll(JQuery.cur,'up');
 
     });
 
     _jScrollDw.on('mousedown',function(event:JqEvent) {
 
-      scroll(JQuery.cur,'165px');
+      scroll(JQuery.cur,'down');
 
     });
 
   }
+
       /* =======================================================================
       scroll
       ========================================================================== */
-      private static function scroll(jThis:JQuery,param:String) {
+      private static function scroll(jThis:JQuery,action:String) {
 
-        var jTarget : JQuery = jThis.prev('.slider').find('ul');
-        jTarget.animate({'margin-top': param});
+        var jTarget   : JQuery = jThis.siblings('.slider');
+        var jUp       : JQuery = jTarget.siblings('.slider-up');
+        var jDw       : JQuery = jTarget.siblings('.slider-down');
+        var h         : Int    = jTarget.find('ul').find('li').outerHeight() + 20;
+        var scrollTop : Int    = jTarget.scrollTop();
+        var scrollVal : Int    = (action == 'up') ? -h : h;
+        if (jTarget.is(':animated')) return;
+        jTarget.animate({scrollTop: scrollTop + scrollVal});
+        setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
+
+      }
+
+      /* =======================================================================
+      Set Scroll Btn
+      ========================================================================== */
+      private static function setScrollBtn(jUp:JQuery,jDw:JQuery,scrollTop:Int,height:Int) {
+
+        if (scrollTop > 0) {
+          jUp.show();
+        } else {
+          jUp.hide();
+        }
+
+        if (scrollTop >= height - 220) {
+          jDw.hide();
+        } else {
+          jDw.show();
+        }
 
       }
 
@@ -108,10 +135,8 @@ class Mainmenu {
   ========================================================================== */
   public static function addDrop(id:String):Void {
 
-    if (_jMenu.find('#' + id) == null) {
-      return;
-    }
-
+    if (_jMenu.find('#' + id) == null) return;
+trace('ugoiteru');
     _jMenu.find('#' + id).addClass('drop');
 
   }

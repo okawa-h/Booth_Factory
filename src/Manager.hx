@@ -12,7 +12,7 @@ import src.view.Log;
 import src.view.Board;
 import src.view.Trash;
 import src.view.Mainmenu;
-import src.view.Sidemenu;
+import src.view.sidemenu.Sidemenu;
 import src.animate.Animate;
 
 class Manager {
@@ -84,7 +84,7 @@ class Manager {
     Price.change(price);
     var param : String = Param.make(_jAreaObj,length,price);
     Param.change('?' + param);
-    Animate.hoverObject(_jAreaObj);
+    //Animate.hoverObject(_jAreaObj);
 
   }
 

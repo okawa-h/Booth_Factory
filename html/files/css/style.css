@@ -69,6 +69,18 @@
 			z-index: 800;
 		}
 
+		#mainboard .board .removebtn {
+			display: block;
+			position: absolute;
+			top: -5px;
+			right: -5px;
+			width: 20px;
+			height: 20px;
+			background-color: #888;
+			color: #fff;
+			line-height: 18px;
+		}
+
 		#mainboard .board .desk {
 			position: absolute;
 			top: 360px;
@@ -404,23 +416,34 @@
 			}
 
 			#mainmenu div .slider-up {
-				width: 10px;
-				height: 10px;
-				background-color: red;
+				position: absolute;
+				top: 50%;
+				left: 30px;
+				display: none;
+				width: 0px;
+				height: 0px;
+				margin-top: -60px;
+				border: 20px solid transparent;
+				border-bottom: 20px solid #f00;
 				cursor: pointer;
 			}
 
 			#mainmenu div .slider-down {
-				width: 10px;
-				height: 10px;
-				background-color: green;
+				position: absolute;
+				top: 50%;
+				left: 30px;
+				width: 0px;
+				height: 0px;
+				margin-top: 20px;
+				border: 20px solid transparent;
+				border-top: 20px solid #f00;
 				cursor: pointer;
 			}
 
 		#mainmenu div .slider {
-			overflow-y: scroll;
-			/*overflow: hidden;*/
-			height: 240px;
+			/*overflow-y: scroll;*/
+			overflow: hidden;
+			height: 200px;
 		}
 
 			#mainmenu div .slider ul {
@@ -492,7 +515,6 @@
 								font-size: 170%;
 							}
 
-
 /*-------------------------------------------------------------------------
 	Contact
 /*-----------------------------------------------------------------------*/
@@ -517,3 +539,108 @@
 		width: 100%;
 		height: 100%;
 	}
+
+/*-------------------------------------------------------------------------
+	Lightbox
+/*-----------------------------------------------------------------------*/
+#lightbox {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.3);
+	z-index: 10000;
+}
+
+	#lightbox .lightbox-content {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		z-index: 2;
+	}
+
+		#lightbox .lightbox-content .close-btn {
+			position: absolute;
+			top: -15px;
+			right: -20px;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background: #bbb;
+			cursor: pointer;
+		}
+
+		#lightbox .lightbox-content .lightbox-ttl {
+			/*width: 300px;*/
+			margin-bottom: 5px;
+			padding: 5px 0 3px;
+			background-color: #1a580b;
+			color: #fff;
+			font-size: 16px;
+			text-align: center;
+		}
+
+		#lightbox .lightbox-content .caution {
+			width: 300px;
+			text-align: center;
+			margin-bottom: 5px;
+		}
+
+	#lightbox .color {
+		display: none;
+		height: 110px;
+		border: 6px solid #4c3410;
+		border-radius: 8px;
+		background-color: #fff;
+	}
+
+		#lightbox .color .color-list {
+			width: 300px;
+			text-align: center;
+		}
+
+			#lightbox .color .color-list li {
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				cursor: pointer;
+			}
+
+			#lightbox .color .color-list li.red {
+				background-color: red;
+			}
+
+			#lightbox .color .color-list li.blue {
+				background-color: blue;
+			}
+
+			#lightbox .color .color-list li.green {
+				background-color: green;
+			}
+
+			#lightbox .color .color-list li.yellow {
+				background-color: yellow;
+			}
+
+			#lightbox .color .color-list li.current {
+				border: solid #000 1px;
+			}
+
+	#lightbox .help {
+		display: none;
+		width: 300px;
+		height: 80px;
+		border: 6px solid #4c3410;
+		border-radius: 8px;
+		background-color: #fff;
+	}
+
+
+
+
+

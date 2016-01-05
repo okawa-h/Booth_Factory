@@ -1,4 +1,10 @@
 (function () { "use strict";
+function $extend(from, fields) {
+	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
+	for (var name in fields) proto[name] = fields[name];
+	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
+	return proto;
+}
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -194,7 +200,7 @@ src.Manager.start = function() {
 	src.view.Board.init(src.Manager._jArea);
 	src.view.Price.init();
 	src.view.Mainmenu.init(src.Manager._jMenu);
-	src.view.Sidemenu.init(src.Manager._Data);
+	src.view.sidemenu.Sidemenu.init(src.Manager._Data);
 	src.view.ProductLength.init();
 	src.view.Trash.init();
 	src.utils.Param.remakeObject();
@@ -224,7 +230,6 @@ src.Manager.setCounter = function() {
 	src.view.Price.change(price);
 	var param = src.utils.Param.make(src.Manager._jAreaObj,length,price);
 	src.utils.Param.change("?" + param);
-	src.animate.Animate.hoverObject(src.Manager._jAreaObj);
 };
 src.animate = {};
 src.animate.Animate = function() { };
@@ -270,10 +275,14 @@ src.utils.Drag.init = function(jArea,jAreaObj,jMenu) {
 	src.utils.Drag._jAreaObj.on("mousedown",function(event) {
 		src.utils.Drag.grabObject($(this),event);
 	});
+	src.utils.Drag._jAreaObj.on("mouseover",function(event1) {
+		src.utils.Drag.hoverObject($(this));
+	});
 };
 src.utils.Drag.grabList = function(event) {
 	event.preventDefault();
 	var target = $(this);
+	if(target.hasClass("drop")) return;
 	src.Manager._DragObj = target.find(".img");
 	src.Manager._DragObj.addClass("grab");
 	src.utils.Drag._Status = true;
@@ -315,6 +324,9 @@ src.utils.Drag.mouseup = function(event) {
 			src.utils.Drag._jAreaObj.on("mousedown",function(event1) {
 				src.utils.Drag.grabObject($(this),event1);
 			});
+			src.utils.Drag._jAreaObj.on("mouseover",function(event2) {
+				src.utils.Drag.hoverObject($(this));
+			});
 		}
 	}
 	src.utils.Drag.judgeArea(src.Manager._DragObj);
@@ -340,7 +352,7 @@ src.utils.Drag.createListToObj = function(target,event) {
 };
 src.utils.Drag.judgeArea = function(jTarget) {
 	if(jTarget.hasClass("accessory")) return;
-	var SPEED = 200;
+	var sPEED = 200;
 	var top = jTarget.css("top").split("px").join("");
 	var left = jTarget.css("left").split("px").join("");
 	var t = Std.parseInt(top);
@@ -353,12 +365,21 @@ src.utils.Drag.judgeArea = function(jTarget) {
 	if(left.indexOf("-") == 0) l = 0;
 	if(bottom > areaB) t = areaB - jTarget.height();
 	if(right > areaR) l = areaR - jTarget.width();
-	jTarget.animate({ top : t, left : l},SPEED);
+	jTarget.animate({ top : t, left : l},sPEED);
 };
 src.utils.Drag.getObject = function() {
 	src.utils.Drag._jAreaObj = src.utils.Drag._jArea.find(".object");
 	src.utils.Drag._jAreaObj.on("mousedown",function(event) {
 		src.utils.Drag.grabObject($(this),event);
+	});
+};
+src.utils.Drag.hoverObject = function(target) {
+	if(target.hasClass("accessory")) target.append("<div class=\"removebtn\"></div>");
+	new js.JQuery(".removebtn").on("mousedown",function(event) {
+		target.remove();
+	});
+	target.on("mouseout",function(event1) {
+		target.find(".removebtn").remove();
 	});
 };
 src.utils.Html = function() { };
@@ -580,15 +601,27 @@ src.view.Mainmenu.init = function(jMenu) {
 		src.view.Mainmenu.close();
 	});
 	src.view.Mainmenu._jScrollUp.on("mousedown",function(event2) {
-		src.view.Mainmenu.scroll($(this),"-=165px");
+		src.view.Mainmenu.scroll($(this),"up");
 	});
 	src.view.Mainmenu._jScrollDw.on("mousedown",function(event3) {
-		src.view.Mainmenu.scroll($(this),"165px");
+		src.view.Mainmenu.scroll($(this),"down");
 	});
 };
-src.view.Mainmenu.scroll = function(jThis,param) {
-	var jTarget = jThis.prev(".slider").find("ul");
-	jTarget.animate({ 'margin-top' : param});
+src.view.Mainmenu.scroll = function(jThis,action) {
+	var jTarget = jThis.siblings(".slider");
+	var jUp = jTarget.siblings(".slider-up");
+	var jDw = jTarget.siblings(".slider-down");
+	var h = jTarget.find("ul").find("li").outerHeight() + 20;
+	var scrollTop = jTarget.scrollTop();
+	var scrollVal;
+	if(action == "up") scrollVal = -h; else scrollVal = h;
+	if(jTarget["is"](":animated")) return;
+	jTarget.animate({ scrollTop : scrollTop + scrollVal});
+	src.view.Mainmenu.setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
+};
+src.view.Mainmenu.setScrollBtn = function(jUp,jDw,scrollTop,height) {
+	if(scrollTop > 0) jUp.show(); else jUp.hide();
+	if(scrollTop >= height - 220) jDw.hide(); else jDw.show();
 };
 src.view.Mainmenu.clickBtn = function(jThis,event) {
 	var cls = jThis.prop("class");
@@ -613,6 +646,7 @@ src.view.Mainmenu.addCurrent = function(cls) {
 };
 src.view.Mainmenu.addDrop = function(id) {
 	if(src.view.Mainmenu._jMenu.find("#" + id) == null) return;
+	console.log("ugoiteru");
 	src.view.Mainmenu._jMenu.find("#" + id).addClass("drop");
 };
 src.view.Mainmenu.clearDrop = function(id) {
@@ -660,67 +694,6 @@ src.view.ProductLength.clear = function() {
 	src.view.ProductLength.lengthBanner.text("0");
 	src.view.ProductLength.lengthPaper.text("0");
 };
-src.view.Sidemenu = function() { };
-src.view.Sidemenu.init = function(data) {
-	src.view.Sidemenu._jBtnMatu = new js.JQuery("#set-name-matu");
-	src.view.Sidemenu._jBtnTake = new js.JQuery("#set-name-take");
-	src.view.Sidemenu._jBtnUme = new js.JQuery("#set-name-ume");
-	src.view.Sidemenu._jBtnColor = new js.JQuery("#color-btn");
-	src.view.Sidemenu._jColorList = src.view.Sidemenu._jBtnColor.find(".color-list");
-	src.view.Sidemenu._jBtnClear = new js.JQuery("#help-btn");
-	src.view.Sidemenu.setRightMenu(data);
-};
-src.view.Sidemenu.setRightMenu = function(data) {
-	src.view.Sidemenu._jBtnMatu.on("mousedown",function(event) {
-		src.view.Sidemenu.setPacage(data.set[0].url);
-	});
-	src.view.Sidemenu._jBtnTake.on("mousedown",function(event1) {
-		src.view.Sidemenu.setPacage(data.set[1].url);
-	});
-	src.view.Sidemenu._jBtnUme.on("mousedown",function(event2) {
-		src.view.Sidemenu.setPacage(data.set[2].url);
-	});
-	src.view.Sidemenu._jBtnColor.on("mousedown",function(event3) {
-		src.view.Sidemenu.showChangeColor();
-	});
-	src.view.Sidemenu._jColorList.find("li").on("mousedown",function(event4) {
-		src.view.Sidemenu.changeColor($(this));
-	});
-	src.view.Sidemenu._jBtnClear.on("mousedown",function(event5) {
-		src.view.Sidemenu.setPacage("?");
-		src.view.Price.clear();
-		src.view.ProductLength.clear();
-		src.view.Mainmenu.clearDrop("all");
-	});
-};
-src.view.Sidemenu.setPacage = function(data) {
-	var url = jp.saken.utils.Dom.jWindow[0].location;
-	if(url == null) url = "null"; else url = "" + url;
-	if(url.indexOf("obj") > -1) src.view.Board.clear();
-	src.utils.Param.change(data);
-	src.utils.Param.remakeObject();
-	src.utils.Drag.getObject();
-};
-src.view.Sidemenu.showChangeColor = function() {
-	if(src.view.Sidemenu._jColorList.hasClass("open")) {
-		src.view.Sidemenu._jColorList.animate({ width : "0px", 'margin-left' : "0px"},null,function() {
-			src.view.Sidemenu._jColorList.hide();
-		});
-		src.view.Sidemenu._jColorList.removeClass("open");
-		return;
-	}
-	src.view.Sidemenu._jColorList.show();
-	src.view.Sidemenu._jColorList.addClass("open");
-	src.view.Sidemenu._jColorList.animate({ width : "200px", 'margin-left' : "-150px"});
-};
-src.view.Sidemenu.changeColor = function(target) {
-	if(target.hasClass("current")) return;
-	var cls = target.prop("class");
-	src.view.Sidemenu._jBtnColor.removeClass();
-	src.view.Sidemenu._jBtnColor.addClass(cls);
-	src.view.Sidemenu._jColorList.find("li").removeClass("current");
-	target.addClass("current");
-};
 src.view.Trash = function() { };
 src.view.Trash.init = function() {
 	src.view.Trash._jTrash = new js.JQuery("#trash");
@@ -753,6 +726,7 @@ src.view.Trash.deleteObj = function(target,event) {
 		src.view.Mainmenu.clearDrop(id);
 		TweenMax.to(target,0.6,{ scaleX : 2.0, scaleY : 2.0, ease : Elastic.easeOut, onComplete : function() {
 			target.remove();
+			src.Manager.setCounter();
 		}});
 	}
 };
@@ -769,6 +743,102 @@ src.view.Trash.judgeDelete = function(event) {
 	if(y > top && bottom > y && x > left && right > x) judge = true; else judge = false;
 	return judge;
 };
+src.view.sidemenu = {};
+src.view.sidemenu.Sidemenu = function() {
+};
+src.view.sidemenu.Sidemenu.init = function(data) {
+	src.view.sidemenu.Sidemenu._jBtnMatu = new js.JQuery("#set-name-matu");
+	src.view.sidemenu.Sidemenu._jBtnTake = new js.JQuery("#set-name-take");
+	src.view.sidemenu.Sidemenu._jBtnUme = new js.JQuery("#set-name-ume");
+	src.view.sidemenu.Sidemenu._jBtnColor = new js.JQuery("#color-btn");
+	src.view.sidemenu.Sidemenu._jColorList = src.view.sidemenu.Sidemenu._jBtnColor.find(".color-list");
+	src.view.sidemenu.Sidemenu._jBtnHelp = new js.JQuery("#help-btn");
+	src.view.sidemenu.Sidemenu._jLightBox = new js.JQuery("#lightbox");
+	src.view.sidemenu.Lightbox.init(src.view.sidemenu.Sidemenu._jLightBox);
+	src.view.sidemenu.Sidemenu.setRightMenu(data);
+};
+src.view.sidemenu.Sidemenu.setRightMenu = function(data) {
+	src.view.sidemenu.Sidemenu._jBtnMatu.on("mousedown",function(event) {
+		src.view.sidemenu.Sidemenu.setPacage(data.set[0].url);
+	});
+	src.view.sidemenu.Sidemenu._jBtnTake.on("mousedown",function(event1) {
+		src.view.sidemenu.Sidemenu.setPacage(data.set[1].url);
+	});
+	src.view.sidemenu.Sidemenu._jBtnUme.on("mousedown",function(event2) {
+		src.view.sidemenu.Sidemenu.setPacage(data.set[2].url);
+	});
+	src.view.sidemenu.Sidemenu._jBtnColor.on("mousedown",function(event3) {
+		src.view.sidemenu.Lightbox.show("color",$(this));
+	});
+	src.view.sidemenu.Sidemenu._jBtnHelp.on("mousedown",function(event4) {
+		src.view.sidemenu.Lightbox.show("help",$(this));
+	});
+	new js.JQuery("#contact-btn").find("a").on("mousedown",function(event5) {
+		src.view.sidemenu.Sidemenu.setPacage("?");
+		src.view.Price.clear();
+		src.view.ProductLength.clear();
+		src.view.Mainmenu.clearDrop("all");
+	});
+};
+src.view.sidemenu.Sidemenu.setPacage = function(data) {
+	var url = jp.saken.utils.Dom.jWindow[0].location;
+	if(url == null) url = "null"; else url = "" + url;
+	if(url.indexOf("obj") > -1) src.view.Board.clear();
+	src.utils.Param.change(data);
+	src.utils.Param.remakeObject();
+	src.utils.Drag.getObject();
+};
+src.view.sidemenu.Lightbox = function() {
+	src.view.sidemenu.Sidemenu.call(this);
+};
+src.view.sidemenu.Lightbox.init = function(jLightBox) {
+	src.view.sidemenu.Lightbox._jLightBox = jLightBox;
+};
+src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
+	var jbox = src.view.sidemenu.Lightbox._jLightBox.find("." + cls);
+	var sPEED = 300;
+	jbox.width(50);
+	src.view.sidemenu.Lightbox._jLightBox.fadeIn(sPEED,function() {
+		jbox.show();
+		TweenMax.to(jbox,1,{ width : 300, ease : Elastic.easeOut});
+	});
+	if(cls == "color") src.view.sidemenu.Lightbox.changeColor(jBtn,jbox);
+	jbox.find(".close-btn").on("mousedown",function(event) {
+		jbox.fadeOut(sPEED);
+		src.view.sidemenu.Lightbox._jLightBox.fadeOut(sPEED);
+		jbox.find(".close-btn").off("mousedown");
+	});
+};
+src.view.sidemenu.Lightbox.changeColor = function(jBtn,jbox) {
+	var jColorList = jbox.find(".color-list");
+	jColorList.find("li").on("mousedown",function(event) {
+		var jAreaObj = new js.JQuery("#mainboard").find(".object");
+		var target = $(this);
+		if(target.hasClass("current")) return;
+		var cls = target.prop("class");
+		jBtn.removeClass();
+		jBtn.addClass(cls);
+		jColorList.find("li").removeClass("current");
+		target.addClass("current");
+		if(jAreaObj != null) src.view.sidemenu.Lightbox.changeObjColor(jAreaObj,cls);
+	});
+};
+src.view.sidemenu.Lightbox.changeObjColor = function(jAreaObj,cls) {
+	var length = jAreaObj.length;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var jObj = jAreaObj.eq(i).find("img");
+		var src = jObj.prop("src");
+		var array = src.split("/");
+		var color = array[array.length - 2];
+		var newSrc = src.split("/" + color + "/").join("/" + cls + "/");
+		jObj.prop("src",newSrc);
+	}
+};
+src.view.sidemenu.Lightbox.__super__ = src.view.sidemenu.Sidemenu;
+src.view.sidemenu.Lightbox.prototype = $extend(src.view.sidemenu.Sidemenu.prototype,{
+});
 var q = window.jQuery;
 js.JQuery = q;
 jp.saken.utils.Dom.document = window.document;
