@@ -18,7 +18,7 @@
 			<h1></h1>
 			<div id="contact">
 				<div class="contact-box">
-					<p id="price"><span>0</span>円</p><div id="contact-btn"><a href="">お問い合わせ</a></div>
+					<div id="contact-btn"><a href="#">お問い合わせ</a></div><p id="price"><span>0</span>円</p>
 				</div>
 				<p class="caution">これらの他にも多数のグッズを取り揃えております。詳しくはお問い合わせください。</p>
 			</div>
@@ -44,14 +44,19 @@
 					<div class="set-config">
 						<ul>
 							<li id="color-btn" class="blue">
-								<ul class="color-list">
-									<li class="red"></li>
-									<li class="blue current"></li>
-									<li class="green"></li>
-									<li class="yellow"></li>
-								</ul>
-							</li><li id="help-btn"></li>
+							</li>
+							<li id="help-btn"></li>
 						</ul>
+						<div class="color-config">
+							<div class="close-btn">×</div>
+							<header class="color-ttl">色変更</header>
+							<ul class="color-list">
+								<li class="red"></li>
+								<li class="blue current"></li>
+								<li class="green"></li>
+								<li class="yellow"></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 
@@ -111,22 +116,12 @@
 
 		<div id="lightbox">
 			
-			<div class="color lightbox-content">
-				<div class="close-btn"></div>
-				<header class="lightbox-ttl">カラーチェンジ</header>
-				<p class="caution">色を選択してください。</p>
-				<ul class="color-list">
-					<li class="red"></li>
-					<li class="blue current"></li>
-					<li class="green"></li>
-					<li class="yellow"></li>
-				</ul>
-			</div>
 			<div class="help lightbox-content">
-				<div class="close-btn"></div>
+				<div class="close-btn">×</div>
 				<header class="lightbox-ttl">ヘルプ</header>
 				<p class="caution">ヘルプヘルプヘルプ</p>
 			</div>
+			
 		</div><!-- lightbox -->
 
 		<footer id="footer">

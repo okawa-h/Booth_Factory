@@ -14,6 +14,7 @@ class Trash {
 	private static var _jTrash      : JQuery;
 	private static var _jTrashBox   : JQuery;
 	private static var _jTrashArrow : JQuery;
+  private static var _Status      : Bool;
 
   /* =======================================================================
   Init
@@ -23,100 +24,116 @@ class Trash {
     _jTrash      = new JQuery('#trash');
     _jTrashBox   = _jTrash.find('.trash-box');
     _jTrashArrow = _jTrash.find('.trash-arrow');
-
-    _jTrashBox.on('mouseover',function(event:JqEvent) {
-
-      TweenMaxHaxe.to(_jTrash, 1, {scaleX:1.2, scaleY:1.2, ease:Elastic.easeOut});
-
-      untyped _jTrashBox.off('mouseup');
-
-      _jTrashBox.on('mouseup',function(event:JqEvent) {
-
-        deleteObj(Manager._DragObj,event);
-
-      });
-
-    });
-
-     _jTrashBox.on('mouseleave',function(event:JqEvent) {
-
-      TweenMaxHaxe.to(_jTrash, 1, {scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut});
-
-    });
+    _Status      = false;
 
   }
 
   /* =======================================================================
-  View
+  On Obj
   ========================================================================== */
-  public static function show():Void {
+  public static function onObj(target:JQuery):Void {
 
-    _jTrashBox.show();
-    _jTrashArrow.show(function() {
-    	//TweenMaxHaxe.to(_jTrashArrow , 0.5 , {top:"-25%",repeat: -1,yoyo : true,ease: Circ.easeOut});
-    });
+    if (judgeOnObj(target)) {
+
+      TweenMaxHaxe.to(_jTrashBox, 1, {scaleX:1.2, scaleY:1.2, ease:Elastic.easeOut});
+
+    } else {
+
+      TweenMaxHaxe.to(_jTrashBox, 1, {scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut});
+
+    }
+
+  }
+
+  /* =======================================================================
+  Leave Obj
+  ========================================================================== */
+  public static function leaveObj(target:JQuery):Void {
+
+    deleteObj(target);
 
   }
 
   /* =======================================================================
   Hide
   ========================================================================== */
-  public static function hide(target:JQuery = null):Void {
+  public static function hide():Void {
 
-    if (target == null) {
+    if (!_Status) {
 
+      _jTrashArrow.hide();
       _jTrashBox.hide();
 
-    } else {
-
-      _jTrashBox.delay(3000).hide();
-
     }
-    
-    _jTrashArrow.hide();
+
+  }
+
+  /* =======================================================================
+  Show
+  ========================================================================== */
+  public static function show():Void {
+
+    TweenMaxHaxe.set(_jTrashArrow,{y:60});
+    _jTrashBox.show();
+    _jTrashArrow.show();
+    TweenMaxHaxe.to(_jTrashArrow , 0.8 , {y:-30,repeat:-1,yoyo : true,ease: Circ.easeOut});
 
   }
 
       /* =======================================================================
       Delete Object
       ========================================================================== */
-      private static function deleteObj(target:JQuery,event:JqEvent):Void {
+      private static function deleteObj(target:JQuery):Void {
 
-      	var judge : Bool = judgeDelete(event);
-        
-      	if (judge) {
+      	if (judgeOnObj(target)) {
 
+          _Status = true;
           var id : String = target.data('id');
-          Mainmenu.clearDrop(id);
+          target.css('z-index','10000');
 
-          TweenMaxHaxe.to(target, 0.6, {scaleX:2.0, scaleY:2.0, ease:Elastic.easeOut,onComplete:function() {
+          TweenMaxHaxe.to(target, 0.2, {scaleX:0.7, scaleY:0.7, ease:Elastic.easeOut});
+          TweenMaxHaxe.to(target, 0.3,{y:-30,delay:0.2});
+          TweenMaxHaxe.to(target, 0.3,{y:130,delay:0.5,onComplete:function() {
 
             target.remove();
             Manager.setCounter();
+            Mainmenu.clearDrop(id);
+            _Status = false;
 
           }});
+
+          TweenMaxHaxe.to(_jTrashBox, 0.5, {y:15,ease:Elastic.easeIn,delay:0.5});
+          TweenMaxHaxe.to(_jTrashBox, 0.8, {y:0,scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut,delay:1,onComplete:function() {
+
+            if (Manager._DragObj == null) {
+              _jTrashBox.hide();
+              _jTrashArrow.hide(); 
+            }
+
+          }});
+
+
         }
       }
 
-		  /* =======================================================================
-		  Object Delete
-		  ========================================================================== */
-		  private static function judgeDelete(event:JqEvent):Bool {
+  /* =======================================================================
+  Object Delete
+  ========================================================================== */
+  public static function judgeOnObj(target:JQuery):Bool {
 
-		  	var y : Float = 0;
-		  	var x : Float = 0;
+  	var y : Float = target.offset().top;
+    var h : Float = y + target.height();
+  	var x : Float = target.offset().left;
+    var w : Float = x + target.width();
 
-		  	untyped y = event.clientY;
-		  	untyped x = event.clientX;
+    var top    : Float = _jTrashBox.offset().top;
+    var left   : Float = _jTrashBox.offset().left;
+    var bottom : Float = top + _jTrashBox.height();
+    var right  : Float = left + _jTrashBox.width();
 
-		    var top    : Float = _jTrashBox.offset().top;
-		    var left   : Float = _jTrashBox.offset().left;
-		    var bottom : Float = top + _jTrashBox.height();
-		    var right  : Float = left + _jTrashBox.width();
+    var judge  : Bool = ( top < h && left < w && bottom > y && right > x ) ? true : false;
 
-		    var judge : Bool = (y > top && bottom > y && x > left && right > x ) ? true : false;
-
-		    return judge;
-		  }
+    return judge;
+  }
 
 }

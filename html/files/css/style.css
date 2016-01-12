@@ -65,6 +65,10 @@
 			z-index: 450;
 		}
 
+		#mainboard .board .clothes {
+			z-index: 750;
+		}
+
 		#mainboard .board .accessory {
 			z-index: 800;
 		}
@@ -141,11 +145,12 @@
 	#trash .trash-arrow {
 		display: none;
 		position: absolute;
-		top: -80%;
+		top: -80px;
 		left: 23px;
 		width: 30px;
 		height: 34px;
 		background: url(../img/icon/icon_trash_arrow.png) no-repeat center center;
+		z-index: 1;
 	}
 
 	#trash .trash-box {
@@ -161,7 +166,7 @@
 /*-----------------------------------------------------------------------*/
 #sidemenu-left {
 	position: absolute;
-	top: 25%;
+	top: 165px;
 	left: 0;
 	z-index: 600;
 }
@@ -204,7 +209,7 @@
 /*-----------------------------------------------------------------------*/
 #sidemenu-right {
 	position: absolute;
-	top: 20%;
+	top: 160px;
 	right: 25px;
 	z-index: 600;
 }
@@ -257,7 +262,7 @@
 			padding: 10px 0;
 		}
 
-			#sidemenu-right .set-config > ul > li {
+			#sidemenu-right .set-config ul li {
 				width: 60px;
 				height: 61px;
 				margin: 0 auto;
@@ -281,38 +286,73 @@
 				background: url(../img/icon/icon_color_yellow.png) no-repeat center center;
 			}
 
-				#sidemenu-right .set-config ul #color-btn ul {
+				#sidemenu-right .set-config .color-config {
 					display: none;
 					position: absolute;
-					left: 0px;
-					width: 0;
+					top: 360px;
+					left: -120%;
+					width: 0px;
+					height: 0;
+					border: 6px solid #4c3410;
+					border-radius: 8px;
+					background-color: #fff;
+					overflow: hidden;
 				}
 
-					#sidemenu-right .set-config ul #color-btn ul li {
-						float: left;
-						width: 30px;
-						height: 30px;
-						margin-right: 5px;
+					#sidemenu-right .set-config .color-config .close-btn {
+						position: absolute;
+						top: -12px;
+						right: -10px;
+						width: 23px;
+						height: 23px;
+						border-radius: 50%;
+						background-color: #888;
+						color: #fff;
+						font-weight: bold;
+						text-align: center;
+						cursor: pointer;
+					}
+
+					#sidemenu-right .set-config .color-config .close-btn:hover {
+						background-color: #eee;
+						color: #888;
+					}
+
+					#sidemenu-right .set-config .color-config .color-ttl {
+						margin-bottom: 15px;
+						padding: 10px 0 5px;
+						background-color: #1a580b;
+						color: #fff;
+					}
+
+				#sidemenu-right .set-config .color-config ul {
+					display: none;
+				}
+
+					#sidemenu-right .set-config .color-config ul li {
+						width: 20px;
+						height: 20px;
+						margin: 0 auto 10px;
 						border-radius: 50%;
 					}
 
-					#sidemenu-right .set-config ul #color-btn ul li.current {
+					#sidemenu-right .set-config .color-config ul li.current {
 						border: 1px solid #000;
 					}
 
-					#sidemenu-right .set-config ul #color-btn ul li.red {
+					#sidemenu-right .set-config .color-config ul li.red {
 						background-color: red;
 					}
 
-					#sidemenu-right .set-config ul #color-btn ul li.blue {
+					#sidemenu-right .set-config .color-config ul li.blue {
 						background-color: blue;
 					}
 
-					#sidemenu-right .set-config ul #color-btn ul li.green {
+					#sidemenu-right .set-config .color-config ul li.green {
 						background-color: green;
 					}
 
-					#sidemenu-right .set-config ul #color-btn ul li.yellow {
+					#sidemenu-right .set-config .color-config ul li.yellow {
 						background-color: yellow;
 					}
 
@@ -424,7 +464,7 @@
 				height: 0px;
 				margin-top: -60px;
 				border: 20px solid transparent;
-				border-bottom: 20px solid #f00;
+				border-bottom: 20px solid #1a580b;
 				cursor: pointer;
 			}
 
@@ -436,12 +476,12 @@
 				height: 0px;
 				margin-top: 20px;
 				border: 20px solid transparent;
-				border-top: 20px solid #f00;
+				border-top: 20px solid #1a580b;
 				cursor: pointer;
 			}
 
 		#mainmenu div .slider {
-			/*overflow-y: scroll;*/
+			overflow-y: scroll;
 			overflow: hidden;
 			height: 200px;
 		}
@@ -545,7 +585,7 @@
 /*-----------------------------------------------------------------------*/
 #lightbox {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -566,13 +606,21 @@
 
 		#lightbox .lightbox-content .close-btn {
 			position: absolute;
-			top: -15px;
-			right: -20px;
-			width: 25px;
-			height: 25px;
+			top: -12px;
+			right: -10px;
+			width: 23px;
+			height: 23px;
 			border-radius: 50%;
-			background: #bbb;
+			background-color: #888;
+			color: #fff;
+			font-weight: bold;
+			text-align: center;
 			cursor: pointer;
+		}
+
+		#lightbox .lightbox-content .close-btn:hover {
+			background-color: #eee;
+			color: #888;
 		}
 
 		#lightbox .lightbox-content .lightbox-ttl {
@@ -590,46 +638,6 @@
 			text-align: center;
 			margin-bottom: 5px;
 		}
-
-	#lightbox .color {
-		display: none;
-		height: 110px;
-		border: 6px solid #4c3410;
-		border-radius: 8px;
-		background-color: #fff;
-	}
-
-		#lightbox .color .color-list {
-			width: 300px;
-			text-align: center;
-		}
-
-			#lightbox .color .color-list li {
-				display: inline-block;
-				width: 20px;
-				height: 20px;
-				cursor: pointer;
-			}
-
-			#lightbox .color .color-list li.red {
-				background-color: red;
-			}
-
-			#lightbox .color .color-list li.blue {
-				background-color: blue;
-			}
-
-			#lightbox .color .color-list li.green {
-				background-color: green;
-			}
-
-			#lightbox .color .color-list li.yellow {
-				background-color: yellow;
-			}
-
-			#lightbox .color .color-list li.current {
-				border: solid #000 1px;
-			}
 
 	#lightbox .help {
 		display: none;

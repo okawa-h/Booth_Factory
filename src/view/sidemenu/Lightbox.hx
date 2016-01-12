@@ -44,8 +44,6 @@ class Lightbox extends Sidemenu {
 
     });
 
-    if (cls == "color") changeColor(jBtn,jbox);
-
     jbox.find('.close-btn').on('mousedown',function(event:JqEvent) {
 
       jbox.fadeOut(sPEED);
@@ -56,52 +54,5 @@ class Lightbox extends Sidemenu {
     });
 
   }
-
-      /* =======================================================================
-      Change Color
-      ========================================================================== */
-      private static function changeColor(jBtn:JQuery,jbox:JQuery):Void {
-
-        var jColorList : JQuery = jbox.find('.color-list');
-        
-        jColorList.find('li').on('mousedown',function(event:JqEvent) {
-
-          var jAreaObj : JQuery = new JQuery('#mainboard').find('.object');
-          var target   : JQuery = JQuery.cur;
-
-          if (target.hasClass('current')) return;
-
-          var cls : String = target.prop('class');
-
-          jBtn.removeClass();
-          jBtn.addClass(cls);
-          jColorList.find('li').removeClass('current');
-          target.addClass('current');
-
-          if (jAreaObj != null) changeObjColor(jAreaObj,cls);
-
-        });
-
-      }
-
-      /* =======================================================================
-      Change Obj Color
-      ========================================================================== */
-      private static function changeObjColor(jAreaObj:JQuery,cls:String):Void {
-
-        var length : Int = jAreaObj.length;
-
-        for (i in 0 ... length) {
-
-          var jObj  : JQuery = jAreaObj.eq(i).find('img');
-          var src   : String = jObj.prop('src');
-          var array : Array<String> = src.split('/');
-          var color : String = array[array.length - 2];
-          var newSrc: String = src.split('/' + color + '/').join('/' + cls + '/');
-          jObj.prop('src',newSrc);
-
-        }
-
-      }
 
 }

@@ -7,6 +7,7 @@
 	All
 /*-----------------------------------------------------------------------*/
 body,html {
+	position: relative;
   width: 100%;
   min-width: 960px;
   height: 100%;
@@ -17,15 +18,15 @@ body,html {
 	-khtml-user-select:none;
 	-webkit-user-drag:none;
 	-khtml-user-drag:none;
-	position: relative;
 }
 
 #all {
-  min-width: 980px;
+  min-width: 960px;
 }
 
 .grab {
 	position: fixed;
+	opacity: .9;
 	z-index: 3000;
 }
 	
@@ -51,23 +52,24 @@ body,html {
 /*-------------------------------------------------------------------------
 	Contact
 /*-----------------------------------------------------------------------*/
-#contact {
-	float: right;
+#header #contact {
+	position: absolute;
+	top: 0;
+	right: 0;
 	margin: 15px 25px 0 0;
+	z-index: 1500;
 }
 
 	#contact .contact-box {
-		position: relative;
 		margin-bottom: 6px;
 		padding: 10px 10px 10px 100px;
 		border: 6px solid #4c3410;
 		border-radius: 8px;
 		background: url(../../img/icon/icon_price_ss.png) no-repeat 15px 50% #fff;
-		z-index: 2000;
 	}
 
 		#contact .contact-box #price {
-			float: left;
+			float: right;
 			font-size: 46px;
 			font-weight: bold;
 			text-align: right;
@@ -97,13 +99,14 @@ body,html {
 		float: right;
 		color: #392508;
 		font-size: 13px;
-		z-index: 2000;
 	}
+	
 /*-------------------------------------------------------------------------
 	Footer
 /*-----------------------------------------------------------------------*/
 #footer {
 	width: 100%;
+	min-width: 960px;
 	position: fixed;
 	bottom: 0;
 	background-color: #6f4809;

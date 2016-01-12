@@ -48,8 +48,8 @@ class Price {
 
         val += '.png';
 
-        var txt    : String = str.split('url("')[1];
-        var url    : String = txt.split('")')[0];
+        var txt    : String = str.split('url(')[1];
+        var url    : String = txt.split(')')[0];
         var urlArr : Array<String> = url.split('/');
         var tar    : String = urlArr[urlArr.length - 1];
         tar = url.split(tar).join(val);

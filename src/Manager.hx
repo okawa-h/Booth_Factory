@@ -53,7 +53,7 @@ class Manager {
 
       setCounter();
       Log.write();
-      Trash.hide(_DragObj);
+      Trash.hide();
 
     });
 

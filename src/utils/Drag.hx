@@ -2,9 +2,12 @@ package src.utils;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import tween.TweenMaxHaxe;
+import tween.easing.Elastic;
 import src.utils.Html;
 import src.Manager;
 import src.view.Trash;
+import src.view.Mainmenu;
 import src.animate.Animate;
 
 class Drag {
@@ -74,8 +77,6 @@ class Drag {
 
     Manager._DragObj = target;
 
-    if (Manager._DragObj.hasClass('accessory')) return;
-
     Manager._DragObj.addClass('grab');
     getDiff(event,Manager._DragObj);
     _Status = true;
@@ -87,7 +88,6 @@ class Drag {
 
     });
 
-    //Animate.vibrationObj(Manager._DragObj);
     Trash.show();
 
   }
@@ -115,6 +115,9 @@ class Drag {
             'left'    : untyped event.clientX - _diffX
 
           });
+
+          Trash.onObj(Manager._DragObj);
+
         }
 
       }
@@ -129,6 +132,8 @@ class Drag {
         if (Manager._DragObj == null) return;
 
         if (Manager._DragObj.hasClass('grab')) {
+          
+          Trash.leaveObj(Manager._DragObj);
 
           var h : Int = new JQuery('#header').height();
           var w : Int = _jArea.offset().left;
@@ -141,7 +146,6 @@ class Drag {
           });
 
           Manager._DragObj.removeClass('grab');
-          //Animate.stopTimeline(Manager._DragObj);
 
         }
 
@@ -186,16 +190,25 @@ class Drag {
         var top   : Float  = event.pageY - new JQuery('#header').height() - _diffY;
         var left  : Float  = event.pageX - _jArea.offset().left - _diffX;
 
-        if (type == "accessory") {
+        if (type == "accessory" || type == "clothes") {
+
           var abs : Array<String> = target.data('abs').split(',');
           top  = Std.parseFloat(abs[0]);
           left = Std.parseFloat(abs[1]);
+
+        }
+
+        if (type == "clothes") {
+          Mainmenu.clearDrop(_jAreaObj.filter('.clothes').data('id'));
+          _jAreaObj.filter('.clothes').remove();
         }
         
         var html:String = Html.getObj(id,top,left,type,cat,price,icon,color);
 
         _jArea.find('.board').append(html);
         Manager._DragObj = _jArea.find('.board').find('.object.' + id);
+        TweenMaxHaxe.set(Manager._DragObj, {scaleX:1.4, scaleY:1.4});
+        TweenMaxHaxe.to(Manager._DragObj, 0.3,{scaleX:1, scaleY:1, ease:Elastic.easeOut,delay:0.1});
 
       }
 
@@ -204,9 +217,8 @@ class Drag {
       ========================================================================== */
       private static function judgeArea(jTarget:JQuery):Void {
 
-        if (jTarget.hasClass('accessory')) return;
-
         var sPEED  : Int    = 200;
+        var duration : Int  = 0;
 
         var top    : String = jTarget.css('top').split('px').join('');
         var left   : String = jTarget.css('left').split('px').join('');
@@ -222,8 +234,36 @@ class Drag {
         if (bottom > areaB) t = areaB - jTarget.height();
         if (right > areaR)  l = areaR - jTarget.width();
 
-        jTarget.animate({ top: t, left : l }, sPEED);
+        if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes')) {
+
+          if (Trash.judgeOnObj(jTarget)) return;
+          var abs : Array<String> = absPosition(jTarget);
+          t = Std.parseInt(abs[0]);
+          l = Std.parseInt(abs[1]);
+          duration = 200;
+          
+        }
+
+        jTarget.delay(duration).animate({ top: t, left : l }, sPEED);
       
+      }
+
+      /* =======================================================================
+      Absolute Position
+      ========================================================================== */
+      private static function absPosition(target:JQuery):Array<String> {
+
+        var id : String    = target.data('id');
+        var data : Dynamic = Manager._Data;
+        var array: Array<String> = [];
+        for (i in 0 ... data.object.length) {
+          if (data.object[i].id == Std.string(id)) {
+            array = data.object[i].abs;
+          }
+        }
+
+        return array;
+
       }
 
   /* =======================================================================

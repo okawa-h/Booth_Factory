@@ -1,7 +1,7 @@
 {
     "object": [
         {
-            "id"   : "poster_a0",
+            "id"   : "01",
             "name" : "A0・ポスター",
             "price": "10000",
             "length": "10セット",
@@ -11,7 +11,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_a1",
+            "id"   : "02",
             "name" : "A1・ポスター",
             "price": "8000",
             "length": "10セット",
@@ -21,7 +21,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_a2",
+            "id"   : "03",
             "name" : "A2・ポスター",
             "price": "6000",
             "length": "10セット",
@@ -31,7 +31,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_a3",
+            "id"   : "04",
             "name" : "A3・ポスター",
             "price": "5000",
             "length": "10セット",
@@ -41,7 +41,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_a4",
+            "id"   : "05",
             "name" : "A4・ポスター",
             "price": "3000",
             "length": "10セット",
@@ -51,7 +51,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_a5",
+            "id"   : "06",
             "name" : "A5・ポスター",
             "price": "1000",
             "length": "10セット",
@@ -61,7 +61,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_b0",
+            "id"   : "07",
             "name" : "B0・ポスター",
             "price": "10000",
             "length": "10セット",
@@ -71,7 +71,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_b1",
+            "id"   : "08",
             "name" : "B1・ポスター",
             "price": "8000",
             "length": "10セット",
@@ -81,7 +81,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_b2",
+            "id"   : "09",
             "name" : "B2・ポスター",
             "price": "6000",
             "length": "10セット",
@@ -91,7 +91,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_b3",
+            "id"   : "10",
             "name" : "B3・ポスター",
             "price": "5000",
             "length": "10セット",
@@ -101,7 +101,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_b4",
+            "id"   : "11",
             "name" : "B4・ポスター",
             "price": "3000",
             "length": "10セット",
@@ -111,7 +111,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "poster_b5",
+            "id"   : "12",
             "name" : "B5・ポスター",
             "price": "1000",
             "length": "10セット",
@@ -121,7 +121,7 @@
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "booklet_a4",
+            "id"   : "13",
             "name" : "A4・冊子",
             "price": "10000",
             "length": "10000セット",
@@ -131,7 +131,7 @@
             "img"  : "utiwa.png",
             "bgImg": "utiwa.png"
         }, {
-            "id"   : "file_a4",
+            "id"   : "14",
             "name" : "A4・クリアファイル",
             "price": "10000",
             "length": "10000セット",
@@ -141,7 +141,7 @@
             "img"  : "clearfile.png",
             "bgImg": "clearfile.png"
         }, {
-            "id"   : "folder_a4",
+            "id"   : "15",
             "name" : "A4・フォルダー",
             "price": "10000",
             "length": "10000セット",
@@ -151,7 +151,7 @@
             "img"  : "folder.png",
             "bgImg": "folder.png"
         }, {
-            "id"   : "paper_a4",
+            "id"   : "16",
             "name" : "A4・チラシ",
             "price": "10000",
             "length": "10000セット",
@@ -161,7 +161,7 @@
             "img"  : "utiwa.png",
             "bgImg": "utiwa.png"
         }, {
-            "id"   : "banner_b1",
+            "id"   : "17",
             "name" : "B1・バナー",
             "price": "8000",
             "length": "3セット",
@@ -171,7 +171,7 @@
             "img"  : "banner_b1.png",
             "bgImg": "banner_b1.png"
         }, {
-            "id"   : "board_a",
+            "id"   : "18",
             "name" : "A型看板",
             "price": "10000",
             "length": "1セット",
@@ -181,7 +181,7 @@
             "img"  : "banner.png",
             "bgImg": "banner.png"
         }, {
-            "id"   : "table_2",
+            "id"   : "19",
             "name" : "机の上におくやつ",
             "price": "3000",
             "length": "10セット",
@@ -191,7 +191,7 @@
             "img"  : "table_pop_2.png",
             "bgImg": "table_pop_2.png"
         }, {
-            "id"   : "table_3",
+            "id"   : "20",
             "name" : "机の上におくやつ2",
             "price": "3000",
             "length": "10セット",
@@ -201,7 +201,7 @@
             "img"  : "table_pop_3.png",
             "bgImg": "table_pop_3.png"
         }, {
-            "id"   : "table_tisuue",
+            "id"   : "21",
             "name" : "鼻セレブ",
             "price": "1000000",
             "length": "10000セット",
@@ -211,7 +211,7 @@
             "img"  : "tissue.png",
             "bgImg": "tissue.png"
         }, {
-            "id"   : "table_pop",
+            "id"   : "22",
             "name" : "卓上ポップ",
             "price": "3000",
             "length": "10セット",
@@ -221,40 +221,40 @@
             "img"  : "table_pop.png",
             "bgImg": "table_pop.png"
         }, {
-            "id"   : "best",
+            "id"   : "23",
             "name" : "ベスト",
             "price": "1000000",
             "length": "10000セット",
-            "type" : "accessory",
+            "type" : "clothes",
             "abs" : ["230","6"],
             "cat" : "accessory",
             "icon" : "best.png",
             "img"  : "best.png",
             "bgImg": "best.png"
         }, {
-            "id"   : "buruzon",
+            "id"   : "24",
             "name" : "ブルゾン",
             "price": "1000000",
             "length": "10000セット",
-            "type" : "accessory",
+            "type" : "clothes",
             "abs" : ["230","5"],
             "cat" : "accessory",
             "icon" : "buruzon.png",
             "img"  : "buruzon.png",
             "bgImg": "buruzon.png"
         }, {
-            "id"   : "hapi",
+            "id"   : "25",
             "name" : "法被",
             "price": "1000000",
             "length": "10000セット",
-            "type" : "accessory",
+            "type" : "clothes",
             "abs" : ["232","0"],
             "cat" : "accessory",
             "icon" : "hapi.png",
             "img"  : "hapi.png",
             "bgImg": "hapi.png"
         }, {
-            "id"   : "hat",
+            "id"   : "26",
             "name" : "帽子",
             "price": "1000000",
             "length": "10000セット",
@@ -265,7 +265,7 @@
             "img"  : "hat.png",
             "bgImg": "hat.png"
         }, {
-            "id"   : "megaphone",
+            "id"   : "27",
             "name" : "メガホン",
             "price": "1000000",
             "length": "10000セット",
@@ -276,18 +276,18 @@
             "img"  : "megaphone.png",
             "bgImg": "megaphone.png"
         }, {
-            "id"   : "tshirts",
+            "id"   : "28",
             "name" : "T-シャツ",
             "price": "1000000",
             "length": "10000セット",
-            "type" : "accessory",
+            "type" : "clothes",
             "abs" : ["233","6"],
             "cat" : "accessory",
             "icon" : "tshirts.png",
             "img"  : "tshirts.png",
             "bgImg": "tshirts.png"
         }, {
-            "id"   : "utiwa",
+            "id"   : "29",
             "name" : "うちわ",
             "price": "1000000",
             "length": "10000セット",
@@ -302,12 +302,12 @@
     "set": [
         {
             "name": "matu",
-            "url" : "?obj=poster_a0-591-73&obj=poster_a1-393-65&price=18000"
+            "url" : "?color=blue&01_x=170&01_y=63&02_x=171&02_y=302&03_x=339.5&03_y=337&04_x=542&04_y=73&05_x=682&05_y=411&06_x=569&06_y=130&07_x=607&07_y=55&08_x=359&08_y=63&09_x=464&09_y=315&10_x=731&10_y=368&11_x=547&11_y=224&12_x=602&12_y=405&price=66000"
         }, {
             "name": "take",
-            "url" : "?obj=poster_a0-406.5-83&price=10000"
+            "url" : "?color=blue&01_x=405.5&01_y=134&price=10000"
         }, {
             "name": "ume",
-            "url" : "?obj=board_a-861-347&obj=banner_b1-634-73&obj=table_pop-796-321&obj=table_2-440-283&obj=poster_a0-186-73&price=34000"
+            "url" : "?color=blue&18_x=449&18_y=183&17_x=624.5&17_y=142&price=18000"
         }]
 }

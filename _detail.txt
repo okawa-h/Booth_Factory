@@ -1,37 +1,56 @@
 body
 |
---header: z-index: 2000;
+--header;
+|   |
+|   --ttl    : z-index: 2000;
+|   |
+|   --contact: z-index: 1500;
 |
---price: z-index: 2000;
+--main;
+|   |
+|   --trash     : z-index: 900;
+|   |
+|   --mainmenu  : z-index: 800;
+|   |
+|   --sidemenu-l: z-index: 600;
+|   |
+|   --sidemenu-r: z-index: 600;
+|   |
+|   --mainboard : z-index: 0;
+|       |
+|       --board : z-index: 100;
+|           |
+|           --poster   : z-index: 200;
+|           |   
+|           --desk     : z-index: 300;
+|           |   
+|           --paper    : z-index: 400;
+|           |   
+|           --panel    : z-index: 450;
+|           |   
+|           --human    : z-index: 500;
+|           |
+|           --accessory: z-index: 800;
+|           |
+|           --grab     : z-index: 3000;
 |
---trash: z-index: 900;
+--lightbox: z-index:10000;
 |
---mainmenu: z-index: 800;
-|
---sidemenu: z-index: 600;
-|
---footer: z-index: 1000;
-|
---board: z-index: 0;
-	|	
-	--banar: z-index: 100;
-	|	
-	--paper: z-index: 300;
-	|
-	--accessory: z-index: 500;
+--footer  : z-index: 1000;
 
-pram
-obj=id-x-y-color
+param
+color=blue
+obj=id-x-y
+price=1000
 
 border 6px #4c3410
 border-radius: 8px;
 
-
 item status
 {
-    "id"    : "utiwa",
-    "name"  : "うちわハンディセンス",
-    "price" : "100",
+    "id"    : "product_id",
+    "name"  : "商品名",
+    "price" : "1000",
     "length": "100セット",
     "type"  : "paper",
     "icon"  : "utiwa.png",

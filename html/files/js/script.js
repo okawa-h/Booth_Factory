@@ -9,18 +9,21 @@ var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
 };
+EReg.__name__ = true;
 EReg.prototype = {
 	replace: function(s,by) {
 		return s.replace(this.r,by);
 	}
 };
 var HxOverrides = function() { };
+HxOverrides.__name__ = true;
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
 	return x;
 };
 var Lambda = function() { };
+Lambda.__name__ = true;
 Lambda.exists = function(it,f) {
 	var $it0 = it.iterator();
 	while( $it0.hasNext() ) {
@@ -41,6 +44,7 @@ Lambda.filter = function(it,f) {
 var List = function() {
 	this.length = 0;
 };
+List.__name__ = true;
 List.prototype = {
 	add: function(item) {
 		var x = [item];
@@ -65,7 +69,9 @@ List.prototype = {
 		}};
 	}
 };
+Math.__name__ = true;
 var Std = function() { };
+Std.__name__ = true;
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -82,6 +88,7 @@ haxe.Http = function(url) {
 	this.params = new List();
 	this.async = true;
 };
+haxe.Http.__name__ = true;
 haxe.Http.prototype = {
 	setParameter: function(param,value) {
 		this.params = Lambda.filter(this.params,function(p) {
@@ -164,30 +171,142 @@ haxe.Http.prototype = {
 	,onStatus: function(status) {
 	}
 };
+haxe.Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+haxe.Timer.__name__ = true;
+haxe.Timer.prototype = {
+	stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
+	,run: function() {
+	}
+};
 var jp = {};
 jp.okawa = {};
 jp.okawa.utils = {};
 jp.okawa.utils.Estimate = function() { };
+jp.okawa.utils.Estimate.__name__ = true;
 jp.okawa.utils.Estimate.insertComma = function(numberString) {
 	var ereg = new EReg("(\\d)(?=(\\d{3})+$)","g");
 	return ereg.replace(numberString,"$1,");
+};
+jp.okawa.utils.Ua = function() { };
+jp.okawa.utils.Ua.__name__ = true;
+jp.okawa.utils.Ua.getBrowserName = function() {
+	var _ua = "取得出来ませんでした。: Ua Class";
+	var user = jp.okawa.utils.Ua.userAgent.toLowerCase();
+	var appVersion = jp.okawa.utils.Ua.window.navigator.appVersion.toLowerCase();
+	if(user.indexOf("msie") != -1) {
+		_ua = "IE6～9（おそらく）";
+		if(appVersion.indexOf("msie 6.") != -1) _ua = "IE6"; else if(appVersion.indexOf("msie 7.") != -1) _ua = "IE7"; else if(appVersion.indexOf("msie 8.") != -1) _ua = "IE8"; else if(appVersion.indexOf("msie 9.") != -1) _ua = "IE9";
+	} else if(user.indexOf("chrome") != -1) _ua = "Chrome"; else if(user.indexOf("safari") != -1) _ua = "Safari"; else if(user.indexOf("firefox") != -1) _ua = "Firefox";
+	return _ua;
+};
+jp.okawa.utils.Ua.getDevice = function() {
+	var _device = "pc";
+	if(jp.okawa.utils.Ua.userAgent.indexOf("iPhone") > 0 && jp.okawa.utils.Ua.userAgent.indexOf("iPad") == -1 || jp.okawa.utils.Ua.userAgent.indexOf("iPod") > 0 || jp.okawa.utils.Ua.userAgent.indexOf("Android") > 0) _device = "sp";
+	return _device;
 };
 var js = {};
 jp.saken = {};
 jp.saken.utils = {};
 jp.saken.utils.Dom = function() { };
+jp.saken.utils.Dom.__name__ = true;
+js.Boot = function() { };
+js.Boot.__name__ = true;
+js.Boot.__string_rec = function(o,s) {
+	if(o == null) return "null";
+	if(s.length >= 5) return "<...>";
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
+	switch(t) {
+	case "object":
+		if(o instanceof Array) {
+			if(o.__enum__) {
+				if(o.length == 2) return o[0];
+				var str = o[0] + "(";
+				s += "\t";
+				var _g1 = 2;
+				var _g = o.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
+				}
+				return str + ")";
+			}
+			var l = o.length;
+			var i1;
+			var str1 = "[";
+			s += "\t";
+			var _g2 = 0;
+			while(_g2 < l) {
+				var i2 = _g2++;
+				str1 += (i2 > 0?",":"") + js.Boot.__string_rec(o[i2],s);
+			}
+			str1 += "]";
+			return str1;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e ) {
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString) {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") return s2;
+		}
+		var k = null;
+		var str2 = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str2.length != 2) str2 += ", \n";
+		str2 += s + k + " : " + js.Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str2 += "\n" + s + "}";
+		return str2;
+	case "function":
+		return "<function>";
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
 js.Browser = function() { };
+js.Browser.__name__ = true;
 js.Browser.createXMLHttpRequest = function() {
 	if(typeof XMLHttpRequest != "undefined") return new XMLHttpRequest();
 	if(typeof ActiveXObject != "undefined") return new ActiveXObject("Microsoft.XMLHTTP");
 	throw "Unable to create XMLHttpRequest object.";
 };
+js.Lib = function() { };
+js.Lib.__name__ = true;
+js.Lib.alert = function(v) {
+	alert(js.Boot.__string_rec(v,""));
+};
 var src = {};
 src.Main = function() { };
+src.Main.__name__ = true;
 src.Main.main = function() {
 	new js.JQuery("document").ready(src.Manager.init);
 };
 src.Manager = function() { };
+src.Manager.__name__ = true;
 src.Manager.init = function(event) {
 	src.Manager._jMenu = new js.JQuery("#mainmenu");
 	src.Manager._jArea = new js.JQuery("#mainboard");
@@ -209,7 +328,7 @@ src.Manager.start = function() {
 	jp.saken.utils.Dom.jWindow.on("mouseup",function(event) {
 		src.Manager.setCounter();
 		src.view.Log.write();
-		src.view.Trash.hide(src.Manager._DragObj);
+		src.view.Trash.hide();
 	});
 };
 src.Manager.setCounter = function() {
@@ -233,6 +352,7 @@ src.Manager.setCounter = function() {
 };
 src.animate = {};
 src.animate.Animate = function() { };
+src.animate.Animate.__name__ = true;
 src.animate.Animate.init = function(jMenu,jArea) {
 	src.animate.Animate._jMenu = jMenu;
 	src.animate.Animate._jArea = jArea;
@@ -265,6 +385,7 @@ src.animate.Animate.hoverObject = function(_jAreaObj) {
 };
 src.utils = {};
 src.utils.Drag = function() { };
+src.utils.Drag.__name__ = true;
 src.utils.Drag.init = function(jArea,jAreaObj,jMenu) {
 	src.utils.Drag._Status = false;
 	src.utils.Drag._jArea = jArea;
@@ -292,7 +413,6 @@ src.utils.Drag.grabList = function(event) {
 src.utils.Drag.grabObject = function(target,event) {
 	event.preventDefault();
 	src.Manager._DragObj = target;
-	if(src.Manager._DragObj.hasClass("accessory")) return;
 	src.Manager._DragObj.addClass("grab");
 	src.utils.Drag.getDiff(event,src.Manager._DragObj);
 	src.utils.Drag._Status = true;
@@ -304,12 +424,16 @@ src.utils.Drag.getDiff = function(event,target) {
 	src.utils.Drag._diffX = event.offsetX;
 };
 src.utils.Drag.mousemove = function(event) {
-	if(src.utils.Drag._Status) src.Manager._DragObj.css({ top : event.clientY - src.utils.Drag._diffY, left : event.clientX - src.utils.Drag._diffX});
+	if(src.utils.Drag._Status) {
+		src.Manager._DragObj.css({ top : event.clientY - src.utils.Drag._diffY, left : event.clientX - src.utils.Drag._diffX});
+		src.view.Trash.onObj(src.Manager._DragObj);
+	}
 };
 src.utils.Drag.mouseup = function(event) {
 	src.utils.Drag._Status = false;
 	if(src.Manager._DragObj == null) return;
 	if(src.Manager._DragObj.hasClass("grab")) {
+		src.view.Trash.leaveObj(src.Manager._DragObj);
 		var h = new js.JQuery("#header").height();
 		var w = src.utils.Drag._jArea.offset().left;
 		src.Manager._DragObj.css({ top : event.pageY - h - src.utils.Drag._diffY, left : event.pageX - w - src.utils.Drag._diffX});
@@ -341,18 +465,24 @@ src.utils.Drag.createListToObj = function(target,event) {
 	var color = src.utils.Param.getParamOption("color");
 	var top = event.pageY - new js.JQuery("#header").height() - src.utils.Drag._diffY;
 	var left = event.pageX - src.utils.Drag._jArea.offset().left - src.utils.Drag._diffX;
-	if(type == "accessory") {
+	if(type == "accessory" || type == "clothes") {
 		var abs = target.data("abs").split(",");
 		top = Std.parseFloat(abs[0]);
 		left = Std.parseFloat(abs[1]);
 	}
+	if(type == "clothes") {
+		src.view.Mainmenu.clearDrop(src.utils.Drag._jAreaObj.filter(".clothes").data("id"));
+		src.utils.Drag._jAreaObj.filter(".clothes").remove();
+	}
 	var html = src.utils.Html.getObj(id,top,left,type,cat,price,icon,color);
 	src.utils.Drag._jArea.find(".board").append(html);
 	src.Manager._DragObj = src.utils.Drag._jArea.find(".board").find(".object." + id);
+	TweenMax.set(src.Manager._DragObj,{ scaleX : 1.4, scaleY : 1.4});
+	TweenMax.to(src.Manager._DragObj,0.3,{ scaleX : 1, scaleY : 1, ease : Elastic.easeOut, delay : 0.1});
 };
 src.utils.Drag.judgeArea = function(jTarget) {
-	if(jTarget.hasClass("accessory")) return;
 	var sPEED = 200;
+	var duration = 0;
 	var top = jTarget.css("top").split("px").join("");
 	var left = jTarget.css("left").split("px").join("");
 	var t = Std.parseInt(top);
@@ -365,7 +495,26 @@ src.utils.Drag.judgeArea = function(jTarget) {
 	if(left.indexOf("-") == 0) l = 0;
 	if(bottom > areaB) t = areaB - jTarget.height();
 	if(right > areaR) l = areaR - jTarget.width();
-	jTarget.animate({ top : t, left : l},sPEED);
+	if(jTarget.hasClass("accessory") || jTarget.hasClass("clothes")) {
+		if(src.view.Trash.judgeOnObj(jTarget)) return;
+		var abs = src.utils.Drag.absPosition(jTarget);
+		t = Std.parseInt(abs[0]);
+		l = Std.parseInt(abs[1]);
+		duration = 200;
+	}
+	jTarget.delay(duration).animate({ top : t, left : l},sPEED);
+};
+src.utils.Drag.absPosition = function(target) {
+	var id = target.data("id");
+	var data = src.Manager._Data;
+	var array = [];
+	var _g1 = 0;
+	var _g = data.object.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		if(data.object[i].id == (id == null?"null":"" + id)) array = data.object[i].abs;
+	}
+	return array;
 };
 src.utils.Drag.getObject = function() {
 	src.utils.Drag._jAreaObj = src.utils.Drag._jArea.find(".object");
@@ -383,6 +532,7 @@ src.utils.Drag.hoverObject = function(target) {
 	});
 };
 src.utils.Html = function() { };
+src.utils.Html.__name__ = true;
 src.utils.Html.getObj = function(id,top,left,type,cat,price,src,color) {
 	var html = "";
 	html += "<p class=\"object " + id + " " + type + "\"";
@@ -415,6 +565,7 @@ src.utils.Html.getList = function(id,type,cat,icon,price,bgImg,img,name,length,a
 	return html;
 };
 src.utils.Param = function() { };
+src.utils.Param.__name__ = true;
 src.utils.Param.init = function(jArea) {
 	src.utils.Param._jArea = jArea;
 };
@@ -431,29 +582,32 @@ src.utils.Param.createObject = function(param) {
 	var length = paramArray.length;
 	var data = src.Manager._Data;
 	var color = src.utils.Param.getColorParam().split("color=").join("");
+	var x = 0;
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
 		var item = paramArray[i].split("=");
-		if(item[0] == "obj") src.utils.Param.addHtml(item[1],data,color);
+		if(item[0].indexOf("_x") > -1) x = Std.parseFloat(item[1]);
+		if(item[0].indexOf("_y") > -1) {
+			var id = item[0].split("_");
+			src.utils.Param.addHtml(id[0],data,color,x,Std.parseFloat(item[1]));
+		}
 	}
 };
-src.utils.Param.addHtml = function(string,data,color) {
-	var target = string.split("-");
+src.utils.Param.addHtml = function(id,data,color,x,y) {
+	var target = id;
 	var length = data.object.length;
 	var html = "";
-	var id = "";
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
-		if(data.object[i].id == target[0]) {
-			id = target[0];
+		if(data.object[i].id == id) {
 			var type = data.object[i].type;
 			var cat = data.object[i].cat;
 			var icon = data.object[i].icon;
 			var price = data.object[i].price;
-			var top = Std.parseFloat(target[2]);
-			var left = Std.parseFloat(target[1]);
+			var top = y;
+			var left = x;
 			html += src.utils.Html.getObj(id,top,left,type,cat,price,icon,color);
 			src.view.Mainmenu.addDrop(id);
 		}
@@ -478,7 +632,7 @@ src.utils.Param.getObjectParam = function(jTarget) {
 	var id = jTarget.data("id");
 	var x = jTarget.css("left").split("px").join("");
 	var y = jTarget.css("top").split("px").join("");
-	return "obj=" + id + "-" + x + "-" + y;
+	return id + "_x=" + x + "&" + id + "_y=" + y;
 };
 src.utils.Param.getPriceParam = function(price) {
 	return "price=" + price;
@@ -510,6 +664,7 @@ src.utils.Param.getParamOption = function(string) {
 };
 src.view = {};
 src.view.Board = function() { };
+src.view.Board.__name__ = true;
 src.view.Board.init = function(jArea) {
 	src.view.Board._jArea = jArea;
 };
@@ -540,6 +695,7 @@ src.view.Board.loop = function(jItem,length) {
 	return [accessoryLength,bannerLength,paperLength,price];
 };
 src.view.Data = function() { };
+src.view.Data.__name__ = true;
 src.view.Data.set = function(jMenu,callback) {
 	src.view.Data._jMenu = jMenu;
 	src.view.Data._callback = callback;
@@ -563,7 +719,7 @@ src.view.Data.loop = function(data) {
 		var i = _g++;
 		var t = data.object[i];
 		var abs;
-		if(t.type == "accessory") abs = t.abs; else abs = "";
+		if(t.type == "accessory" || t.type == "clothes") abs = t.abs; else abs = "";
 		var html = src.utils.Html.getList(t.id,t.type,t.cat,t.icon,t.price,t.bgImg,t.img,t.name,t.length,abs);
 		if(t.cat == "paper") paperHtml += html; else if(t.cat == "accessory") accessoryHtml += html; else if(t.cat == "banner") bannerHtml += html;
 	}
@@ -576,6 +732,7 @@ src.view.Data.setHTML = function(accessoryHtml,bannerHtml,paperHtml) {
 	src.view.Data._callback();
 };
 src.view.Log = function() { };
+src.view.Log.__name__ = true;
 src.view.Log.write = function() {
 	var request = new haxe.Http("files/php/history.php");
 	var param = jp.saken.utils.Dom.jWindow[0].location.search;
@@ -589,32 +746,38 @@ src.view.Log.write = function() {
 src.view.Log.onData = function(data) {
 };
 src.view.Mainmenu = function() { };
+src.view.Mainmenu.__name__ = true;
 src.view.Mainmenu.init = function(jMenu) {
 	src.view.Mainmenu._jMenu = jMenu;
 	src.view.Mainmenu._jBtn = src.view.Mainmenu._jMenu.find(".ttl").find("p");
+	src.view.Mainmenu._jSlider = jMenu.find(".slider");
 	src.view.Mainmenu._jScrollUp = jMenu.find(".slider-up");
 	src.view.Mainmenu._jScrollDw = jMenu.find(".slider-down");
+	var mousewheelevent = "wheel";
 	src.view.Mainmenu._jBtn.on("mousedown",function(event) {
 		src.view.Mainmenu.clickBtn($(this),event);
 	});
 	src.view.Mainmenu._jMenu.on("mouseleave",function(event1) {
-		src.view.Mainmenu.close();
+		src.view.Mainmenu._Timer = new haxe.Timer(1000);
+		src.view.Mainmenu._Timer.run = src.view.Mainmenu.close;
 	});
-	src.view.Mainmenu._jScrollUp.on("mousedown",function(event2) {
-		src.view.Mainmenu.scroll($(this),"up");
+	src.view.Mainmenu._jMenu.on("mouseover",function(event2) {
+		if(src.view.Mainmenu._Timer == null) return;
+		src.view.Mainmenu._Timer.stop();
 	});
-	src.view.Mainmenu._jScrollDw.on("mousedown",function(event3) {
-		src.view.Mainmenu.scroll($(this),"down");
+	src.view.Mainmenu._jSlider.on(mousewheelevent,function(event3) {
+		var y = event3.originalEvent.deltaY;
+		if(y > 40) src.view.Mainmenu.scroll($(this),"down",y); else if(y < -40) src.view.Mainmenu.scroll($(this),"up",y);
 	});
 };
-src.view.Mainmenu.scroll = function(jThis,action) {
-	var jTarget = jThis.siblings(".slider");
+src.view.Mainmenu.scroll = function(jThis,action,move) {
+	var jTarget = jThis;
 	var jUp = jTarget.siblings(".slider-up");
 	var jDw = jTarget.siblings(".slider-down");
-	var h = jTarget.find("ul").find("li").outerHeight() + 20;
+	var h = move * 2;
 	var scrollTop = jTarget.scrollTop();
 	var scrollVal;
-	if(action == "up") scrollVal = -h; else scrollVal = h;
+	if(action == "up") scrollVal = h * -1; else scrollVal = h;
 	if(jTarget["is"](":animated")) return;
 	jTarget.animate({ scrollTop : scrollTop + scrollVal});
 	src.view.Mainmenu.setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
@@ -639,6 +802,7 @@ src.view.Mainmenu.close = function() {
 	src.view.Mainmenu._jMenu.removeClass("open");
 	src.view.Mainmenu._jMenu.addClass("close");
 	TweenMax.to(src.view.Mainmenu._jMenu.find(".inner"),1,{ top : 0, ease : Elastic.easeOut});
+	src.view.Mainmenu._Timer.stop();
 };
 src.view.Mainmenu.addCurrent = function(cls) {
 	src.view.Mainmenu._jMenu.find("div").removeClass("current");
@@ -646,13 +810,13 @@ src.view.Mainmenu.addCurrent = function(cls) {
 };
 src.view.Mainmenu.addDrop = function(id) {
 	if(src.view.Mainmenu._jMenu.find("#" + id) == null) return;
-	console.log("ugoiteru");
 	src.view.Mainmenu._jMenu.find("#" + id).addClass("drop");
 };
 src.view.Mainmenu.clearDrop = function(id) {
 	if(id == "all") src.view.Mainmenu._jMenu.find(".drop").removeClass("drop"); else src.view.Mainmenu._jMenu.find("#" + id).removeClass("drop");
 };
 src.view.Price = function() { };
+src.view.Price.__name__ = true;
 src.view.Price.init = function() {
 	src.view.Price._jContact = new js.JQuery("#contact");
 	src.view.Price._jContactBox = src.view.Price._jContact.find(".contact-box");
@@ -668,8 +832,8 @@ src.view.Price.calPriceSize = function(price) {
 	var str = src.view.Price._jContactBox.css("background-image");
 	if(10000 > price) val += "ss"; else if(50000 > price) val += "s"; else if(100000 > price) val += "m"; else if(200000 < price) val += "l";
 	val += ".png";
-	var txt = str.split("url(\"")[1];
-	var url = txt.split("\")")[0];
+	var txt = str.split("url(")[1];
+	var url = txt.split(")")[0];
 	var urlArr = url.split("/");
 	var tar = urlArr[urlArr.length - 1];
 	tar = url.split(tar).join(val);
@@ -679,10 +843,12 @@ src.view.Price.clear = function() {
 	src.view.Price._jPrice.text("0");
 };
 src.view.ProductLength = function() { };
+src.view.ProductLength.__name__ = true;
 src.view.ProductLength.init = function() {
 	src.view.ProductLength.lengthAccessory = new js.JQuery("#length-accessory").find(".item-length").find("span");
 	src.view.ProductLength.lengthBanner = new js.JQuery("#length-banner").find(".item-length").find("span");
 	src.view.ProductLength.lengthPaper = new js.JQuery("#length-paper").find(".item-length").find("span");
+	if(jp.okawa.utils.Ua.getDevice() == "sp") src.view.ProductLength.setSpMode();
 };
 src.view.ProductLength.change = function(accessoryLength,bannerLength,paperLength) {
 	src.view.ProductLength.lengthAccessory.text(accessoryLength == null?"null":"" + accessoryLength);
@@ -694,64 +860,129 @@ src.view.ProductLength.clear = function() {
 	src.view.ProductLength.lengthBanner.text("0");
 	src.view.ProductLength.lengthPaper.text("0");
 };
+src.view.ProductLength.setSpMode = function() {
+	new js.JQuery("#sidemenu-left").hide();
+	new js.JQuery("#mainmenu").hide();
+	var h = jp.saken.utils.Dom.jWindow.height();
+	js.Lib.alert(h);
+};
 src.view.Trash = function() { };
+src.view.Trash.__name__ = true;
 src.view.Trash.init = function() {
 	src.view.Trash._jTrash = new js.JQuery("#trash");
 	src.view.Trash._jTrashBox = src.view.Trash._jTrash.find(".trash-box");
 	src.view.Trash._jTrashArrow = src.view.Trash._jTrash.find(".trash-arrow");
-	src.view.Trash._jTrashBox.on("mouseover",function(event) {
-		TweenMax.to(src.view.Trash._jTrash,1,{ scaleX : 1.2, scaleY : 1.2, ease : Elastic.easeOut});
-		src.view.Trash._jTrashBox.off("mouseup");
-		src.view.Trash._jTrashBox.on("mouseup",function(event1) {
-			src.view.Trash.deleteObj(src.Manager._DragObj,event1);
-		});
-	});
-	src.view.Trash._jTrashBox.on("mouseleave",function(event2) {
-		TweenMax.to(src.view.Trash._jTrash,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut});
-	});
+	src.view.Trash._Status = false;
+};
+src.view.Trash.onObj = function(target) {
+	if(src.view.Trash.judgeOnObj(target)) TweenMax.to(src.view.Trash._jTrashBox,1,{ scaleX : 1.2, scaleY : 1.2, ease : Elastic.easeOut}); else TweenMax.to(src.view.Trash._jTrashBox,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut});
+};
+src.view.Trash.leaveObj = function(target) {
+	src.view.Trash.deleteObj(target);
+};
+src.view.Trash.hide = function() {
+	if(!src.view.Trash._Status) {
+		src.view.Trash._jTrashArrow.hide();
+		src.view.Trash._jTrashBox.hide();
+	}
 };
 src.view.Trash.show = function() {
+	TweenMax.set(src.view.Trash._jTrashArrow,{ y : 60});
 	src.view.Trash._jTrashBox.show();
-	src.view.Trash._jTrashArrow.show(null,function() {
-	});
+	src.view.Trash._jTrashArrow.show();
+	TweenMax.to(src.view.Trash._jTrashArrow,0.8,{ y : -30, repeat : -1, yoyo : true, ease : Circ.easeOut});
 };
-src.view.Trash.hide = function(target) {
-	if(target == null) src.view.Trash._jTrashBox.hide(); else src.view.Trash._jTrashBox.delay(3000).hide();
-	src.view.Trash._jTrashArrow.hide();
-};
-src.view.Trash.deleteObj = function(target,event) {
-	var judge = src.view.Trash.judgeDelete(event);
-	if(judge) {
+src.view.Trash.deleteObj = function(target) {
+	if(src.view.Trash.judgeOnObj(target)) {
+		src.view.Trash._Status = true;
 		var id = target.data("id");
-		src.view.Mainmenu.clearDrop(id);
-		TweenMax.to(target,0.6,{ scaleX : 2.0, scaleY : 2.0, ease : Elastic.easeOut, onComplete : function() {
+		target.css("z-index","10000");
+		TweenMax.to(target,0.2,{ scaleX : 0.7, scaleY : 0.7, ease : Elastic.easeOut});
+		TweenMax.to(target,0.3,{ y : -30, delay : 0.2});
+		TweenMax.to(target,0.3,{ y : 130, delay : 0.5, onComplete : function() {
 			target.remove();
 			src.Manager.setCounter();
+			src.view.Mainmenu.clearDrop(id);
+			src.view.Trash._Status = false;
+		}});
+		TweenMax.to(src.view.Trash._jTrashBox,0.5,{ y : 15, ease : Elastic.easeIn, delay : 0.5});
+		TweenMax.to(src.view.Trash._jTrashBox,0.8,{ y : 0, scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut, delay : 1, onComplete : function() {
+			if(src.Manager._DragObj == null) {
+				src.view.Trash._jTrashBox.hide();
+				src.view.Trash._jTrashArrow.hide();
+			}
 		}});
 	}
 };
-src.view.Trash.judgeDelete = function(event) {
-	var y = 0;
-	var x = 0;
-	y = event.clientY;
-	x = event.clientX;
+src.view.Trash.judgeOnObj = function(target) {
+	var y = target.offset().top;
+	var h = y + target.height();
+	var x = target.offset().left;
+	var w = x + target.width();
 	var top = src.view.Trash._jTrashBox.offset().top;
 	var left = src.view.Trash._jTrashBox.offset().left;
 	var bottom = top + src.view.Trash._jTrashBox.height();
 	var right = left + src.view.Trash._jTrashBox.width();
 	var judge;
-	if(y > top && bottom > y && x > left && right > x) judge = true; else judge = false;
+	if(top < h && left < w && bottom > y && right > x) judge = true; else judge = false;
 	return judge;
 };
 src.view.sidemenu = {};
+src.view.sidemenu.Color = function() { };
+src.view.sidemenu.Color.__name__ = true;
+src.view.sidemenu.Color.show = function(jBtn) {
+	src.view.sidemenu.Color._jbox = new js.JQuery(".color-config");
+	src.view.sidemenu.Color._jColorList = src.view.sidemenu.Color._jbox.find(".color-list");
+	var sPEED = 300;
+	src.view.sidemenu.Color._jbox.fadeIn(sPEED,function() {
+		TweenMax.to(src.view.sidemenu.Color._jbox,0.5,{ width : 100, ease : Elastic.easeOut, onComplete : function() {
+			src.view.sidemenu.Color._jColorList.fadeIn();
+		}});
+		TweenMax.to(src.view.sidemenu.Color._jbox,0.5,{ height : 200, delay : 0.4, ease : Elastic.easeOut});
+	});
+	src.view.sidemenu.Color.changeColor(jBtn,src.view.sidemenu.Color._jbox);
+	src.view.sidemenu.Color._jbox.find(".close-btn").on("mousedown",function(event) {
+		src.view.sidemenu.Color._jbox.stop().fadeOut(sPEED,function() {
+			src.view.sidemenu.Color._jbox.css({ width : 0, height : 0});
+			src.view.sidemenu.Color._jColorList.hide();
+		});
+		src.view.sidemenu.Color._jbox.find(".close-btn").off("mousedown");
+	});
+};
+src.view.sidemenu.Color.changeColor = function(jBtn,jbox) {
+	src.view.sidemenu.Color._jColorList.find("li").on("mousedown",function(event) {
+		var jAreaObj = new js.JQuery("#mainboard").find(".object");
+		var target = $(this);
+		if(target.hasClass("current")) return;
+		var cls = target.prop("class");
+		jBtn.removeClass();
+		jBtn.addClass(cls);
+		src.view.sidemenu.Color._jColorList.find("li").removeClass("current");
+		target.addClass("current");
+		if(jAreaObj != null) src.view.sidemenu.Color.changeObjColor(jAreaObj,cls);
+	});
+};
+src.view.sidemenu.Color.changeObjColor = function(jAreaObj,cls) {
+	var length = jAreaObj.length;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var jObj = jAreaObj.eq(i).find("img");
+		var src = jObj.prop("src");
+		var array = src.split("/");
+		var color = array[array.length - 2];
+		var newSrc = src.split("/" + color + "/").join("/" + cls + "/");
+		jObj.prop("src",newSrc);
+	}
+};
 src.view.sidemenu.Sidemenu = function() {
 };
+src.view.sidemenu.Sidemenu.__name__ = true;
 src.view.sidemenu.Sidemenu.init = function(data) {
 	src.view.sidemenu.Sidemenu._jBtnMatu = new js.JQuery("#set-name-matu");
 	src.view.sidemenu.Sidemenu._jBtnTake = new js.JQuery("#set-name-take");
 	src.view.sidemenu.Sidemenu._jBtnUme = new js.JQuery("#set-name-ume");
 	src.view.sidemenu.Sidemenu._jBtnColor = new js.JQuery("#color-btn");
-	src.view.sidemenu.Sidemenu._jColorList = src.view.sidemenu.Sidemenu._jBtnColor.find(".color-list");
 	src.view.sidemenu.Sidemenu._jBtnHelp = new js.JQuery("#help-btn");
 	src.view.sidemenu.Sidemenu._jLightBox = new js.JQuery("#lightbox");
 	src.view.sidemenu.Lightbox.init(src.view.sidemenu.Sidemenu._jLightBox);
@@ -768,7 +999,7 @@ src.view.sidemenu.Sidemenu.setRightMenu = function(data) {
 		src.view.sidemenu.Sidemenu.setPacage(data.set[2].url);
 	});
 	src.view.sidemenu.Sidemenu._jBtnColor.on("mousedown",function(event3) {
-		src.view.sidemenu.Lightbox.show("color",$(this));
+		src.view.sidemenu.Color.show($(this));
 	});
 	src.view.sidemenu.Sidemenu._jBtnHelp.on("mousedown",function(event4) {
 		src.view.sidemenu.Lightbox.show("help",$(this));
@@ -783,7 +1014,7 @@ src.view.sidemenu.Sidemenu.setRightMenu = function(data) {
 src.view.sidemenu.Sidemenu.setPacage = function(data) {
 	var url = jp.saken.utils.Dom.jWindow[0].location;
 	if(url == null) url = "null"; else url = "" + url;
-	if(url.indexOf("obj") > -1) src.view.Board.clear();
+	if(url.indexOf("_x") > -1) src.view.Board.clear();
 	src.utils.Param.change(data);
 	src.utils.Param.remakeObject();
 	src.utils.Drag.getObject();
@@ -791,6 +1022,7 @@ src.view.sidemenu.Sidemenu.setPacage = function(data) {
 src.view.sidemenu.Lightbox = function() {
 	src.view.sidemenu.Sidemenu.call(this);
 };
+src.view.sidemenu.Lightbox.__name__ = true;
 src.view.sidemenu.Lightbox.init = function(jLightBox) {
 	src.view.sidemenu.Lightbox._jLightBox = jLightBox;
 };
@@ -802,45 +1034,21 @@ src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
 		jbox.show();
 		TweenMax.to(jbox,1,{ width : 300, ease : Elastic.easeOut});
 	});
-	if(cls == "color") src.view.sidemenu.Lightbox.changeColor(jBtn,jbox);
 	jbox.find(".close-btn").on("mousedown",function(event) {
 		jbox.fadeOut(sPEED);
 		src.view.sidemenu.Lightbox._jLightBox.fadeOut(sPEED);
 		jbox.find(".close-btn").off("mousedown");
 	});
 };
-src.view.sidemenu.Lightbox.changeColor = function(jBtn,jbox) {
-	var jColorList = jbox.find(".color-list");
-	jColorList.find("li").on("mousedown",function(event) {
-		var jAreaObj = new js.JQuery("#mainboard").find(".object");
-		var target = $(this);
-		if(target.hasClass("current")) return;
-		var cls = target.prop("class");
-		jBtn.removeClass();
-		jBtn.addClass(cls);
-		jColorList.find("li").removeClass("current");
-		target.addClass("current");
-		if(jAreaObj != null) src.view.sidemenu.Lightbox.changeObjColor(jAreaObj,cls);
-	});
-};
-src.view.sidemenu.Lightbox.changeObjColor = function(jAreaObj,cls) {
-	var length = jAreaObj.length;
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		var jObj = jAreaObj.eq(i).find("img");
-		var src = jObj.prop("src");
-		var array = src.split("/");
-		var color = array[array.length - 2];
-		var newSrc = src.split("/" + color + "/").join("/" + cls + "/");
-		jObj.prop("src",newSrc);
-	}
-};
 src.view.sidemenu.Lightbox.__super__ = src.view.sidemenu.Sidemenu;
 src.view.sidemenu.Lightbox.prototype = $extend(src.view.sidemenu.Sidemenu.prototype,{
 });
+String.__name__ = true;
+Array.__name__ = true;
 var q = window.jQuery;
 js.JQuery = q;
+jp.okawa.utils.Ua.window = window;
+jp.okawa.utils.Ua.userAgent = jp.okawa.utils.Ua.window.navigator.userAgent;
 jp.saken.utils.Dom.document = window.document;
 jp.saken.utils.Dom.window = window;
 jp.saken.utils.Dom.jWindow = new js.JQuery(jp.saken.utils.Dom.window);

@@ -1,6 +1,8 @@
 package src.view;
 
 import js.JQuery;
+import jp.saken.utils.Dom;
+import haxe.Timer;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Sine;
@@ -10,15 +12,22 @@ class Mainmenu {
 
   private static var _jMenu     : JQuery;
   private static var _jBtn      : JQuery;
+  private static var _jSlider   : JQuery;
   private static var _jScrollUp : JQuery;
   private static var _jScrollDw : JQuery;
+  private static var _Timer     : Timer;
 
   public static function init(jMenu):Void {
 
     _jMenu     = jMenu;
     _jBtn      = _jMenu.find('.ttl').find('p');
+    _jSlider   = jMenu.find('.slider');
     _jScrollUp = jMenu.find('.slider-up');
     _jScrollDw = jMenu.find('.slider-down');
+
+    //var mousewheelevent = 'onmousewheel';
+    //var mousewheelevent = 'DOMMouseScroll';
+    var mousewheelevent = 'wheel';
 
     _jBtn.on('mousedown',function(event:JqEvent) {
 
@@ -28,35 +37,55 @@ class Mainmenu {
 
     _jMenu.on('mouseleave',function(event:JqEvent) {
 
-      close();
+      _Timer     = new Timer(1000);
+      _Timer.run = close;
 
     });
 
-    _jScrollUp.on('mousedown',function(event:JqEvent) {
+    _jMenu.on('mouseover',function(event:JqEvent) {
 
-      scroll(JQuery.cur,'up');
+      if (_Timer == null) return;
+      _Timer.stop();
+
+    });
+
+    _jSlider.on(mousewheelevent,function(event:JqEvent) {
+
+      var y : Float = untyped event.originalEvent.deltaY;
+      if (y > 40) {
+        scroll(JQuery.cur,'down',y);
+      } else if(y < -40) {
+        scroll(JQuery.cur,'up',y);
+      }
 
     });
 
-    _jScrollDw.on('mousedown',function(event:JqEvent) {
+    // _jScrollUp.on('mousedown',function(event:JqEvent) {
 
-      scroll(JQuery.cur,'down');
+    //   scroll(JQuery.cur,'up');
 
-    });
+    // });
+
+    // _jScrollDw.on('mousedown',function(event:JqEvent) {
+
+    //   scroll(JQuery.cur,'down');
+
+    // });
 
   }
 
       /* =======================================================================
       scroll
       ========================================================================== */
-      private static function scroll(jThis:JQuery,action:String) {
+      private static function scroll(jThis:JQuery,action:String,move:Float) {
 
-        var jTarget   : JQuery = jThis.siblings('.slider');
+        var jTarget   : JQuery = jThis;
         var jUp       : JQuery = jTarget.siblings('.slider-up');
         var jDw       : JQuery = jTarget.siblings('.slider-down');
-        var h         : Int    = jTarget.find('ul').find('li').outerHeight() + 20;
-        var scrollTop : Int    = jTarget.scrollTop();
-        var scrollVal : Int    = (action == 'up') ? -h : h;
+        // var h         : Int    = jTarget.find('ul').find('li').outerHeight() + 20;
+        var h         : Float    = move * 2;
+        var scrollTop : Float    = jTarget.scrollTop();
+        var scrollVal : Float    = (action == 'up') ? h * (-1) : h;
         if (jTarget.is(':animated')) return;
         jTarget.animate({scrollTop: scrollTop + scrollVal});
         setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
@@ -66,18 +95,26 @@ class Mainmenu {
       /* =======================================================================
       Set Scroll Btn
       ========================================================================== */
-      private static function setScrollBtn(jUp:JQuery,jDw:JQuery,scrollTop:Int,height:Int) {
+      private static function setScrollBtn(jUp:JQuery,jDw:JQuery,scrollTop:Float,height:Int) {
 
         if (scrollTop > 0) {
+
           jUp.show();
+
         } else {
+
           jUp.hide();
+
         }
 
         if (scrollTop >= height - 220) {
+
           jDw.hide();
+
         } else {
+
           jDw.show();
+
         }
 
       }
@@ -87,9 +124,9 @@ class Mainmenu {
       ========================================================================== */
       private static function clickBtn(jThis:JQuery,event:JqEvent):Void {
 
-        var cls   :String = jThis.prop('class');
-        var target:JQuery = _jMenu.find('.inner');
-        var h     :Int    = target.find('#' + cls).outerHeight() * (-1) + 1;
+        var cls    : String = jThis.prop('class');
+        var target : JQuery = _jMenu.find('.inner');
+        var h      : Int    = target.find('#' + cls).outerHeight() * (-1) + 1;
 
         addCurrent(cls);
 
@@ -117,6 +154,7 @@ class Mainmenu {
         _jMenu.removeClass('open');
         _jMenu.addClass('close');
         TweenMaxHaxe.to(_jMenu.find('.inner'), 1, { top : 0 , ease:Elastic.easeOut});
+        _Timer.stop();
 
       }
 
@@ -136,7 +174,7 @@ class Mainmenu {
   public static function addDrop(id:String):Void {
 
     if (_jMenu.find('#' + id) == null) return;
-trace('ugoiteru');
+
     _jMenu.find('#' + id).addClass('drop');
 
   }

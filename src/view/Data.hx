@@ -42,7 +42,7 @@ class Data {
         for (i in 0 ... length) {
 
           var t    : Dynamic = data.object[i];
-          var abs  : String  = (t.type == "accessory") ? t.abs : "";
+          var abs  : String  = (t.type == "accessory" || t.type == "clothes") ? t.abs : "";
           var html : String  = Html.getList(t.id,t.type,t.cat,t.icon,t.price,t.bgImg,t.img,t.name,t.length,abs);
 
           if (t.cat == "paper") {

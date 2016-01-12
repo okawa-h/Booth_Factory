@@ -50,13 +50,17 @@ class Param {
 		    var data       : Dynamic       = Manager._Data;
 		    var color      : String  			 = getColorParam().split('color=').join('');
 
+        var x : Float = 0;
+
 		    for (i in 0 ... length) {
 
 		      var item : Array<String> = paramArray[i].split('=');
 
-		      if (item[0] == "obj") {
+          if (item[0].indexOf('_x') > -1) x = Std.parseFloat(item[1]);
+		      if (item[0].indexOf('_y') > -1) {
 
-		        addHtml(item[1],data,color);
+            var id = item[0].split('_');
+		        addHtml(id[0],data,color,x,Std.parseFloat(item[1]));
 		        
 		      }
 
@@ -67,24 +71,22 @@ class Param {
 			/* =======================================================================
 		  Make HTML
 		  ========================================================================== */
-		  private static function addHtml(string:String,data:Dynamic,color:String) {
+		  private static function addHtml(id:String,data:Dynamic,color:String,x:Float,y:Float) {
 
-		    var target:Array<String> = string.split('-');
-		    var length:Int    = data.object.length;
-		    var html  :String = "";
-		    var id    :String = "";
+		    var target : String = id;
+		    var length : Int    = data.object.length;
+		    var html   : String = "";
 
 		    for (i in 0 ... length) {
 		    	
-		      if (data.object[i].id == target[0]) {
+		      if (data.object[i].id == id) {
 
-		        id = target[0];
 		        var type  : String = data.object[i].type;
 		        var cat   : String = data.object[i].cat;
 		        var icon  : String = data.object[i].icon;
 		        var price : Int    = data.object[i].price;
-		        var top   : Float  = Std.parseFloat(target[2]);
-		        var left  : Float  = Std.parseFloat(target[1]);
+		        var top   : Float  = y;
+		        var left  : Float  = x;
 
 		        html += Html.getObj(id,top,left,type,cat,price,icon,color);
 		        Mainmenu.addDrop(id);
@@ -129,7 +131,7 @@ class Param {
 		    var x  : String = jTarget.css('left').split('px').join('');
 		    var y  : String = jTarget.css('top').split('px').join('');
 
-		    return 'obj=' + id + '-' + x + '-' + y;
+		    return id + '_x=' + x + '&' + id + '_y=' + y;
 
 		  }
 

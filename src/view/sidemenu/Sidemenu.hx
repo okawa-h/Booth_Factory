@@ -5,6 +5,7 @@ import jp.saken.utils.Dom;
 import src.Manager;
 import src.view.Mainmenu;
 import src.view.sidemenu.Lightbox;
+import src.view.sidemenu.Color;
 import src.utils.Param;
 import src.utils.Drag;
 
@@ -14,7 +15,6 @@ class Sidemenu {
   private static var _jBtnTake  : JQuery;
   private static var _jBtnUme   : JQuery;
   private static var _jBtnColor : JQuery;
-  private static var _jColorList: JQuery;
   private static var _jBtnHelp  : JQuery;
   private static var _jLightBox : JQuery;
 
@@ -30,9 +30,9 @@ class Sidemenu {
     _jBtnTake   = new JQuery('#set-name-take');
     _jBtnUme    = new JQuery('#set-name-ume');
     _jBtnColor  = new JQuery('#color-btn');
-    _jColorList = _jBtnColor.find('.color-list');
     _jBtnHelp   = new JQuery('#help-btn');
     _jLightBox  = new JQuery('#lightbox');
+
     Lightbox.init(_jLightBox);
 
     setRightMenu(data);
@@ -64,7 +64,7 @@ class Sidemenu {
 
         _jBtnColor.on('mousedown',function(event:JqEvent):Void {
 
-          Lightbox.show('color',JQuery.cur);
+          Color.show(JQuery.cur);
 
         });
 
@@ -93,7 +93,7 @@ class Sidemenu {
         var url = untyped Dom.jWindow[0].location;
             url = Std.string(url);
 
-        if (url.indexOf('obj') > -1) {
+        if (url.indexOf('_x') > -1) {
 
           Board.clear(); 
 
