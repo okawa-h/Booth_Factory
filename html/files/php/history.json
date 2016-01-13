@@ -7,14 +7,14 @@
     },
     {
         "id": "192.168.0.68",
-        "point": 3275,
-        "data": "2016\/01\/12 19:48:59",
-        "param": "?color=blue&price=0"
+        "point": 4452,
+        "data": "2016\/01\/13 19:23:39",
+        "param": "?color=blue&01_x=170&01_y=63&02_x=171&02_y=302&03_x=339.5&03_y=337&04_x=542&04_y=73&05_x=682&05_y=411&06_x=569&06_y=130&08_x=359&08_y=63&09_x=464&09_y=315&10_x=730&10_y=354&11_x=547&11_y=224&12_x=602&12_y=405&22_x=657&22_y=163&price=59000"
     },
     {
         "id": "192.168.0.82",
-        "point": 146,
-        "data": "2016\/01\/08 16:26:42",
+        "point": 300,
+        "data": "2016\/01\/13 18:49:59",
         "param": ""
     },
     {
@@ -25,9 +25,9 @@
     },
     {
         "id": "192.168.0.39",
-        "point": 194,
-        "data": "2016\/01\/08 19:04:17",
-        "param": "?color=red&obj=poster_a0-178-64&obj=poster_a1-369-64&obj=poster_a2-506-65&obj=poster_b0-602-64&obj=poster_b2-179-322&obj=poster_b3-731-361&obj=poster_b4-538-200&obj=poster_a3-295-322&obj=banner_b1-366-233&obj=board_a-828-332&obj=best-6-230&obj=table_2-449-290&obj=table_3-503-311&obj=table_tisuue-740-344&obj=table_pop-793-331&obj=utiwa-100-218&obj=megaphone-auto-14&obj=hat-43-135&obj=paper_a4-675-298&obj=folder_a4-535-304&obj=file_a4-733.5-270&obj=booklet_a4-625-296&obj=poster_a4-279-246&price=5123000"
+        "point": 326,
+        "data": "2016\/01\/13 18:26:15",
+        "param": "?color=blue&18_x=449&18_y=183&17_x=624.5&17_y=142&price=18000"
     },
     {
         "id": "192.168.0.133",

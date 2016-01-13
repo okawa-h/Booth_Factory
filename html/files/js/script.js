@@ -315,10 +315,9 @@ src.Manager.init = function(event) {
 };
 src.Manager.start = function() {
 	src.utils.Param.init(src.Manager._jArea);
-	src.animate.Animate.init(src.Manager._jMenu,src.Manager._jArea);
 	src.view.Board.init(src.Manager._jArea);
 	src.view.Price.init();
-	src.view.Mainmenu.init(src.Manager._jMenu);
+	src.view.mainmenu.Mainmenu.init(src.Manager._jMenu);
 	src.view.sidemenu.Sidemenu.init(src.Manager._Data);
 	src.view.ProductLength.init();
 	src.view.Trash.init();
@@ -339,7 +338,7 @@ src.Manager.setCounter = function() {
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
-		src.view.Mainmenu.addDrop(src.Manager._jAreaObj.eq(i).data("id"));
+		src.view.mainmenu.Mainmenu.addDrop(src.Manager._jAreaObj.eq(i).data("id"));
 	}
 	var accessoryLength = lengthArray[0];
 	var bannerlength = lengthArray[1];
@@ -349,39 +348,6 @@ src.Manager.setCounter = function() {
 	src.view.Price.change(price);
 	var param = src.utils.Param.make(src.Manager._jAreaObj,length,price);
 	src.utils.Param.change("?" + param);
-};
-src.animate = {};
-src.animate.Animate = function() { };
-src.animate.Animate.__name__ = true;
-src.animate.Animate.init = function(jMenu,jArea) {
-	src.animate.Animate._jMenu = jMenu;
-	src.animate.Animate._jArea = jArea;
-	src.animate.Animate._jTitle = new js.JQuery("#header").find("h1");
-};
-src.animate.Animate.setup = function() {
-	var leftMenu = new js.JQuery("#sidemenu-left").find("li");
-	var rightMenu = new js.JQuery("#sidemenu-right").find("div");
-	var rightListMenu = new js.JQuery("#sidemenu-right").find("li");
-	TweenMax.staggerFromTo(leftMenu,1,{ x : -300},{ x : 0, ease : Elastic.easeInOut, onComplete : function() {
-		TweenMax.staggerFromTo(rightMenu,0.5,{ x : 300},{ x : 0, ease : Elastic.easeInOut},0.2);
-	}},0.2);
-};
-src.animate.Animate.vibrationObj = function(target) {
-	src.animate.Animate._timeline = new TimelineMax({ repeat : -1}).to(target,0.001,{ transform : "rotate(0.4deg) translate(1px,-1px)"},"").to(target,0.001,{ transform : "rotate(0.8deg) translate(0px,1px)"},"").to(target,0.001,{ transform : "rotate(0.4deg) translate(-1px,0)"},"").to(target,0.001,{ transform : "rotate(0deg) translate(0,0)"},"").to(target,0.001,{ transform : "rotate(-0.4deg) translate(1px,0)"},"").to(target,0.001,{ transform : "rotate(-0.8deg) translate(0,1px)"},"").to(target,0.001,{ transform : "rotate(-0.4deg) translate(-1px,-1px)"},"").to(target,0.001,{ transform : "rotate(0deg) translate(0,0)"},"");
-};
-src.animate.Animate.stopTimeline = function(target) {
-	src.animate.Animate._timeline.pause();
-	src.animate.Animate._timeline.to(target,0.001,{ transform : "rotate(0deg) translate(0,0)"},"");
-};
-src.animate.Animate.hoverObject = function(_jAreaObj) {
-	_jAreaObj.on("mouseover",function(event) {
-		if($(this).hasClass("accessory")) return;
-		TweenMax.to($(this),1,{ scaleX : 1.05, scaleY : 1.05, ease : Elastic.easeOut});
-	});
-	_jAreaObj.on("mouseleave",function(event1) {
-		if($(this).hasClass("accessory")) return;
-		TweenMax.to($(this),0,{ scaleX : 1, scaleY : 1, ease : Expo.easeOut});
-	});
 };
 src.utils = {};
 src.utils.Drag = function() { };
@@ -395,9 +361,6 @@ src.utils.Drag.init = function(jArea,jAreaObj,jMenu) {
 	jp.saken.utils.Dom.jWindow.on({ mousemove : src.utils.Drag.mousemove, mouseup : src.utils.Drag.mouseup});
 	src.utils.Drag._jAreaObj.on("mousedown",function(event) {
 		src.utils.Drag.grabObject($(this),event);
-	});
-	src.utils.Drag._jAreaObj.on("mouseover",function(event1) {
-		src.utils.Drag.hoverObject($(this));
 	});
 };
 src.utils.Drag.grabList = function(event) {
@@ -448,9 +411,6 @@ src.utils.Drag.mouseup = function(event) {
 			src.utils.Drag._jAreaObj.on("mousedown",function(event1) {
 				src.utils.Drag.grabObject($(this),event1);
 			});
-			src.utils.Drag._jAreaObj.on("mouseover",function(event2) {
-				src.utils.Drag.hoverObject($(this));
-			});
 		}
 	}
 	src.utils.Drag.judgeArea(src.Manager._DragObj);
@@ -471,7 +431,7 @@ src.utils.Drag.createListToObj = function(target,event) {
 		left = Std.parseFloat(abs[1]);
 	}
 	if(type == "clothes") {
-		src.view.Mainmenu.clearDrop(src.utils.Drag._jAreaObj.filter(".clothes").data("id"));
+		src.view.mainmenu.Mainmenu.clearDrop(src.utils.Drag._jAreaObj.filter(".clothes").data("id"));
 		src.utils.Drag._jAreaObj.filter(".clothes").remove();
 	}
 	var html = src.utils.Html.getObj(id,top,left,type,cat,price,icon,color);
@@ -520,15 +480,6 @@ src.utils.Drag.getObject = function() {
 	src.utils.Drag._jAreaObj = src.utils.Drag._jArea.find(".object");
 	src.utils.Drag._jAreaObj.on("mousedown",function(event) {
 		src.utils.Drag.grabObject($(this),event);
-	});
-};
-src.utils.Drag.hoverObject = function(target) {
-	if(target.hasClass("accessory")) target.append("<div class=\"removebtn\"></div>");
-	new js.JQuery(".removebtn").on("mousedown",function(event) {
-		target.remove();
-	});
-	target.on("mouseout",function(event1) {
-		target.find(".removebtn").remove();
 	});
 };
 src.utils.Html = function() { };
@@ -609,7 +560,7 @@ src.utils.Param.addHtml = function(id,data,color,x,y) {
 			var top = y;
 			var left = x;
 			html += src.utils.Html.getObj(id,top,left,type,cat,price,icon,color);
-			src.view.Mainmenu.addDrop(id);
+			src.view.mainmenu.Mainmenu.addDrop(id);
 		}
 	}
 	src.utils.Param._jArea.find(".board").append(html);
@@ -745,76 +696,6 @@ src.view.Log.write = function() {
 };
 src.view.Log.onData = function(data) {
 };
-src.view.Mainmenu = function() { };
-src.view.Mainmenu.__name__ = true;
-src.view.Mainmenu.init = function(jMenu) {
-	src.view.Mainmenu._jMenu = jMenu;
-	src.view.Mainmenu._jBtn = src.view.Mainmenu._jMenu.find(".ttl").find("p");
-	src.view.Mainmenu._jSlider = jMenu.find(".slider");
-	src.view.Mainmenu._jScrollUp = jMenu.find(".slider-up");
-	src.view.Mainmenu._jScrollDw = jMenu.find(".slider-down");
-	var mousewheelevent = "wheel";
-	src.view.Mainmenu._jBtn.on("mousedown",function(event) {
-		src.view.Mainmenu.clickBtn($(this),event);
-	});
-	src.view.Mainmenu._jMenu.on("mouseleave",function(event1) {
-		src.view.Mainmenu._Timer = new haxe.Timer(1000);
-		src.view.Mainmenu._Timer.run = src.view.Mainmenu.close;
-	});
-	src.view.Mainmenu._jMenu.on("mouseover",function(event2) {
-		if(src.view.Mainmenu._Timer == null) return;
-		src.view.Mainmenu._Timer.stop();
-	});
-	src.view.Mainmenu._jSlider.on(mousewheelevent,function(event3) {
-		var y = event3.originalEvent.deltaY;
-		if(y > 40) src.view.Mainmenu.scroll($(this),"down",y); else if(y < -40) src.view.Mainmenu.scroll($(this),"up",y);
-	});
-};
-src.view.Mainmenu.scroll = function(jThis,action,move) {
-	var jTarget = jThis;
-	var jUp = jTarget.siblings(".slider-up");
-	var jDw = jTarget.siblings(".slider-down");
-	var h = move * 2;
-	var scrollTop = jTarget.scrollTop();
-	var scrollVal;
-	if(action == "up") scrollVal = h * -1; else scrollVal = h;
-	if(jTarget["is"](":animated")) return;
-	jTarget.animate({ scrollTop : scrollTop + scrollVal});
-	src.view.Mainmenu.setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
-};
-src.view.Mainmenu.setScrollBtn = function(jUp,jDw,scrollTop,height) {
-	if(scrollTop > 0) jUp.show(); else jUp.hide();
-	if(scrollTop >= height - 220) jDw.hide(); else jDw.show();
-};
-src.view.Mainmenu.clickBtn = function(jThis,event) {
-	var cls = jThis.prop("class");
-	var target = src.view.Mainmenu._jMenu.find(".inner");
-	var h = target.find("#" + cls).outerHeight() * -1 + 1;
-	src.view.Mainmenu.addCurrent(cls);
-	if(src.view.Mainmenu._jMenu.prop("class") == "close") src.view.Mainmenu.open(target,h);
-};
-src.view.Mainmenu.open = function(target,h) {
-	src.view.Mainmenu._jMenu.removeClass("close");
-	src.view.Mainmenu._jMenu.addClass("open");
-	TweenMax.to(target,0.3,{ top : h, ease : Sine.easeOut});
-};
-src.view.Mainmenu.close = function() {
-	src.view.Mainmenu._jMenu.removeClass("open");
-	src.view.Mainmenu._jMenu.addClass("close");
-	TweenMax.to(src.view.Mainmenu._jMenu.find(".inner"),1,{ top : 0, ease : Elastic.easeOut});
-	src.view.Mainmenu._Timer.stop();
-};
-src.view.Mainmenu.addCurrent = function(cls) {
-	src.view.Mainmenu._jMenu.find("div").removeClass("current");
-	src.view.Mainmenu._jMenu.find("#" + cls).addClass("current");
-};
-src.view.Mainmenu.addDrop = function(id) {
-	if(src.view.Mainmenu._jMenu.find("#" + id) == null) return;
-	src.view.Mainmenu._jMenu.find("#" + id).addClass("drop");
-};
-src.view.Mainmenu.clearDrop = function(id) {
-	if(id == "all") src.view.Mainmenu._jMenu.find(".drop").removeClass("drop"); else src.view.Mainmenu._jMenu.find("#" + id).removeClass("drop");
-};
 src.view.Price = function() { };
 src.view.Price.__name__ = true;
 src.view.Price.init = function() {
@@ -902,7 +783,7 @@ src.view.Trash.deleteObj = function(target) {
 		TweenMax.to(target,0.3,{ y : 130, delay : 0.5, onComplete : function() {
 			target.remove();
 			src.Manager.setCounter();
-			src.view.Mainmenu.clearDrop(id);
+			src.view.mainmenu.Mainmenu.clearDrop(id);
 			src.view.Trash._Status = false;
 		}});
 		TweenMax.to(src.view.Trash._jTrashBox,0.5,{ y : 15, ease : Elastic.easeIn, delay : 0.5});
@@ -926,6 +807,138 @@ src.view.Trash.judgeOnObj = function(target) {
 	var judge;
 	if(top < h && left < w && bottom > y && right > x) judge = true; else judge = false;
 	return judge;
+};
+src.view.mainmenu = {};
+src.view.mainmenu.Mainmenu = function() { };
+src.view.mainmenu.Mainmenu.__name__ = true;
+src.view.mainmenu.Mainmenu.init = function(jMenu) {
+	src.view.mainmenu.Mainmenu._jMenu = jMenu;
+	src.view.mainmenu.Mainmenu._jBtn = src.view.mainmenu.Mainmenu._jMenu.find(".ttl").find("p");
+	src.view.mainmenu.Scrollbar.init(src.view.mainmenu.Mainmenu._jMenu);
+	src.view.mainmenu.Mainmenu._jBtn.on("mousedown",function(event) {
+		src.view.mainmenu.Mainmenu.clickBtn($(this),event);
+	});
+	src.view.mainmenu.Mainmenu._jMenu.on("mouseleave",function(event1) {
+		src.view.mainmenu.Mainmenu._Timer = new haxe.Timer(1000);
+		src.view.mainmenu.Mainmenu._Timer.run = src.view.mainmenu.Mainmenu.close;
+	});
+	src.view.mainmenu.Mainmenu._jMenu.on("mouseover",function(event2) {
+		if(src.view.mainmenu.Mainmenu._Timer == null) return;
+		src.view.mainmenu.Mainmenu._Timer.stop();
+	});
+};
+src.view.mainmenu.Mainmenu.scroll = function(jThis,action,move) {
+	var jTarget = jThis;
+	var jUp = jTarget.siblings(".slider-up");
+	var jDw = jTarget.siblings(".slider-down");
+	var h = move * 2;
+	var scrollTop = jTarget.scrollTop();
+	var scrollVal;
+	if(action == "up") scrollVal = h * -1; else scrollVal = h;
+	if(jTarget["is"](":animated")) return;
+	jTarget.animate({ scrollTop : scrollTop + scrollVal});
+	src.view.mainmenu.Mainmenu.setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
+};
+src.view.mainmenu.Mainmenu.setScrollBtn = function(jUp,jDw,scrollTop,height) {
+	if(scrollTop > 0) jUp.show(); else jUp.hide();
+	if(scrollTop >= height - 220) jDw.hide(); else jDw.show();
+};
+src.view.mainmenu.Mainmenu.clickBtn = function(jThis,event) {
+	var cls = jThis.prop("class");
+	var target = src.view.mainmenu.Mainmenu._jMenu.find(".inner");
+	var h = target.find("#" + cls).outerHeight() * -1 + 1;
+	src.view.mainmenu.Mainmenu.addCurrent(cls);
+	if(src.view.mainmenu.Mainmenu._jMenu.prop("class") == "close") src.view.mainmenu.Mainmenu.open(target,h);
+};
+src.view.mainmenu.Mainmenu.open = function(target,h) {
+	src.view.mainmenu.Mainmenu._jMenu.removeClass("close");
+	src.view.mainmenu.Mainmenu._jMenu.addClass("open");
+	TweenMax.to(target,0.3,{ top : h, ease : Sine.easeOut});
+};
+src.view.mainmenu.Mainmenu.close = function() {
+	src.view.mainmenu.Mainmenu._jMenu.removeClass("open");
+	src.view.mainmenu.Mainmenu._jMenu.addClass("close");
+	TweenMax.to(src.view.mainmenu.Mainmenu._jMenu.find(".inner"),1,{ top : 0, ease : Elastic.easeOut});
+	src.view.mainmenu.Mainmenu._Timer.stop();
+};
+src.view.mainmenu.Mainmenu.addCurrent = function(cls) {
+	src.view.mainmenu.Mainmenu._jMenu.find("div").removeClass("current");
+	src.view.mainmenu.Mainmenu._jMenu.find("#" + cls).addClass("current");
+};
+src.view.mainmenu.Mainmenu.addDrop = function(id) {
+	if(src.view.mainmenu.Mainmenu._jMenu.find("#" + id) == null) return;
+	src.view.mainmenu.Mainmenu._jMenu.find("#" + id).addClass("drop");
+};
+src.view.mainmenu.Mainmenu.clearDrop = function(id) {
+	if(id == "all") src.view.mainmenu.Mainmenu._jMenu.find(".drop").removeClass("drop"); else src.view.mainmenu.Mainmenu._jMenu.find("#" + id).removeClass("drop");
+};
+src.view.mainmenu.Scrollbar = function() { };
+src.view.mainmenu.Scrollbar.__name__ = true;
+src.view.mainmenu.Scrollbar.init = function(jMenu) {
+	src.view.mainmenu.Scrollbar._jMenu = jMenu;
+	src.view.mainmenu.Scrollbar._jSlider = jMenu.find(".slider");
+	src.view.mainmenu.Scrollbar.set();
+	jp.saken.utils.Dom.jWindow.on("resize",src.view.mainmenu.Scrollbar.set);
+	src.view.mainmenu.Scrollbar._jSlider.on("mousewheel",src.view.mainmenu.Scrollbar.onMousewheel);
+	jMenu.find(".scroll-navi").on("mousedown",src.view.mainmenu.Scrollbar.onMousedown);
+};
+src.view.mainmenu.Scrollbar.set = function(event) {
+	var length = src.view.mainmenu.Scrollbar._jSlider.length;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		src.view.mainmenu.Scrollbar.getDom(src.view.mainmenu.Scrollbar._jSlider.eq(i));
+		var scale = src.view.mainmenu.Scrollbar.getScale();
+		var nH = Math.round(src.view.mainmenu.Scrollbar._jScroll.height() * scale / 100);
+		src.view.mainmenu.Scrollbar._jNavi.height(nH);
+	}
+};
+src.view.mainmenu.Scrollbar.getDom = function(target) {
+	src.view.mainmenu.Scrollbar._jInner = target.find("ul");
+	src.view.mainmenu.Scrollbar._jScroll = target.siblings(".slider-scroll");
+	src.view.mainmenu.Scrollbar._jNavi = src.view.mainmenu.Scrollbar._jScroll.find(".scroll-navi");
+	src.view.mainmenu.Scrollbar._max = (src.view.mainmenu.Scrollbar._jInner.height() - src.view.mainmenu.Scrollbar._jSlider.height()) * -1 + 20;
+	src.view.mainmenu.Scrollbar._posi = Std.parseInt(src.view.mainmenu.Scrollbar._jInner.css("margin-top"));
+	src.view.mainmenu.Scrollbar._scale = src.view.mainmenu.Scrollbar.getScale();
+};
+src.view.mainmenu.Scrollbar.getScale = function() {
+	var vH = src.view.mainmenu.Scrollbar._jSlider.height();
+	var tH = src.view.mainmenu.Scrollbar._jInner.height() - 20;
+	var sH = src.view.mainmenu.Scrollbar._jScroll.height();
+	var scale = vH * 100 / tH;
+	return scale;
+};
+src.view.mainmenu.Scrollbar.onMousewheel = function(event) {
+	var target = $(this);
+	var delta = event.originalEvent.wheelDelta;
+	src.view.mainmenu.Scrollbar.getDom(target);
+	src.view.mainmenu.Scrollbar.move(delta);
+};
+src.view.mainmenu.Scrollbar.onMousedown = function(event) {
+	var target = $(this).parent(".slider-scroll").siblings(".slider");
+	var base = event.pageY;
+	src.view.mainmenu.Scrollbar.getDom(target);
+	var onMousemove = function(event1) {
+		var diff = base - event1.pageY;
+		src.view.mainmenu.Scrollbar.move(diff * 15);
+		return false;
+	};
+	var onMouseup;
+	var onMouseup1 = null;
+	onMouseup1 = function(event2) {
+		jp.saken.utils.Dom.jBody.unbind("mousemove",onMousemove).unbind("mouseup",onMouseup1);
+	};
+	onMouseup = onMouseup1;
+	jp.saken.utils.Dom.jBody.on({ mousemove : onMousemove, mouseup : onMouseup});
+};
+src.view.mainmenu.Scrollbar.move = function(delta) {
+	delta = Math.round(delta * .3);
+	var val = src.view.mainmenu.Scrollbar._posi + delta;
+	if(0 < val) val = 0;
+	if(src.view.mainmenu.Scrollbar._max > val) val = src.view.mainmenu.Scrollbar._max;
+	src.view.mainmenu.Scrollbar._jInner.stop().animate({ marginTop : val},100,"linear");
+	val = (val * src.view.mainmenu.Scrollbar._scale / 100 | 0) * -1;
+	src.view.mainmenu.Scrollbar._jNavi.stop().animate({ marginTop : val},100,"linear");
 };
 src.view.sidemenu = {};
 src.view.sidemenu.Color = function() { };
@@ -1008,7 +1021,7 @@ src.view.sidemenu.Sidemenu.setRightMenu = function(data) {
 		src.view.sidemenu.Sidemenu.setPacage("?");
 		src.view.Price.clear();
 		src.view.ProductLength.clear();
-		src.view.Mainmenu.clearDrop("all");
+		src.view.mainmenu.Mainmenu.clearDrop("all");
 	});
 };
 src.view.sidemenu.Sidemenu.setPacage = function(data) {

@@ -6,7 +6,7 @@ import tween.TweenMaxHaxe;
 import tween.easing.Circ;
 import tween.easing.Elastic;
 import src.Manager;
-import src.view.Mainmenu;
+import src.view.mainmenu.Mainmenu;
 
 
 class Trash {

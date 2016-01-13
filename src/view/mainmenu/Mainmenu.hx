@@ -1,4 +1,4 @@
-package src.view;
+package src.view.mainmenu;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
@@ -7,27 +7,20 @@ import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Sine;
 import tween.easing.Back;
+import src.view.mainmenu.Scrollbar;
 
 class Mainmenu {
 
   private static var _jMenu     : JQuery;
   private static var _jBtn      : JQuery;
-  private static var _jSlider   : JQuery;
-  private static var _jScrollUp : JQuery;
-  private static var _jScrollDw : JQuery;
   private static var _Timer     : Timer;
 
   public static function init(jMenu):Void {
 
     _jMenu     = jMenu;
     _jBtn      = _jMenu.find('.ttl').find('p');
-    _jSlider   = jMenu.find('.slider');
-    _jScrollUp = jMenu.find('.slider-up');
-    _jScrollDw = jMenu.find('.slider-down');
 
-    //var mousewheelevent = 'onmousewheel';
-    //var mousewheelevent = 'DOMMouseScroll';
-    var mousewheelevent = 'wheel';
+    Scrollbar.init(_jMenu);
 
     _jBtn.on('mousedown',function(event:JqEvent) {
 
@@ -48,29 +41,6 @@ class Mainmenu {
       _Timer.stop();
 
     });
-
-    _jSlider.on(mousewheelevent,function(event:JqEvent) {
-
-      var y : Float = untyped event.originalEvent.deltaY;
-      if (y > 40) {
-        scroll(JQuery.cur,'down',y);
-      } else if(y < -40) {
-        scroll(JQuery.cur,'up',y);
-      }
-
-    });
-
-    // _jScrollUp.on('mousedown',function(event:JqEvent) {
-
-    //   scroll(JQuery.cur,'up');
-
-    // });
-
-    // _jScrollDw.on('mousedown',function(event:JqEvent) {
-
-    //   scroll(JQuery.cur,'down');
-
-    // });
 
   }
 

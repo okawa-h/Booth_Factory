@@ -455,30 +455,22 @@
 				background: url(../img/mainmenu/bg_accessory.jpg);
 			}
 
-			#mainmenu div .slider-up {
+			#mainmenu div .slider-scroll {
 				position: absolute;
-				top: 50%;
-				left: 30px;
-				display: none;
-				width: 0px;
-				height: 0px;
-				margin-top: -60px;
-				border: 20px solid transparent;
-				border-bottom: 20px solid #1a580b;
-				cursor: pointer;
+				top: 15px;
+				right: 5%;
+				width: 20px;
+				height: 200px;
+				/*padding: 10px 0;*/
+				background-color: #eee;
 			}
 
-			#mainmenu div .slider-down {
-				position: absolute;
-				top: 50%;
-				left: 30px;
-				width: 0px;
-				height: 0px;
-				margin-top: 20px;
-				border: 20px solid transparent;
-				border-top: 20px solid #1a580b;
-				cursor: pointer;
-			}
+				#mainmenu div .slider-scroll .scroll-navi {
+					position: relative;
+					width: 100%;
+					background-color: #555;
+					cursor: pointer;
+				}
 
 		#mainmenu div .slider {
 			overflow-y: scroll;
@@ -487,6 +479,8 @@
 		}
 
 			#mainmenu div .slider ul {
+				position: relative;
+				top: 0;
 				width: 100%;
 				text-align: center;
 			}
@@ -496,10 +490,11 @@
 /*-----------------------------------------------------------------------*/
 
 				#mainmenu div .slider ul li {
-					display: inline-block;
+					display: block;
+					float: left;
 					position: relative;
 					width: 160px;
-					margin: 0 10px 20px;
+					margin: 0 20px 20px 0;
 					border: 5px solid #fff000;
 					box-sizing: border-box;
 					background-color: #fff;

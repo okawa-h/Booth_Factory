@@ -3,7 +3,7 @@ package src.view.sidemenu;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.Manager;
-import src.view.Mainmenu;
+import src.view.mainmenu.Mainmenu;
 import src.view.sidemenu.Lightbox;
 import src.view.sidemenu.Color;
 import src.utils.Param;

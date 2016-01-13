@@ -4,7 +4,7 @@ import js.JQuery;
 import js.html.History;
 import jp.saken.utils.Dom;
 import src.Manager;
-import src.view.Mainmenu;
+import src.view.mainmenu.Mainmenu;
 import src.utils.Html;
 
 class Param {

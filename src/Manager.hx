@@ -11,9 +11,8 @@ import src.view.Data;
 import src.view.Log;
 import src.view.Board;
 import src.view.Trash;
-import src.view.Mainmenu;
+import src.view.mainmenu.Mainmenu;
 import src.view.sidemenu.Sidemenu;
-import src.animate.Animate;
 
 class Manager {
 
@@ -37,7 +36,6 @@ class Manager {
   public static function start():Void {
 
     Param.init(_jArea);
-    Animate.init(_jMenu,_jArea);
     Board.init(_jArea);
     Price.init();
     Mainmenu.init(_jMenu);

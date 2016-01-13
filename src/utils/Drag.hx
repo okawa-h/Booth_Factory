@@ -7,8 +7,7 @@ import tween.easing.Elastic;
 import src.utils.Html;
 import src.Manager;
 import src.view.Trash;
-import src.view.Mainmenu;
-import src.animate.Animate;
+import src.view.mainmenu.Mainmenu;
 
 class Drag {
 
@@ -38,12 +37,6 @@ class Drag {
     _jAreaObj.on('mousedown',function(event:JqEvent) {
 
       grabObject(JQuery.cur,event);
-
-    });
-
-    _jAreaObj.on('mouseover',function(event:JqEvent) {
-
-      hoverObject(JQuery.cur);
 
     });
 
@@ -163,12 +156,6 @@ class Drag {
               grabObject(JQuery.cur,event);
 
             });
-
-            _jAreaObj.on('mouseover',function(event:JqEvent) {
-
-              hoverObject(JQuery.cur);
-
-            });
           }
         }
 
@@ -279,30 +266,5 @@ class Drag {
     });
 
   }
-
-    /* =======================================================================
-    Hover Obj
-    ========================================================================== */
-    private static function hoverObject(target:JQuery):Void {
-
-      if (target.hasClass('accessory')) {
-
-        target.append('<div class="removebtn"></div>');
-
-      }
-
-      new JQuery('.removebtn').on('mousedown',function(event:JqEvent) {
-
-        target.remove();
-
-      });
-
-      target.on('mouseout',function(event:JqEvent) {
-
-        target.find('.removebtn').remove();
-
-      });
-
-    }
 
 }
