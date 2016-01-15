@@ -1,7 +1,6 @@
 @charset "UTF-8";
 
 @import "base.css";
-/*@import "lightbox.css";*/
 
 /*-------------------------------------------------------------------------
 	All
@@ -28,9 +27,6 @@ body,html {
 	position: fixed;
 	opacity: .9;
 	z-index: 3000;
-}
-	
-@media screen and (max-width:960px) {
 }
 
 /*-------------------------------------------------------------------------
@@ -62,23 +58,27 @@ body,html {
 
 	#contact .contact-box {
 		margin-bottom: 6px;
-		padding: 10px 10px 10px 100px;
+		padding: 10px 10px 10px 115px;
 		border: 6px solid #4c3410;
 		border-radius: 8px;
 		background: url(../../img/icon/icon_price_ss.png) no-repeat 15px 50% #fff;
+		text-align: right;
 	}
 
 		#contact .contact-box #price {
-			float: right;
+			display: inline-block;
+			float: left;
+			margin-right: 20px;
 			font-size: 46px;
 			font-weight: bold;
-			text-align: right;
 		}
 
+			#contact .contact-box #price span {
+				position: relative;
+			}
+
 		#contact .contact-box #contact-btn {
-			display: block;
-			float: right;
-			margin-left: 26px;
+			display: inline-block;
 		}
 
 			#contact .contact-box #contact-btn a {
@@ -94,9 +94,10 @@ body,html {
 				background: url(../../img/icon/icon_contact.png) no-repeat 13px 50% #ff6833;
 			}
 
-	#contact .caution {
-		position: relative;
-		float: right;
+	#header .caution {
+		position: absolute;
+		top: 130px;
+		right: 30px;
 		color: #392508;
 		font-size: 13px;
 	}
@@ -133,5 +134,5 @@ body,html {
 	#footer #copyright {
 		float: right;
 		color: #ffe593;
-		font-size: 12zpx;
+		font-size: 12px;
 	}

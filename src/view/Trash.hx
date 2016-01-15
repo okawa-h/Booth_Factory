@@ -14,6 +14,8 @@ class Trash {
 	private static var _jTrash      : JQuery;
 	private static var _jTrashBox   : JQuery;
 	private static var _jTrashArrow : JQuery;
+  private static var _jTrashBg    : JQuery;
+  private static var _ArrowAnimate: TweenMaxHaxe;
   private static var _Status      : Bool;
 
   /* =======================================================================
@@ -24,6 +26,7 @@ class Trash {
     _jTrash      = new JQuery('#trash');
     _jTrashBox   = _jTrash.find('.trash-box');
     _jTrashArrow = _jTrash.find('.trash-arrow');
+    _jTrashBg    = _jTrash.find('.trash-bg');
     _Status      = false;
 
   }
@@ -36,10 +39,12 @@ class Trash {
     if (judgeOnObj(target)) {
 
       TweenMaxHaxe.to(_jTrashBox, 1, {scaleX:1.2, scaleY:1.2, ease:Elastic.easeOut});
+      TweenMaxHaxe.to(_jTrashBg,1,{scaleX:0.95, scaleY:0.95, ease:Elastic.easeOut});
 
     } else {
 
       TweenMaxHaxe.to(_jTrashBox, 1, {scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut});
+      TweenMaxHaxe.to(_jTrashBg,1,{scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut});
 
     }
 
@@ -61,8 +66,25 @@ class Trash {
 
     if (!_Status) {
 
-      _jTrashArrow.hide();
-      _jTrashBox.hide();
+      TweenMaxHaxe.to(_jTrashArrow,0.05,{y:60,
+        onComplete:function() {
+
+          _jTrashArrow.hide();
+          TweenMaxHaxe.set(_jTrashArrow,{y:0});
+
+        }
+      });
+
+      TweenMaxHaxe.to(_jTrashBox,0.05,{y:60,
+        onComplete:function() {
+
+          _jTrashBox.hide();
+          _jTrashBg.stop().fadeOut(100);
+          TweenMaxHaxe.set(_jTrashBox,{y:0});
+          if (_ArrowAnimate != null) _ArrowAnimate.pause(0);
+
+        }
+      });
 
     }
 
@@ -74,9 +96,22 @@ class Trash {
   public static function show():Void {
 
     TweenMaxHaxe.set(_jTrashArrow,{y:60});
-    _jTrashBox.show();
+
     _jTrashArrow.show();
-    TweenMaxHaxe.to(_jTrashArrow , 0.8 , {y:-30,repeat:-1,yoyo : true,ease: Circ.easeOut});
+    _jTrashBox.show();
+    _jTrashBg.stop().fadeIn(100);
+
+    TweenMaxHaxe.to(_jTrashBox,0.05,{y:-30,
+      onComplete:function() {
+
+        TweenMaxHaxe.to(_jTrashBox,0.05,{y:0});
+
+      }
+    });
+
+    //TweenMaxHaxe.to(_jTrashBg,0.8,{y:10,x:10,width:180,height:180,repeat:-1,yoyo : true});
+
+    _ArrowAnimate = TweenMaxHaxe.to(_jTrashArrow , 0.8 , {y:30,repeat:-1,yoyo : true,ease: Circ.easeOut});
 
   }
 
@@ -89,28 +124,35 @@ class Trash {
 
           _Status = true;
           var id : String = target.data('id');
-          target.css('z-index','10000');
+          target.css({'z-index':'10000'});
 
-          TweenMaxHaxe.to(target, 0.2, {scaleX:0.7, scaleY:0.7, ease:Elastic.easeOut});
-          TweenMaxHaxe.to(target, 0.3,{y:-30,delay:0.2});
-          TweenMaxHaxe.to(target, 0.3,{y:130,delay:0.5,onComplete:function() {
+          TweenMaxHaxe.to(target, 0.2, {scaleX:0.7, scaleY:0.7});
+          var left = target.parent().width()/2 - target.width()/2;
+          TweenMaxHaxe.to(target, 0.2,{y:-30,left:left,delay:0.2});
+          TweenMaxHaxe.to(target, 0.1,{y:130,delay:0.5,
+            onComplete:function() {
 
-            target.remove();
-            Manager.setCounter();
-            Mainmenu.clearDrop(id);
-            _Status = false;
+              target.remove();
+              Manager.setCounter();
+              Mainmenu.clearDrop(id);
+              _Status = false;
 
-          }});
+            }
+          });
 
           TweenMaxHaxe.to(_jTrashBox, 0.5, {y:15,ease:Elastic.easeIn,delay:0.5});
-          TweenMaxHaxe.to(_jTrashBox, 0.8, {y:0,scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut,delay:1,onComplete:function() {
+          TweenMaxHaxe.to(_jTrashBg,1,{scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut,delay:1});
+          TweenMaxHaxe.to(_jTrashBox, 0.8, {y:0,scaleX:1.0, scaleY:1.0, ease:Elastic.easeOut,delay:1,
+            onComplete:function() {
 
-            if (Manager._DragObj == null) {
-              _jTrashBox.hide();
-              _jTrashArrow.hide(); 
+              if (Manager._DragObj == null) {
+
+                hide();
+
+              }
+
             }
-
-          }});
+          });
 
 
         }

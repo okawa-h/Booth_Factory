@@ -2,10 +2,8 @@ package src.view.mainmenu;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import jp.okawa.utils.Ua;
 import tween.TweenMaxHaxe;
-import tween.easing.Elastic;
-import tween.easing.Sine;
-import tween.easing.Back;
 
 class Scrollbar {
 
@@ -23,13 +21,20 @@ class Scrollbar {
     _jMenu   = jMenu;
     _jSlider = jMenu.find('.slider');
 
+    var browser    : String = Ua.getBrowserName();
+    var mouseevent : String = ( browser == "Firefox") ? "wheel" : "mousewheel";
+    mouseevent = (mouseevent.indexOf('IE') > -1) ? "mousewheel" :  mouseevent;
+
     set();
     Dom.jWindow.on("resize",set);
-    _jSlider.on("mousewheel",onMousewheel);
+    _jSlider.on(mouseevent,onMousewheel);
     jMenu.find('.scroll-navi').on("mousedown",onMousedown);
 
   }
 
+      /* =======================================================================
+      Set
+      ========================================================================== */
       private static function set(event:JqEvent = null):Void {
 
         var length : Int = _jSlider.length;
@@ -46,6 +51,9 @@ class Scrollbar {
 
       }
 
+      /* =======================================================================
+      Get using Dom
+      ========================================================================== */
       private static function getDom(target:JQuery):Void {
 
         _jInner  = target.find('ul');
@@ -57,6 +65,9 @@ class Scrollbar {
 
       }
 
+      /* =======================================================================
+      Get Scale
+      ========================================================================== */
       private static function getScale():Float {
 
         var vH    : Int = _jSlider.height();
@@ -68,15 +79,23 @@ class Scrollbar {
 
       }
 
+      /* =======================================================================
+      On Mouse Wheel
+      ========================================================================== */
       private static function onMousewheel(event:Dynamic):Void {
 
         var target : JQuery = JQuery.cur;
         var delta  : Int    = event.originalEvent.wheelDelta;
+        if (delta == null) delta = Math.round(event.originalEvent.deltaY * -120);//Firefox
+
         getDom(target);
         move(delta);
 
       }
 
+      /* =======================================================================
+      On Mouse
+      ========================================================================== */
       private static function onMousedown(event:Dynamic):Void {
 
         var target : JQuery = JQuery.cur.parent('.slider-scroll').siblings('.slider');
@@ -102,6 +121,9 @@ class Scrollbar {
 
       }
 
+      /* =======================================================================
+      Move
+      ========================================================================== */
       private static function move(delta:Int):Void {
 
         delta = Math.round(delta * .3);
@@ -110,9 +132,9 @@ class Scrollbar {
         if (0 < val) val = 0;
         if (_max > val) val = _max;
 
-        _jInner.stop().animate({marginTop: val },100,"linear");
+        TweenMaxHaxe.to(_jInner,0.1,{marginTop: val,ease:'linear'});
         val = Std.int((val * _scale)/100) * -1;
-        _jNavi.stop().animate({ marginTop: val },100,"linear");
+        TweenMaxHaxe.to(_jNavi,0.1,{marginTop: val,ease:'linear'});
 
       }
 

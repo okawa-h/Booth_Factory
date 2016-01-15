@@ -9,6 +9,7 @@ import src.utils.Html;
 
 class Param {
 
+  private static var _user  : String;
   private static var _jArea : JQuery;
 
   public static function init(jArea:JQuery):Void {
@@ -22,19 +23,13 @@ class Param {
   ========================================================================== */
   public static function remakeObject():Void {
 
-    var url : String = untyped Dom.jWindow[0].location;
-        url = Std.string(url);
+    var url : String = Dom.window.location.toString();
+    _user = getParamOption('utm_content');
 
     if (url.indexOf('?') > -1) {
 
       var param : Array<String> = url.split('?');
-
-      //var res = Dom.window.confirm('履歴があります。復元しますか？');
-      //if( res == true ) {
-
-        createObject(param[1]);
-
-      //}
+      createObject(param[1]);
       
     }
 
@@ -105,7 +100,8 @@ class Param {
 
     var param :String = "";
 
-    param += getColorParam();
+    param += getUserParam();
+    param += '&' + getColorParam();
 
     for (i in 0 ... length) {
 
@@ -121,6 +117,25 @@ class Param {
     return param;
 
   }
+
+      /* =======================================================================
+      Get User Param
+      ========================================================================== */
+      private static function getUserParam():String {
+
+        return 'utm_content=' + _user;
+
+      }
+
+      /* =======================================================================
+      Get Color Param
+      ========================================================================== */
+      private static function getColorParam():String {
+
+        var color : String = new JQuery('#color-btn').prop('class');
+        return 'color=' + color;
+
+      }
 
   	  /* =======================================================================
 		  Get Object Param
@@ -144,23 +159,20 @@ class Param {
 
 		  }
 
-		  /* =======================================================================
-		  Get Color Param
-		  ========================================================================== */
-		  private static function getColorParam():String {
-
-		  	var color : String = new JQuery('#color-btn').prop('class');
-		    return 'color=' + color;
-
-		  }
-
   /* =======================================================================
   Change Param
   ========================================================================== */
   public static function change(string:String):Void {
   	
     // Dom.window.history.replaceState('','',string);
-    untyped History.replaceState('','',string);//ie
+    var param : String = "";
+    if (string.indexOf('utm_content') == -1) {
+      param  = "?" + getUserParam() + "&";
+      string = string.split('?')[1];
+    }
+    param += string;
+
+    untyped History.replaceState('','',param);//ie
 
   }
 
@@ -186,6 +198,7 @@ class Param {
   	var str    : String        = option[1];
   	var param  : String        = "";
 
+    if (str == null) return "none";
   	if (str.indexOf('&') != -1) {
 
   		option = str.split('&');

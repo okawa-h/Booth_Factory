@@ -3,8 +3,6 @@ package src.view.sidemenu;
 import js.JQuery;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
-import tween.easing.Sine;
-import tween.easing.Back;
 
 class Lightbox extends Sidemenu {
 
@@ -38,9 +36,6 @@ class Lightbox extends Sidemenu {
 
       jbox.show();
       TweenMaxHaxe.to(jbox, 1, { width : 300 , ease:Elastic.easeOut});
-      // jbox.animate({
-      //   width: '300px'
-      // });
 
     });
 
@@ -49,7 +44,7 @@ class Lightbox extends Sidemenu {
       jbox.fadeOut(sPEED);
       _jLightBox.fadeOut(sPEED);
 
-      untyped jbox.find('.close-btn').off('mousedown');
+      jbox.find('.close-btn').unbind('mousedown');
 
     });
 

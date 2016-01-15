@@ -67,10 +67,10 @@
 
         $new_array = array(
                 "id"    => $userId,
+                "utm"   => $_POST["user"],
                 "point" => $point + 1,
                 "data"  => date("Y/m/d G:i:s"),
                 "param" => $_POST['param'],
-                // "agent" => $_SERVER["HTTP_USER_AGENT"],
         );
 
         if ($current == null) {

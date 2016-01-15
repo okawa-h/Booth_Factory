@@ -16,13 +16,20 @@ class Color {
 
     _jbox       = new JQuery('.color-config');
     _jColorList = _jbox.find('.color-list');
-    var sPEED: Int    = 300;
 
-    _jbox.fadeIn(sPEED,function() {
+    if (jBtn.hasClass('open')) {
+      hide(jBtn);
+      return;
+    }
+
+    _jbox.fadeIn(300,function() {
 
       TweenMaxHaxe.to(_jbox, 0.5, { width : 100 , ease:Elastic.easeOut, 
         onComplete:function() {
+
           _jColorList.fadeIn();
+          jBtn.addClass('open');
+
         }
       });
 
@@ -34,15 +41,28 @@ class Color {
 
     _jbox.find('.close-btn').on('mousedown',function(event:JqEvent) {
 
-      _jbox.stop().fadeOut(sPEED,function() {
-        _jbox.css({width:0,height:0});
-        _jColorList.hide();
-      });
-      untyped _jbox.find('.close-btn').off('mousedown');
+      hide(jBtn);
+
+      _jbox.find('.close-btn').unbind('mousedown');
 
     });
 
   }
+
+      /* =======================================================================
+      Hide
+      ========================================================================== */
+      private static function hide(jBtn:JQuery):Void {
+
+        _jbox.stop().fadeOut(300,function() {
+
+          _jbox.css({ width:0, height:0 });
+          _jColorList.hide();
+          jBtn.removeClass('open');
+
+        });
+
+      }
 
       /* =======================================================================
       Change Color

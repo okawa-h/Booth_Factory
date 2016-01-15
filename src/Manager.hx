@@ -5,10 +5,10 @@ import haxe.Json;
 import jp.saken.utils.Dom;
 import src.utils.Param;
 import src.utils.Drag;
+import src.utils.Log;
 import src.view.ProductLength;
 import src.view.Price;
 import src.view.Data;
-import src.view.Log;
 import src.view.Board;
 import src.view.Trash;
 import src.view.mainmenu.Mainmenu;
@@ -38,7 +38,7 @@ class Manager {
     Param.init(_jArea);
     Board.init(_jArea);
     Price.init();
-    Mainmenu.init(_jMenu);
+    Mainmenu.init(_jMenu,_jArea);
     Sidemenu.init(_Data);
     ProductLength.init();
     Trash.init();
@@ -82,7 +82,6 @@ class Manager {
     Price.change(price);
     var param : String = Param.make(_jAreaObj,length,price);
     Param.change('?' + param);
-    //Animate.hoverObject(_jAreaObj);
 
   }
 

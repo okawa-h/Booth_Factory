@@ -226,7 +226,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "clothes",
-            "abs" : ["230","6"],
+            "abs" : ["230","-74"],
             "cat" : "accessory",
             "icon" : "best.png",
             "img"  : "best.png",
@@ -237,7 +237,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "clothes",
-            "abs" : ["230","5"],
+            "abs" : ["230","-75"],
             "cat" : "accessory",
             "icon" : "buruzon.png",
             "img"  : "buruzon.png",
@@ -248,7 +248,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "clothes",
-            "abs" : ["232","0"],
+            "abs" : ["232","-80"],
             "cat" : "accessory",
             "icon" : "hapi.png",
             "img"  : "hapi.png",
@@ -259,7 +259,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "accessory",
-            "abs" : ["135","43"],
+            "abs" : ["135","-37"],
             "cat" : "accessory",
             "icon" : "hat.png",
             "img"  : "hat.png",
@@ -270,7 +270,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "accessory",
-            "abs" : ["224","-14"],
+            "abs" : ["224","-94"],
             "cat" : "accessory",
             "icon" : "megaphone.png",
             "img"  : "megaphone.png",
@@ -281,7 +281,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "clothes",
-            "abs" : ["233","6"],
+            "abs" : ["233","-74"],
             "cat" : "accessory",
             "icon" : "tshirts.png",
             "img"  : "tshirts.png",
@@ -292,7 +292,7 @@
             "price": "1000000",
             "length": "10000セット",
             "type" : "accessory",
-            "abs" : ["218","100"],
+            "abs" : ["222","23"],
             "cat" : "accessory",
             "icon" : "utiwa.png",
             "img"  : "utiwa.png",
@@ -302,12 +302,12 @@
     "set": [
         {
             "name": "matu",
-            "url" : "?color=blue&01_x=170&01_y=63&02_x=171&02_y=302&03_x=339.5&03_y=337&04_x=542&04_y=73&05_x=682&05_y=411&06_x=569&06_y=130&07_x=607&07_y=55&08_x=359&08_y=63&09_x=464&09_y=315&10_x=731&10_y=368&11_x=547&11_y=224&12_x=602&12_y=405&price=66000"
+            "url" : "?color=blue&01_x=97&01_y=60&02_x=98&02_y=290&03_x=491&03_y=208&04_x=512&04_y=50&05_x=534&05_y=141&08_x=585&08_y=56&09_x=395&09_y=48&10_x=347&10_y=224&14_x=648&14_y=303&13_x=698&13_y=291&15_x=488&15_y=301&18_x=727&18_y=332&25_x=-80&25_y=232&22_x=590&22_y=332&21_x=459&21_y=341&29_x=23&29_y=222&26_x=-37&26_y=135&27_x=-94&27_y=224&price=5094000"
         }, {
             "name": "take",
-            "url" : "?color=blue&01_x=405.5&01_y=134&price=10000"
+            "url" : "?color=blue&18_x=712&18_y=332&17_x=513&17_y=73&13_x=395&13_y=293&28_x=-74&28_y=233&27_x=-94&27_y=224&08_x=146&08_y=92&price=2036000"
         }, {
             "name": "ume",
-            "url" : "?color=blue&18_x=449&18_y=183&17_x=624.5&17_y=142&price=18000"
+            "url" : "?color=blue&21_x=406&21_y=219&price=1000000"
         }]
 }

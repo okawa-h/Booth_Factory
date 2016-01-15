@@ -1,7 +1,5 @@
 package src.utils;
 
-import js.JQuery;
-
 class Html {
 
   /* =======================================================================
@@ -32,6 +30,8 @@ class Html {
     html += 'data-cat="' + cat + '" ';
     html += 'data-icon="' + icon + '" ';
     html += 'data-price="' + price + '">';
+    html += '<div class="revertObj">×</div>';
+    //html += '<div class="removeObj">済</div>';
     html += '<div class="img-box" style="background: url(files/img/product/bg/' + bgImg + ') no-repeat center center;">';
     html += '<div class="img">';
     html += '<img src="files/img/product/image/' + img + '">';

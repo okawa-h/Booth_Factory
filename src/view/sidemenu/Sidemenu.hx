@@ -90,12 +90,12 @@ class Sidemenu {
       ========================================================================== */
       private static function setPacage(data:String):Void {
 
-        var url = untyped Dom.jWindow[0].location;
-            url = Std.string(url);
+        var url = Dom.window.location.toString();
 
         if (url.indexOf('_x') > -1) {
 
-          Board.clear(); 
+          Board.clear();
+          Mainmenu.clearDrop('all');
 
         }
 

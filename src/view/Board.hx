@@ -1,7 +1,6 @@
 package src.view;
 
 import js.JQuery;
-import jp.saken.utils.Dom;
 
 class Board {
 

@@ -199,11 +199,11 @@ jp.okawa.utils.Estimate.insertComma = function(numberString) {
 jp.okawa.utils.Ua = function() { };
 jp.okawa.utils.Ua.__name__ = true;
 jp.okawa.utils.Ua.getBrowserName = function() {
-	var _ua = "取得出来ませんでした。: Ua Class";
+	var _ua = "miss";
 	var user = jp.okawa.utils.Ua.userAgent.toLowerCase();
 	var appVersion = jp.okawa.utils.Ua.window.navigator.appVersion.toLowerCase();
-	if(user.indexOf("msie") != -1) {
-		_ua = "IE6～9（おそらく）";
+	if(user.indexOf("msie") != -1 || user.indexOf("trident") != -1) {
+		_ua = "IE6～11（おそらく）";
 		if(appVersion.indexOf("msie 6.") != -1) _ua = "IE6"; else if(appVersion.indexOf("msie 7.") != -1) _ua = "IE7"; else if(appVersion.indexOf("msie 8.") != -1) _ua = "IE8"; else if(appVersion.indexOf("msie 9.") != -1) _ua = "IE9";
 	} else if(user.indexOf("chrome") != -1) _ua = "Chrome"; else if(user.indexOf("safari") != -1) _ua = "Safari"; else if(user.indexOf("firefox") != -1) _ua = "Firefox";
 	return _ua;
@@ -311,13 +311,13 @@ src.Manager.init = function(event) {
 	src.Manager._jMenu = new js.JQuery("#mainmenu");
 	src.Manager._jArea = new js.JQuery("#mainboard");
 	src.view.Data.set(src.Manager._jMenu,src.Manager.start);
-	src.view.Log.write();
+	src.utils.Log.write();
 };
 src.Manager.start = function() {
 	src.utils.Param.init(src.Manager._jArea);
 	src.view.Board.init(src.Manager._jArea);
 	src.view.Price.init();
-	src.view.mainmenu.Mainmenu.init(src.Manager._jMenu);
+	src.view.mainmenu.Mainmenu.init(src.Manager._jMenu,src.Manager._jArea);
 	src.view.sidemenu.Sidemenu.init(src.Manager._Data);
 	src.view.ProductLength.init();
 	src.view.Trash.init();
@@ -326,7 +326,7 @@ src.Manager.start = function() {
 	src.utils.Drag.init(src.Manager._jArea,src.Manager._jAreaObj,src.Manager._jMenu);
 	jp.saken.utils.Dom.jWindow.on("mouseup",function(event) {
 		src.Manager.setCounter();
-		src.view.Log.write();
+		src.utils.Log.write();
 		src.view.Trash.hide();
 	});
 };
@@ -376,10 +376,10 @@ src.utils.Drag.grabList = function(event) {
 src.utils.Drag.grabObject = function(target,event) {
 	event.preventDefault();
 	src.Manager._DragObj = target;
-	src.Manager._DragObj.addClass("grab");
 	src.utils.Drag.getDiff(event,src.Manager._DragObj);
 	src.utils.Drag._Status = true;
 	src.Manager._DragObj.css({ top : event.clientY - src.utils.Drag._diffY, left : event.clientX - src.utils.Drag._diffX});
+	src.Manager._DragObj.addClass("grab");
 	src.view.Trash.show();
 };
 src.utils.Drag.getDiff = function(event,target) {
@@ -406,7 +406,7 @@ src.utils.Drag.mouseup = function(event) {
 		if(src.utils.Drag._jMenu.find(".current").offset().top > event.pageY) {
 			src.Manager._DragObj.parent().parent("li").addClass("drop");
 			src.utils.Drag.createListToObj(src.Manager._DragObj.parent().parent("li"),event);
-			src.utils.Drag._jAreaObj.off("mousedown");
+			src.utils.Drag._jAreaObj.unbind("mousedown");
 			src.utils.Drag._jAreaObj = src.utils.Drag._jArea.find(".object");
 			src.utils.Drag._jAreaObj.on("mousedown",function(event1) {
 				src.utils.Drag.grabObject($(this),event1);
@@ -441,8 +441,6 @@ src.utils.Drag.createListToObj = function(target,event) {
 	TweenMax.to(src.Manager._DragObj,0.3,{ scaleX : 1, scaleY : 1, ease : Elastic.easeOut, delay : 0.1});
 };
 src.utils.Drag.judgeArea = function(jTarget) {
-	var sPEED = 200;
-	var duration = 0;
 	var top = jTarget.css("top").split("px").join("");
 	var left = jTarget.css("left").split("px").join("");
 	var t = Std.parseInt(top);
@@ -460,9 +458,8 @@ src.utils.Drag.judgeArea = function(jTarget) {
 		var abs = src.utils.Drag.absPosition(jTarget);
 		t = Std.parseInt(abs[0]);
 		l = Std.parseInt(abs[1]);
-		duration = 200;
 	}
-	jTarget.delay(duration).animate({ top : t, left : l},sPEED);
+	TweenMax.to(jTarget,0.5,{ top : t, left : l, delay : 0.05, ease : Expo.easeOut});
 };
 src.utils.Drag.absPosition = function(target) {
 	var id = target.data("id");
@@ -502,6 +499,7 @@ src.utils.Html.getList = function(id,type,cat,icon,price,bgImg,img,name,length,a
 	html += "data-cat=\"" + cat + "\" ";
 	html += "data-icon=\"" + icon + "\" ";
 	html += "data-price=\"" + price + "\">";
+	html += "<div class=\"revertObj\">×</div>";
 	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + bgImg + ") no-repeat center center;\">";
 	html += "<div class=\"img\">";
 	html += "<img src=\"files/img/product/image/" + img + "\">";
@@ -515,14 +513,30 @@ src.utils.Html.getList = function(id,type,cat,icon,price,bgImg,img,name,length,a
 	html += "</li>";
 	return html;
 };
+src.utils.Log = function() { };
+src.utils.Log.__name__ = true;
+src.utils.Log.write = function() {
+	var request = new haxe.Http("files/php/history.php");
+	var param = "?" + jp.saken.utils.Dom.window.location.toString().split("?")[1];
+	var user;
+	if(param.indexOf("?utm_content=") > -1) user = param.split("?utm_content=").join("").split("&")[0]; else user = "none";
+	request.onError = function(data) {
+	};
+	request.onData = function(data1) {
+	};
+	request.setParameter("act","write");
+	request.setParameter("param",param);
+	request.setParameter("user",user);
+	request.request(true);
+};
 src.utils.Param = function() { };
 src.utils.Param.__name__ = true;
 src.utils.Param.init = function(jArea) {
 	src.utils.Param._jArea = jArea;
 };
 src.utils.Param.remakeObject = function() {
-	var url = jp.saken.utils.Dom.jWindow[0].location;
-	if(url == null) url = "null"; else url = "" + url;
+	var url = jp.saken.utils.Dom.window.location.toString();
+	src.utils.Param._user = src.utils.Param.getParamOption("utm_content");
 	if(url.indexOf("?") > -1) {
 		var param = url.split("?");
 		src.utils.Param.createObject(param[1]);
@@ -567,7 +581,8 @@ src.utils.Param.addHtml = function(id,data,color,x,y) {
 };
 src.utils.Param.make = function(jTarget,length,price) {
 	var param = "";
-	param += src.utils.Param.getColorParam();
+	param += src.utils.Param.getUserParam();
+	param += "&" + src.utils.Param.getColorParam();
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
@@ -579,6 +594,13 @@ src.utils.Param.make = function(jTarget,length,price) {
 	param += "&" + src.utils.Param.getPriceParam(price);
 	return param;
 };
+src.utils.Param.getUserParam = function() {
+	return "utm_content=" + src.utils.Param._user;
+};
+src.utils.Param.getColorParam = function() {
+	var color = new js.JQuery("#color-btn").prop("class");
+	return "color=" + color;
+};
 src.utils.Param.getObjectParam = function(jTarget) {
 	var id = jTarget.data("id");
 	var x = jTarget.css("left").split("px").join("");
@@ -588,12 +610,14 @@ src.utils.Param.getObjectParam = function(jTarget) {
 src.utils.Param.getPriceParam = function(price) {
 	return "price=" + price;
 };
-src.utils.Param.getColorParam = function() {
-	var color = new js.JQuery("#color-btn").prop("class");
-	return "color=" + color;
-};
 src.utils.Param.change = function(string) {
-	History.replaceState("","",string);
+	var param = "";
+	if(string.indexOf("utm_content") == -1) {
+		param = "?" + src.utils.Param.getUserParam() + "&";
+		string = string.split("?")[1];
+	}
+	param += string;
+	History.replaceState("","",param);
 };
 src.utils.Param.get = function() {
 	var param = jp.saken.utils.Dom.window.history;
@@ -607,6 +631,7 @@ src.utils.Param.getParamOption = function(string) {
 	var option = search.split(string);
 	var str = option[1];
 	var param = "";
+	if(str == null) return "none";
 	if(str.indexOf("&") != -1) {
 		option = str.split("&");
 		param = option[0];
@@ -682,39 +707,52 @@ src.view.Data.setHTML = function(accessoryHtml,bannerHtml,paperHtml) {
 	src.view.Data._jMenu.find("#sale-paper").find(".slider").find("ul").append(paperHtml);
 	src.view.Data._callback();
 };
-src.view.Log = function() { };
-src.view.Log.__name__ = true;
-src.view.Log.write = function() {
-	var request = new haxe.Http("files/php/history.php");
-	var param = jp.saken.utils.Dom.jWindow[0].location.search;
-	request.onError = function(data) {
-	};
-	request.onData = src.view.Log.onData;
-	request.setParameter("act","write");
-	request.setParameter("param",param);
-	request.request(true);
-};
-src.view.Log.onData = function(data) {
-};
 src.view.Price = function() { };
 src.view.Price.__name__ = true;
 src.view.Price.init = function() {
 	src.view.Price._jContact = new js.JQuery("#contact");
 	src.view.Price._jContactBox = src.view.Price._jContact.find(".contact-box");
 	src.view.Price._jPrice = src.view.Price._jContactBox.find("#price").find("span");
+	src.view.Price._price = 0;
 };
 src.view.Price.change = function(price) {
+	if(src.view.Price._price == price) return;
+	src.view.Price._price = price;
+	src.view.Price.motion(jp.okawa.utils.Estimate.insertComma(price == null?"null":"" + price));
 	src.view.Price.calPriceSize(price);
-	var reprice = jp.okawa.utils.Estimate.insertComma(price == null?"null":"" + price);
-	src.view.Price._jPrice.text(reprice);
+};
+src.view.Price.motion = function(str) {
+	var array = str.split("");
+	var html = "";
+	var _g1 = 0;
+	var _g = array.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		html += "<span>" + array[i] + "</span>";
+	}
+	src.view.Price._jPrice.html(html);
+	var price = src.view.Price._jPrice.find("span");
+	var length = price.length;
+	var g = length;
+	TweenMax.set(price,{ top : -40, opacity : 0});
+	var _g2 = 0;
+	while(_g2 < length) {
+		var i1 = _g2++;
+		g--;
+		if(price.eq(g).text() == ",") {
+		}
+		TweenMax.to(price.eq(g),0.1,{ top : 0, opacity : 1, ease : Elastic.easeOut, delay : i1 * 0.1});
+	}
 };
 src.view.Price.calPriceSize = function(price) {
 	var val = "icon_price_";
 	var str = src.view.Price._jContactBox.css("background-image");
 	if(10000 > price) val += "ss"; else if(50000 > price) val += "s"; else if(100000 > price) val += "m"; else if(200000 < price) val += "l";
 	val += ".png";
-	var txt = str.split("url(")[1];
-	var url = txt.split(")")[0];
+	var txt = str.split("url(\"")[1];
+	if(txt == null) txt = str.split("url(")[1];
+	var url = txt.split("\")")[0];
+	if(url == null) url = txt.split(")")[0];
 	var urlArr = url.split("/");
 	var tar = urlArr[urlArr.length - 1];
 	tar = url.split(tar).join(val);
@@ -726,20 +764,37 @@ src.view.Price.clear = function() {
 src.view.ProductLength = function() { };
 src.view.ProductLength.__name__ = true;
 src.view.ProductLength.init = function() {
-	src.view.ProductLength.lengthAccessory = new js.JQuery("#length-accessory").find(".item-length").find("span");
-	src.view.ProductLength.lengthBanner = new js.JQuery("#length-banner").find(".item-length").find("span");
-	src.view.ProductLength.lengthPaper = new js.JQuery("#length-paper").find(".item-length").find("span");
+	src.view.ProductLength._lengthAccessory = new js.JQuery("#length-accessory").find(".item-length").find("span");
+	src.view.ProductLength._lengthBanner = new js.JQuery("#length-banner").find(".item-length").find("span");
+	src.view.ProductLength._lengthPaper = new js.JQuery("#length-paper").find(".item-length").find("span");
+	src.view.ProductLength._lenAcce = 0;
+	src.view.ProductLength._lenBanner = 0;
+	src.view.ProductLength._lenPaper = 0;
 	if(jp.okawa.utils.Ua.getDevice() == "sp") src.view.ProductLength.setSpMode();
 };
 src.view.ProductLength.change = function(accessoryLength,bannerLength,paperLength) {
-	src.view.ProductLength.lengthAccessory.text(accessoryLength == null?"null":"" + accessoryLength);
-	src.view.ProductLength.lengthBanner.text(bannerLength == null?"null":"" + bannerLength);
-	src.view.ProductLength.lengthPaper.text(paperLength == null?"null":"" + paperLength);
+	if(accessoryLength != src.view.ProductLength._lenAcce) {
+		src.view.ProductLength._lenAcce = accessoryLength;
+		src.view.ProductLength.motion(src.view.ProductLength._lengthAccessory,accessoryLength);
+	}
+	if(bannerLength != src.view.ProductLength._lenBanner) {
+		src.view.ProductLength._lenBanner = bannerLength;
+		src.view.ProductLength.motion(src.view.ProductLength._lengthBanner,bannerLength);
+	}
+	if(paperLength != src.view.ProductLength._lenPaper) {
+		src.view.ProductLength._lenPaper = paperLength;
+		src.view.ProductLength.motion(src.view.ProductLength._lengthPaper,paperLength);
+	}
 };
 src.view.ProductLength.clear = function() {
-	src.view.ProductLength.lengthAccessory.text("0");
-	src.view.ProductLength.lengthBanner.text("0");
-	src.view.ProductLength.lengthPaper.text("0");
+	src.view.ProductLength._lengthAccessory.text("0");
+	src.view.ProductLength._lengthBanner.text("0");
+	src.view.ProductLength._lengthPaper.text("0");
+};
+src.view.ProductLength.motion = function(target,length) {
+	TweenMax.set(target,{ top : -30, opacity : 0});
+	target.text(length == null?"null":"" + length);
+	TweenMax.to(target,0.5,{ top : 0, opacity : 1, ease : Elastic.easeOut, delay : 0.1});
 };
 src.view.ProductLength.setSpMode = function() {
 	new js.JQuery("#sidemenu-left").hide();
@@ -753,45 +808,63 @@ src.view.Trash.init = function() {
 	src.view.Trash._jTrash = new js.JQuery("#trash");
 	src.view.Trash._jTrashBox = src.view.Trash._jTrash.find(".trash-box");
 	src.view.Trash._jTrashArrow = src.view.Trash._jTrash.find(".trash-arrow");
+	src.view.Trash._jTrashBg = src.view.Trash._jTrash.find(".trash-bg");
 	src.view.Trash._Status = false;
 };
 src.view.Trash.onObj = function(target) {
-	if(src.view.Trash.judgeOnObj(target)) TweenMax.to(src.view.Trash._jTrashBox,1,{ scaleX : 1.2, scaleY : 1.2, ease : Elastic.easeOut}); else TweenMax.to(src.view.Trash._jTrashBox,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut});
+	if(src.view.Trash.judgeOnObj(target)) {
+		TweenMax.to(src.view.Trash._jTrashBox,1,{ scaleX : 1.2, scaleY : 1.2, ease : Elastic.easeOut});
+		TweenMax.to(src.view.Trash._jTrashBg,1,{ scaleX : 0.95, scaleY : 0.95, ease : Elastic.easeOut});
+	} else {
+		TweenMax.to(src.view.Trash._jTrashBox,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut});
+		TweenMax.to(src.view.Trash._jTrashBg,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut});
+	}
 };
 src.view.Trash.leaveObj = function(target) {
 	src.view.Trash.deleteObj(target);
 };
 src.view.Trash.hide = function() {
 	if(!src.view.Trash._Status) {
-		src.view.Trash._jTrashArrow.hide();
-		src.view.Trash._jTrashBox.hide();
+		TweenMax.to(src.view.Trash._jTrashArrow,0.05,{ y : 60, onComplete : function() {
+			src.view.Trash._jTrashArrow.hide();
+			TweenMax.set(src.view.Trash._jTrashArrow,{ y : 0});
+		}});
+		TweenMax.to(src.view.Trash._jTrashBox,0.05,{ y : 60, onComplete : function() {
+			src.view.Trash._jTrashBox.hide();
+			src.view.Trash._jTrashBg.stop().fadeOut(100);
+			TweenMax.set(src.view.Trash._jTrashBox,{ y : 0});
+			if(src.view.Trash._ArrowAnimate != null) src.view.Trash._ArrowAnimate.pause(0);
+		}});
 	}
 };
 src.view.Trash.show = function() {
 	TweenMax.set(src.view.Trash._jTrashArrow,{ y : 60});
-	src.view.Trash._jTrashBox.show();
 	src.view.Trash._jTrashArrow.show();
-	TweenMax.to(src.view.Trash._jTrashArrow,0.8,{ y : -30, repeat : -1, yoyo : true, ease : Circ.easeOut});
+	src.view.Trash._jTrashBox.show();
+	src.view.Trash._jTrashBg.stop().fadeIn(100);
+	TweenMax.to(src.view.Trash._jTrashBox,0.05,{ y : -30, onComplete : function() {
+		TweenMax.to(src.view.Trash._jTrashBox,0.05,{ y : 0});
+	}});
+	src.view.Trash._ArrowAnimate = TweenMax.to(src.view.Trash._jTrashArrow,0.8,{ y : 30, repeat : -1, yoyo : true, ease : Circ.easeOut});
 };
 src.view.Trash.deleteObj = function(target) {
 	if(src.view.Trash.judgeOnObj(target)) {
 		src.view.Trash._Status = true;
 		var id = target.data("id");
-		target.css("z-index","10000");
-		TweenMax.to(target,0.2,{ scaleX : 0.7, scaleY : 0.7, ease : Elastic.easeOut});
-		TweenMax.to(target,0.3,{ y : -30, delay : 0.2});
-		TweenMax.to(target,0.3,{ y : 130, delay : 0.5, onComplete : function() {
+		target.css({ 'z-index' : "10000"});
+		TweenMax.to(target,0.2,{ scaleX : 0.7, scaleY : 0.7});
+		var left = target.parent().width() / 2 - target.width() / 2;
+		TweenMax.to(target,0.2,{ y : -30, left : left, delay : 0.2});
+		TweenMax.to(target,0.1,{ y : 130, delay : 0.5, onComplete : function() {
 			target.remove();
 			src.Manager.setCounter();
 			src.view.mainmenu.Mainmenu.clearDrop(id);
 			src.view.Trash._Status = false;
 		}});
 		TweenMax.to(src.view.Trash._jTrashBox,0.5,{ y : 15, ease : Elastic.easeIn, delay : 0.5});
+		TweenMax.to(src.view.Trash._jTrashBg,1,{ scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut, delay : 1});
 		TweenMax.to(src.view.Trash._jTrashBox,0.8,{ y : 0, scaleX : 1.0, scaleY : 1.0, ease : Elastic.easeOut, delay : 1, onComplete : function() {
-			if(src.Manager._DragObj == null) {
-				src.view.Trash._jTrashBox.hide();
-				src.view.Trash._jTrashArrow.hide();
-			}
+			if(src.Manager._DragObj == null) src.view.Trash.hide();
 		}});
 	}
 };
@@ -811,9 +884,11 @@ src.view.Trash.judgeOnObj = function(target) {
 src.view.mainmenu = {};
 src.view.mainmenu.Mainmenu = function() { };
 src.view.mainmenu.Mainmenu.__name__ = true;
-src.view.mainmenu.Mainmenu.init = function(jMenu) {
+src.view.mainmenu.Mainmenu.init = function(jMenu,jArea) {
+	src.view.mainmenu.Mainmenu._jArea = jArea;
 	src.view.mainmenu.Mainmenu._jMenu = jMenu;
 	src.view.mainmenu.Mainmenu._jBtn = src.view.mainmenu.Mainmenu._jMenu.find(".ttl").find("p");
+	var jRevertBtn = jMenu.find(".slider").find("ul li").find(".revertObj");
 	src.view.mainmenu.Scrollbar.init(src.view.mainmenu.Mainmenu._jMenu);
 	src.view.mainmenu.Mainmenu._jBtn.on("mousedown",function(event) {
 		src.view.mainmenu.Mainmenu.clickBtn($(this),event);
@@ -826,18 +901,12 @@ src.view.mainmenu.Mainmenu.init = function(jMenu) {
 		if(src.view.mainmenu.Mainmenu._Timer == null) return;
 		src.view.mainmenu.Mainmenu._Timer.stop();
 	});
-};
-src.view.mainmenu.Mainmenu.scroll = function(jThis,action,move) {
-	var jTarget = jThis;
-	var jUp = jTarget.siblings(".slider-up");
-	var jDw = jTarget.siblings(".slider-down");
-	var h = move * 2;
-	var scrollTop = jTarget.scrollTop();
-	var scrollVal;
-	if(action == "up") scrollVal = h * -1; else scrollVal = h;
-	if(jTarget["is"](":animated")) return;
-	jTarget.animate({ scrollTop : scrollTop + scrollVal});
-	src.view.mainmenu.Mainmenu.setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
+	jRevertBtn.on("mousedown",function(event3) {
+		var jTar = $(this).parent();
+		var id = jTar.prop("id");
+		src.view.mainmenu.Mainmenu._jArea.find("." + id).remove();
+		jTar.removeClass("drop");
+	});
 };
 src.view.mainmenu.Mainmenu.setScrollBtn = function(jUp,jDw,scrollTop,height) {
 	if(scrollTop > 0) jUp.show(); else jUp.hide();
@@ -853,7 +922,7 @@ src.view.mainmenu.Mainmenu.clickBtn = function(jThis,event) {
 src.view.mainmenu.Mainmenu.open = function(target,h) {
 	src.view.mainmenu.Mainmenu._jMenu.removeClass("close");
 	src.view.mainmenu.Mainmenu._jMenu.addClass("open");
-	TweenMax.to(target,0.3,{ top : h, ease : Sine.easeOut});
+	TweenMax.to(target,0.3,{ top : h, ease : Expo.easeOut});
 };
 src.view.mainmenu.Mainmenu.close = function() {
 	src.view.mainmenu.Mainmenu._jMenu.removeClass("open");
@@ -877,9 +946,13 @@ src.view.mainmenu.Scrollbar.__name__ = true;
 src.view.mainmenu.Scrollbar.init = function(jMenu) {
 	src.view.mainmenu.Scrollbar._jMenu = jMenu;
 	src.view.mainmenu.Scrollbar._jSlider = jMenu.find(".slider");
+	var browser = jp.okawa.utils.Ua.getBrowserName();
+	var mouseevent;
+	if(browser == "Firefox") mouseevent = "wheel"; else mouseevent = "mousewheel";
+	if(mouseevent.indexOf("IE") > -1) mouseevent = "mousewheel"; else mouseevent = mouseevent;
 	src.view.mainmenu.Scrollbar.set();
 	jp.saken.utils.Dom.jWindow.on("resize",src.view.mainmenu.Scrollbar.set);
-	src.view.mainmenu.Scrollbar._jSlider.on("mousewheel",src.view.mainmenu.Scrollbar.onMousewheel);
+	src.view.mainmenu.Scrollbar._jSlider.on(mouseevent,src.view.mainmenu.Scrollbar.onMousewheel);
 	jMenu.find(".scroll-navi").on("mousedown",src.view.mainmenu.Scrollbar.onMousedown);
 };
 src.view.mainmenu.Scrollbar.set = function(event) {
@@ -911,6 +984,7 @@ src.view.mainmenu.Scrollbar.getScale = function() {
 src.view.mainmenu.Scrollbar.onMousewheel = function(event) {
 	var target = $(this);
 	var delta = event.originalEvent.wheelDelta;
+	if(delta == null) delta = Math.round(event.originalEvent.deltaY * -120);
 	src.view.mainmenu.Scrollbar.getDom(target);
 	src.view.mainmenu.Scrollbar.move(delta);
 };
@@ -936,9 +1010,9 @@ src.view.mainmenu.Scrollbar.move = function(delta) {
 	var val = src.view.mainmenu.Scrollbar._posi + delta;
 	if(0 < val) val = 0;
 	if(src.view.mainmenu.Scrollbar._max > val) val = src.view.mainmenu.Scrollbar._max;
-	src.view.mainmenu.Scrollbar._jInner.stop().animate({ marginTop : val},100,"linear");
+	TweenMax.to(src.view.mainmenu.Scrollbar._jInner,0.1,{ marginTop : val, ease : "linear"});
 	val = (val * src.view.mainmenu.Scrollbar._scale / 100 | 0) * -1;
-	src.view.mainmenu.Scrollbar._jNavi.stop().animate({ marginTop : val},100,"linear");
+	TweenMax.to(src.view.mainmenu.Scrollbar._jNavi,0.1,{ marginTop : val, ease : "linear"});
 };
 src.view.sidemenu = {};
 src.view.sidemenu.Color = function() { };
@@ -946,20 +1020,28 @@ src.view.sidemenu.Color.__name__ = true;
 src.view.sidemenu.Color.show = function(jBtn) {
 	src.view.sidemenu.Color._jbox = new js.JQuery(".color-config");
 	src.view.sidemenu.Color._jColorList = src.view.sidemenu.Color._jbox.find(".color-list");
-	var sPEED = 300;
-	src.view.sidemenu.Color._jbox.fadeIn(sPEED,function() {
+	if(jBtn.hasClass("open")) {
+		src.view.sidemenu.Color.hide(jBtn);
+		return;
+	}
+	src.view.sidemenu.Color._jbox.fadeIn(300,function() {
 		TweenMax.to(src.view.sidemenu.Color._jbox,0.5,{ width : 100, ease : Elastic.easeOut, onComplete : function() {
 			src.view.sidemenu.Color._jColorList.fadeIn();
+			jBtn.addClass("open");
 		}});
 		TweenMax.to(src.view.sidemenu.Color._jbox,0.5,{ height : 200, delay : 0.4, ease : Elastic.easeOut});
 	});
 	src.view.sidemenu.Color.changeColor(jBtn,src.view.sidemenu.Color._jbox);
 	src.view.sidemenu.Color._jbox.find(".close-btn").on("mousedown",function(event) {
-		src.view.sidemenu.Color._jbox.stop().fadeOut(sPEED,function() {
-			src.view.sidemenu.Color._jbox.css({ width : 0, height : 0});
-			src.view.sidemenu.Color._jColorList.hide();
-		});
-		src.view.sidemenu.Color._jbox.find(".close-btn").off("mousedown");
+		src.view.sidemenu.Color.hide(jBtn);
+		src.view.sidemenu.Color._jbox.find(".close-btn").unbind("mousedown");
+	});
+};
+src.view.sidemenu.Color.hide = function(jBtn) {
+	src.view.sidemenu.Color._jbox.stop().fadeOut(300,function() {
+		src.view.sidemenu.Color._jbox.css({ width : 0, height : 0});
+		src.view.sidemenu.Color._jColorList.hide();
+		jBtn.removeClass("open");
 	});
 };
 src.view.sidemenu.Color.changeColor = function(jBtn,jbox) {
@@ -1025,9 +1107,11 @@ src.view.sidemenu.Sidemenu.setRightMenu = function(data) {
 	});
 };
 src.view.sidemenu.Sidemenu.setPacage = function(data) {
-	var url = jp.saken.utils.Dom.jWindow[0].location;
-	if(url == null) url = "null"; else url = "" + url;
-	if(url.indexOf("_x") > -1) src.view.Board.clear();
+	var url = jp.saken.utils.Dom.window.location.toString();
+	if(url.indexOf("_x") > -1) {
+		src.view.Board.clear();
+		src.view.mainmenu.Mainmenu.clearDrop("all");
+	}
 	src.utils.Param.change(data);
 	src.utils.Param.remakeObject();
 	src.utils.Drag.getObject();
@@ -1050,7 +1134,7 @@ src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
 	jbox.find(".close-btn").on("mousedown",function(event) {
 		jbox.fadeOut(sPEED);
 		src.view.sidemenu.Lightbox._jLightBox.fadeOut(sPEED);
-		jbox.find(".close-btn").off("mousedown");
+		jbox.find(".close-btn").unbind("mousedown");
 	});
 };
 src.view.sidemenu.Lightbox.__super__ = src.view.sidemenu.Sidemenu;

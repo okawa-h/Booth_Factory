@@ -4,6 +4,7 @@ import js.JQuery;
 import jp.saken.utils.Dom;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
+import tween.easing.Expo;
 import src.utils.Html;
 import src.Manager;
 import src.view.Trash;
@@ -70,7 +71,6 @@ class Drag {
 
     Manager._DragObj = target;
 
-    Manager._DragObj.addClass('grab');
     getDiff(event,Manager._DragObj);
     _Status = true;
 
@@ -81,6 +81,8 @@ class Drag {
 
     });
 
+    Manager._DragObj.addClass('grab');
+
     Trash.show();
 
   }
@@ -88,10 +90,10 @@ class Drag {
       /* =======================================================================
       Get Diff
       ========================================================================== */
-      private static function getDiff(event:JqEvent,target:JQuery):Void {
+      private static function getDiff(event:Dynamic,target:JQuery):Void {
 
-        untyped _diffY = event.offsetY;
-        untyped _diffX = event.offsetX;
+        _diffY = event.offsetY;
+        _diffX = event.offsetX;
 
       }
 
@@ -149,7 +151,7 @@ class Drag {
             Manager._DragObj.parent().parent('li').addClass('drop');
             createListToObj(Manager._DragObj.parent().parent('li'),event);
 
-            untyped _jAreaObj.off('mousedown');
+            _jAreaObj.unbind('mousedown');
             _jAreaObj = _jArea.find('.object');
             _jAreaObj.on('mousedown',function(event:JqEvent) {
 
@@ -204,9 +206,6 @@ class Drag {
       ========================================================================== */
       private static function judgeArea(jTarget:JQuery):Void {
 
-        var sPEED  : Int    = 200;
-        var duration : Int  = 0;
-
         var top    : String = jTarget.css('top').split('px').join('');
         var left   : String = jTarget.css('left').split('px').join('');
         var t      : Int    = Std.parseInt(top);
@@ -227,11 +226,10 @@ class Drag {
           var abs : Array<String> = absPosition(jTarget);
           t = Std.parseInt(abs[0]);
           l = Std.parseInt(abs[1]);
-          duration = 200;
           
         }
 
-        jTarget.delay(duration).animate({ top: t, left : l }, sPEED);
+        TweenMaxHaxe.to(jTarget,0.5,{top: t, left : l,delay:0.05,ease:Expo.easeOut});
       
       }
 
@@ -240,13 +238,14 @@ class Drag {
       ========================================================================== */
       private static function absPosition(target:JQuery):Array<String> {
 
-        var id : String    = target.data('id');
-        var data : Dynamic = Manager._Data;
-        var array: Array<String> = [];
+        var id    : String        = target.data('id');
+        var data  : Dynamic       = Manager._Data;
+        var array : Array<String> = [];
+
         for (i in 0 ... data.object.length) {
-          if (data.object[i].id == Std.string(id)) {
-            array = data.object[i].abs;
-          }
+
+          if (data.object[i].id == Std.string(id)) array = data.object[i].abs;
+          
         }
 
         return array;

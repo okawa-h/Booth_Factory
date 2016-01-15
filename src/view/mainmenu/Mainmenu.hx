@@ -5,20 +5,23 @@ import jp.saken.utils.Dom;
 import haxe.Timer;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
-import tween.easing.Sine;
-import tween.easing.Back;
+import tween.easing.Expo;
 import src.view.mainmenu.Scrollbar;
 
 class Mainmenu {
 
+  private static var _jArea     : JQuery;
   private static var _jMenu     : JQuery;
   private static var _jBtn      : JQuery;
   private static var _Timer     : Timer;
 
-  public static function init(jMenu):Void {
+  public static function init(jMenu:JQuery,jArea:JQuery):Void {
 
-    _jMenu     = jMenu;
-    _jBtn      = _jMenu.find('.ttl').find('p');
+    _jArea = jArea;
+    _jMenu = jMenu;
+    _jBtn  = _jMenu.find('.ttl').find('p');
+
+    var jRevertBtn : JQuery = jMenu.find('.slider').find('ul li').find('.revertObj');
 
     Scrollbar.init(_jMenu);
 
@@ -42,25 +45,16 @@ class Mainmenu {
 
     });
 
+    jRevertBtn.on('mousedown',function(event:JqEvent) {
+
+      var jTar : JQuery = JQuery.cur.parent();
+      var id   : String = jTar.prop('id');
+      _jArea.find('.' + id).remove();
+      jTar.removeClass('drop');
+
+    });
+
   }
-
-      /* =======================================================================
-      scroll
-      ========================================================================== */
-      private static function scroll(jThis:JQuery,action:String,move:Float) {
-
-        var jTarget   : JQuery = jThis;
-        var jUp       : JQuery = jTarget.siblings('.slider-up');
-        var jDw       : JQuery = jTarget.siblings('.slider-down');
-        // var h         : Int    = jTarget.find('ul').find('li').outerHeight() + 20;
-        var h         : Float    = move * 2;
-        var scrollTop : Float    = jTarget.scrollTop();
-        var scrollVal : Float    = (action == 'up') ? h * (-1) : h;
-        if (jTarget.is(':animated')) return;
-        jTarget.animate({scrollTop: scrollTop + scrollVal});
-        setScrollBtn(jUp,jDw,scrollTop + scrollVal,jTarget.get(0).scrollHeight);
-
-      }
 
       /* =======================================================================
       Set Scroll Btn
@@ -105,19 +99,18 @@ class Mainmenu {
       }
 
       /* =======================================================================
-      Animate Open
+      Open
       ========================================================================== */
       private static function open(target:JQuery,h:Int):Void {
 
         _jMenu.removeClass('close');
         _jMenu.addClass('open');
-        TweenMaxHaxe.to(target, 0.3, { top : h , ease:Sine.easeOut});
-        // target.animate({ 'top': h + 'px' });
+        TweenMaxHaxe.to(target, 0.3, { top : h, ease:Expo.easeOut});
 
       }
 
       /* =======================================================================
-      Animate Open
+      Close
       ========================================================================== */
       private static function close():Void {
 
