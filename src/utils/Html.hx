@@ -5,12 +5,12 @@ class Html {
   /* =======================================================================
   Object HTML
   ========================================================================== */
-  public static function getObj(id:String,top:Float,left:Float,type:String,cat:String,price:Int,src:String,color:String):String {
+  public static function getObj(id:String,top:Float,left:Float,type:String,cat:String,price:Int,length:String,src:String,color:String):String {
 
     var html :String = "";
     html += '<p class="object ' + id + ' ' + type + '"';
     html += 'style="top:' + top + 'px;left:' + left + 'px"';
-    html += 'data-id="' + id + '" data-cat="' + cat + '" data-price="'+ price +'">';
+    html += 'data-id="' + id + '" data-cat="' + cat + '" data-price="'+ price +'" data-length="'+ length +'">';
     html += '<img src="files/img/product/icon/' + color + '/' + src + '">';
     html += '</p>';
 
@@ -20,7 +20,7 @@ class Html {
   /* =======================================================================
   List HTML
   ========================================================================== */
-  public static function getList(id:String,type:String,cat:String,icon:String,price:Int,bgImg:String,img:String,name:String,length:String,abs:String):String {
+  public static function getList(id:String,type:String,cat:String,icon:String,price:String,bgImg:String,img:String,name:String,length:String,abs:String):String {
 
     var html:String = "";
     html += '<li id="' + id + '" title="' + name + '" ';

@@ -15,6 +15,17 @@ class Param {
   public static function init(jArea:JQuery):Void {
 
     _jArea = jArea;
+    
+    var location : String = Dom.window.location.toString();
+    if (location.indexOf('&color=') > -1) {
+
+      var logColor : String = location.split('&color=')[1].split('&')[0];
+      new JQuery('#color-btn').prop('class',logColor);
+      var jColorList : JQuery = new JQuery('#sidemenu-right').find('ul.color-list');
+      jColorList.find('.current').removeClass('current');
+      jColorList.find('.' + logColor).addClass('current');
+      
+    }
 
   }
 
@@ -33,7 +44,9 @@ class Param {
       
     }
 
-  } 
+    resizeObj();
+
+  }
 
 		  /* =======================================================================
 		  Create Object
@@ -44,7 +57,6 @@ class Param {
 		    var length     : Int           = paramArray.length;
 		    var data       : Dynamic       = Manager._Data;
 		    var color      : String  			 = getColorParam().split('color=').join('');
-
         var x : Float = 0;
 
 		    for (i in 0 ... length) {
@@ -79,11 +91,13 @@ class Param {
 		        var type  : String = data.object[i].type;
 		        var cat   : String = data.object[i].cat;
 		        var icon  : String = data.object[i].icon;
-		        var price : Int    = data.object[i].price;
+		        var price : String = data.object[i].price;
+            if (price.indexOf(',') > -1) price = price.split(',').join('');
+            var length: String = data.object[i].length;
 		        var top   : Float  = y;
 		        var left  : Float  = x;
 
-		        html += Html.getObj(id,top,left,type,cat,price,icon,color);
+		        html += Html.getObj(id,top,left,type,cat,Std.parseInt(price),length,icon,color);
 		        Mainmenu.addDrop(id);
 
 		      }
@@ -92,6 +106,20 @@ class Param {
 		    _jArea.find('.board').append(html);
 
 		  }
+
+      /* =======================================================================
+      Resize Obj
+      ========================================================================== */
+      private static function resizeObj() {
+
+        var tarArray : JQuery = _jArea.find('.board').find('.object');
+        for (i in 0 ... tarArray.length) {
+
+          Manager.resizeDom(tarArray.eq(i),true);
+          
+        }
+
+      }
 
   /* =======================================================================
   Make URL Param
@@ -133,6 +161,7 @@ class Param {
       private static function getColorParam():String {
 
         var color : String = new JQuery('#color-btn').prop('class');
+        if (color.indexOf(' open') > -1) color = color.split(' open').join('');
         return 'color=' + color;
 
       }
@@ -166,10 +195,14 @@ class Param {
   	
     // Dom.window.history.replaceState('','',string);
     var param : String = "";
+
     if (string.indexOf('utm_content') == -1) {
+
       param  = "?" + getUserParam() + "&";
       string = string.split('?')[1];
+
     }
+
     param += string;
 
     untyped History.replaceState('','',param);//ie

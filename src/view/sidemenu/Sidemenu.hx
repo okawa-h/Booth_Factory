@@ -74,7 +74,7 @@ class Sidemenu {
 
         });
 
-        new JQuery('#contact-btn').find('a').on('mousedown',function(event:JqEvent):Void {
+        new JQuery('#clear-btn').on('mousedown',function(event:JqEvent):Void {
 
           setPacage('?');
           Price.clear();

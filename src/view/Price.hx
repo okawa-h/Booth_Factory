@@ -9,6 +9,7 @@ class Price {
 
   private static var _jContact    : JQuery;
   private static var _jContactBox : JQuery;
+  private static var _jImg        : JQuery;
   private static var _jPrice      : JQuery;
   private static var _price       : Int;
 
@@ -16,8 +17,20 @@ class Price {
 
     _jContact    = new JQuery('#contact');
     _jContactBox = _jContact.find('.contact-box');
+    _jImg        = _jContactBox.find('#price').find('img');
     _jPrice      = _jContactBox.find('#price').find('span');
     _price       = 0;
+
+    _jImg.on('mousedown',function(event:JqEvent) {
+      event.preventDefault();
+      var target : JQuery = JQuery.cur;
+      target.parent().append(target.clone().addClass('coin').css({position:'absolute',left:'15px'}));
+      TweenMaxHaxe.to(target.parent().find('.coin'),0.3,{y:-60,opacity:0,
+        onComplete:function() {
+          target.parent().find('.coin').remove();
+        }
+      });
+    });
 
   }
 
@@ -51,21 +64,14 @@ class Price {
 
         _jPrice.html(html);
 
-        var price : JQuery = _jPrice.find('span');
-        var length: Int    = price.length;
-        var g     : Int    = length;
+        var price  : JQuery = _jPrice.find('span');
+        var length : Int    = price.length;
+        var g      : Int    = length;
         TweenMaxHaxe.set(price,{top:-40,opacity:0});
 
         for (i in 0 ... length) {
     
           g--;
-
-          if (price.eq(g).text() == ',') {
-            // TweenMaxHaxe.to(price.eq(g),0.1,{top:0,opacity:1,'font-size':60,ease:Elastic.easeOut,delay:i*0.1});
-            // TweenMaxHaxe.to(price.eq(g),0.1,{top:0,opacity:1,'font-size':20,ease:Elastic.easeOut,delay:i*0.1 + 0.1});
-            // continue;
-          }
-
           TweenMaxHaxe.to(price.eq(g),0.1,{top:0,opacity:1,ease:Elastic.easeOut,delay:i*0.1});
 
         }
@@ -77,29 +83,28 @@ class Price {
       ========================================================================== */
       private static function calPriceSize(price:Int):Void {
 
-        var val : String = 'icon_price_';
-        var str : String = _jContactBox.css('background-image');
+        var jImg : JQuery        = _jContactBox.find('#price').find('img');
 
-        if (10000 > price) {
-          val += 'ss';
-        } else if (50000 > price) {
-          val += 's';
-        } else if (100000 > price) {
-          val += 'm';
-        } else if (200000 < price) {
-          val += 'l';
-        }
+        var array: Array<String> = jImg.prop('src').split('/');
+        var len  : Int           = jImg.prop('src').split('/').length;
+        var now  : String        = array[len - 1];
+        var val  : String        = "ss.png";
 
-        val += '.png';
-        var txt    : String = str.split('url("')[1];
-        if (txt == null) txt = str.split('url(')[1];
-        var url    : String = txt.split('")')[0];
-        if (url == null) url = txt.split(')')[0];
-        var urlArr : Array<String> = url.split('/');
-        var tar    : String = urlArr[urlArr.length - 1];
-        tar = url.split(tar).join(val);
+        if (price < 10000) val = 'ss.png';
 
-        _jContactBox.css({'background' : 'url("' + tar + '") no-repeat 15px 50% #fff'});
+        if (price > 10000 && price < 100000) val = 's.png';
+
+        if (price > 100000 && price < 200000) val = 'm.png';
+
+        if (price > 200000) val = 'l.png';
+
+
+        var newImg : Array<String> = now.split('_');
+        newImg[newImg.length-1] = val;
+        var newSrc = newImg.join('_');
+        array[len - 1] = newSrc;
+
+        jImg.prop('src',array.join('/'));
 
       }
 

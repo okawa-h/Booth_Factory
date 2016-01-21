@@ -84,11 +84,11 @@ class ProductLength {
       ========================================================================== */
       private static function setSpMode() {
 
-        new JQuery('#sidemenu-left').hide();
-        new JQuery('#mainmenu').hide();
+        //new JQuery('#sidemenu-left').hide();
+        //new JQuery('#mainmenu').hide();
 
         var h = Dom.jWindow.height();
-        js.Lib.alert(h);
+        //js.Lib.alert(h);
         // new JQuery('#main').height(h);
 
       }

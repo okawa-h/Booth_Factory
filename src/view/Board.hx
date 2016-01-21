@@ -1,6 +1,7 @@
 package src.view;
 
 import js.JQuery;
+import src.view.board.Human;
 
 class Board {
 
@@ -12,6 +13,7 @@ class Board {
   public static function init(jArea:JQuery):Void {
 
     _jArea = jArea;
+    Human.init(_jArea);
 
   }
 

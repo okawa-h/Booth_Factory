@@ -58,10 +58,10 @@ body,html {
 
 	#contact .contact-box {
 		margin-bottom: 6px;
-		padding: 10px 10px 10px 115px;
+		padding: 10px 10px 10px 10px;
 		border: 6px solid #4c3410;
 		border-radius: 8px;
-		background: url(../../img/icon/icon_price_ss.png) no-repeat 15px 50% #fff;
+		background: #fff;
 		text-align: right;
 	}
 
@@ -72,6 +72,10 @@ body,html {
 			font-size: 46px;
 			font-weight: bold;
 		}
+
+			#contact .contact-box #price img {
+				margin-right: 10px;
+			}
 
 			#contact .contact-box #price span {
 				position: relative;

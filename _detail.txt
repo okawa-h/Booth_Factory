@@ -8,8 +8,6 @@ body
 |
 --main;
 |   |
-|   --trash     : z-index: 900;
-|   |
 |   --mainmenu  : z-index: 800;
 |   |
 |   --sidemenu-l: z-index: 600;
@@ -19,6 +17,8 @@ body
 |   --mainboard : z-index: 0;
 |       |
 |       --board : z-index: 100;
+|   				|
+|   				--trash    : z-index: 2000;
 |           |
 |           --poster   : z-index: 200;
 |           |   

@@ -52,6 +52,8 @@ class Mainmenu {
       _jArea.find('.' + id).remove();
       jTar.removeClass('drop');
 
+      return untyped false;
+
     });
 
   }
@@ -116,7 +118,7 @@ class Mainmenu {
 
         _jMenu.removeClass('open');
         _jMenu.addClass('close');
-        TweenMaxHaxe.to(_jMenu.find('.inner'), 1, { top : 0 , ease:Elastic.easeOut});
+        TweenMaxHaxe.to(_jMenu.find('.inner'), 1, { top : 0, ease:Elastic.easeOut});
         _Timer.stop();
 
       }
@@ -143,7 +145,7 @@ class Mainmenu {
   }
 
   /* =======================================================================
-  Add Drop
+  Clear Drop
   ========================================================================== */
   public static function clearDrop(id:String):Void {
 

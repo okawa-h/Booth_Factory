@@ -2,7 +2,7 @@ package src.view.sidemenu;
 
 import js.JQuery;
 import tween.TweenMaxHaxe;
-import tween.easing.Elastic;
+import tween.easing.Expo;
 
 class Color {
 
@@ -18,13 +18,16 @@ class Color {
     _jColorList = _jbox.find('.color-list');
 
     if (jBtn.hasClass('open')) {
+
       hide(jBtn);
       return;
+
     }
 
     _jbox.fadeIn(300,function() {
 
-      TweenMaxHaxe.to(_jbox, 0.5, { width : 100 , ease:Elastic.easeOut, 
+      TweenMaxHaxe.set(_jbox, { x : 0 });
+      TweenMaxHaxe.to(_jbox, 0.2, { width : 100 , x : 0, ease:Expo.easeOut, 
         onComplete:function() {
 
           _jColorList.fadeIn();
@@ -33,7 +36,7 @@ class Color {
         }
       });
 
-      TweenMaxHaxe.to(_jbox, 0.5, { height : 200,delay : 0.4  , ease:Elastic.easeOut});
+      TweenMaxHaxe.to(_jbox, 0.2, { height : 140,delay : 0.4  , ease:Expo.easeOut});
 
     });
 
@@ -68,7 +71,7 @@ class Color {
       Change Color
       ========================================================================== */
       private static function changeColor(jBtn:JQuery,jbox:JQuery):Void {
-        
+
         _jColorList.find('li').on('mousedown',function(event:JqEvent) {
 
           var jAreaObj : JQuery = new JQuery('#mainboard').find('.object');
