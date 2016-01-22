@@ -324,6 +324,7 @@ src.Manager.start = function() {
 	src.utils.Param.remakeObject();
 	src.Manager.setCounter();
 	src.utils.Drag.init(src.Manager._jArea,src.Manager._jAreaObj,src.Manager._jMenu);
+	src.view.board.Human.talk("ようこそ");
 	jp.saken.utils.Dom.jWindow.on("mouseup",function(event) {
 		src.Manager.setCounter();
 		src.utils.Log.write();
@@ -1061,23 +1062,74 @@ src.view.board = {};
 src.view.board.Human = function() { };
 src.view.board.Human.__name__ = true;
 src.view.board.Human.init = function(jArea) {
+	src.view.board.Human._SPEED = 0.08;
 	src.view.board.Human._jArea = jArea;
 	src.view.board.Human._jHuman = src.view.board.Human._jArea.find(".human");
-	src.view.board.Human._jHuman.append("<div class=\"human-talk\"></div>");
-	src.view.board.Human._jtalk = src.view.board.Human._jHuman.find(".human-talk");
-	src.view.board.Human.set();
-	src.view.board.Human.text();
+	src.view.board.Human._jHuman.append("<div class=\"human-talk\"><p></p></div>");
+	src.view.board.Human._jTalk = src.view.board.Human._jHuman.find(".human-talk");
+	src.view.board.Human._jText = src.view.board.Human._jTalk.find("p");
+	src.view.board.Human._Timer = new haxe.Timer(8000);
+	src.view.board.Human._Timer.run = src.view.board.Human.randamtalk;
 };
-src.view.board.Human.set = function() {
-	var h = src.view.board.Human._jtalk.height();
-	src.view.board.Human._jtalk.css({ top : -h - 30});
+src.view.board.Human.talk = function(str,delay) {
+	if(delay == null) delay = 0;
+	src.view.board.Human._jText.children().remove();
+	if(str == "quiet") {
+		src.view.board.Human._jTalk.hide();
+		return;
+	}
+	src.view.board.Human._jTalk.show();
+	src.view.board.Human.set(str);
+	var timer = new haxe.Timer(delay);
+	timer.run = function() {
+		src.view.board.Human.typing(str);
+		timer.stop();
+	};
 };
-src.view.board.Human.text = function() {
-	var text = "あああああ";
-	src.view.board.Human._jtalk.append(src.view.board.Human.wordWrap(text));
+src.view.board.Human.comment = function(jTarget,str) {
+	src.view.board.Human._Timer.stop();
+	src.view.board.Human.talk(str);
+	jTarget.on("mouseleave",function(event) {
+		src.view.board.Human.talk("quiet");
+		src.view.board.Human._Timer = new haxe.Timer(8000);
+		src.view.board.Human._Timer.run = src.view.board.Human.randamtalk;
+		jTarget.unbind("mouseleave");
+	});
+};
+src.view.board.Human.randamtalk = function() {
+	var text = src.view.board.Human.talkArray();
+	var num = Math.floor(Math.random() * text.length);
+	src.view.board.Human.talk(text[num]);
+};
+src.view.board.Human.set = function(str) {
+	var linefeed = 0;
+	var lineHight = 20;
+	var padding = -30;
+	var arrow = -45;
+	if(str.indexOf("/") > -1) linefeed = str.split("/").length - 1;
+	src.view.board.Human._jTalk.css({ top : padding + -(linefeed * lineHight) + arrow + "px"});
+};
+src.view.board.Human.typing = function(str) {
+	var array = str.split("");
+	var _g1 = 0;
+	var _g = array.length;
+	while(_g1 < _g) {
+		var i = [_g1++];
+		var text = [src.view.board.Human.wordWrap(array[i[0]])];
+		TweenMax.to(src.view.board.Human._jText,0,{ delay : src.view.board.Human._SPEED * i[0], onComplete : (function(text,i) {
+			return function() {
+				if(array[i[0]] == "/") text[0] = text[0].split("<span>/</span>").join("<br>");
+				src.view.board.Human._jText.append(text[0]);
+			};
+		})(text,i)});
+	}
 };
 src.view.board.Human.wordWrap = function(str) {
-	return "<p>" + str + "</p>";
+	return "<span>" + str + "</span>";
+};
+src.view.board.Human.talkArray = function() {
+	var array = ["おはよう","安くない？","やっす","現在の金額は" + new js.JQuery("#contact").find("#price").text() + "です。"];
+	return array;
 };
 src.view.mainmenu = {};
 src.view.mainmenu.Mainmenu = function() { };
@@ -1287,23 +1339,41 @@ src.view.sidemenu.Sidemenu.setRightMenu = function(data) {
 	src.view.sidemenu.Sidemenu._jBtnMatu.on("mousedown",function(event) {
 		src.view.sidemenu.Sidemenu.setPacage(data.set[0].url);
 	});
-	src.view.sidemenu.Sidemenu._jBtnTake.on("mousedown",function(event1) {
+	src.view.sidemenu.Sidemenu._jBtnMatu.on("mouseover",function(event1) {
+		src.view.board.Human.comment($(this),"松セットです。/高いです。");
+	});
+	src.view.sidemenu.Sidemenu._jBtnTake.on("mousedown",function(event2) {
 		src.view.sidemenu.Sidemenu.setPacage(data.set[1].url);
 	});
-	src.view.sidemenu.Sidemenu._jBtnUme.on("mousedown",function(event2) {
+	src.view.sidemenu.Sidemenu._jBtnTake.on("mouseover",function(event3) {
+		src.view.board.Human.comment($(this),"竹セットです。/やや高いです。");
+	});
+	src.view.sidemenu.Sidemenu._jBtnUme.on("mousedown",function(event4) {
 		src.view.sidemenu.Sidemenu.setPacage(data.set[2].url);
 	});
-	src.view.sidemenu.Sidemenu._jBtnColor.on("mousedown",function(event3) {
+	src.view.sidemenu.Sidemenu._jBtnUme.on("mouseover",function(event5) {
+		src.view.board.Human.comment($(this),"梅セットです。/お手頃ですね。");
+	});
+	src.view.sidemenu.Sidemenu._jBtnColor.on("mousedown",function(event6) {
 		src.view.sidemenu.Color.show($(this));
 	});
-	src.view.sidemenu.Sidemenu._jBtnHelp.on("mousedown",function(event4) {
+	src.view.sidemenu.Sidemenu._jBtnColor.on("mouseover",function(event7) {
+		src.view.board.Human.comment($(this),"色の変更が出来ます。");
+	});
+	src.view.sidemenu.Sidemenu._jBtnHelp.on("mousedown",function(event8) {
 		src.view.sidemenu.Lightbox.show("help",$(this));
 	});
-	new js.JQuery("#clear-btn").on("mousedown",function(event5) {
+	src.view.sidemenu.Sidemenu._jBtnHelp.on("mouseover",function(event9) {
+		src.view.board.Human.comment($(this),"ヘルプです。");
+	});
+	new js.JQuery("#clear-btn").on("mousedown",function(event10) {
 		src.view.sidemenu.Sidemenu.setPacage("?");
 		src.view.Price.clear();
 		src.view.ProductLength.clear();
 		src.view.mainmenu.Mainmenu.clearDrop("all");
+	});
+	new js.JQuery("#clear-btn").on("mouseover",function(event11) {
+		src.view.board.Human.comment($(this),"全部消せます。");
 	});
 };
 src.view.sidemenu.Sidemenu.setPacage = function(data) {

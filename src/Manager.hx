@@ -17,6 +17,7 @@ import src.view.Trash;
 import src.view.Tutorial;
 import src.view.mainmenu.Mainmenu;
 import src.view.sidemenu.Sidemenu;
+import src.view.board.Human;
 
 class Manager {
 
@@ -53,6 +54,8 @@ class Manager {
     Param.remakeObject();
     setCounter();
     Drag.init(_jArea,_jAreaObj,_jMenu);
+
+    Human.talk('ようこそ');
 
     Dom.jWindow.on('mouseup',function(event:JqEvent) {
 

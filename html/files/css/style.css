@@ -209,10 +209,10 @@
 	}
 
 		#mainboard .board .human .human-talk {
+			display: none;
 			position: absolute;
-			width: 100px;
-			height: 100px;
-			padding: 5px;
+			left: 30px;
+			padding: 15px 15px 12px;
 			border-radius: 10px;
 			background-color: #fff;
 		}
@@ -228,6 +228,12 @@
 			border: 15px solid transparent;
 			border-top: 15px solid #fff;
 		}
+
+			#mainboard .board .human .human-talk p {
+				position: static;
+				cursor: auto;
+				text-align: left;
+			}
 
 /*-------------------------------------------------------------------------
 	Trash

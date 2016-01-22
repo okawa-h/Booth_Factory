@@ -6,6 +6,7 @@ import src.Manager;
 import src.view.mainmenu.Mainmenu;
 import src.view.sidemenu.Lightbox;
 import src.view.sidemenu.Color;
+import src.view.board.Human;
 import src.utils.Param;
 import src.utils.Drag;
 
@@ -50,9 +51,21 @@ class Sidemenu {
 
         });
 
+        _jBtnMatu.on('mouseover',function(event:JqEvent):Void {
+
+          Human.comment(JQuery.cur,'松セットです。/高いです。');
+
+        });
+
         _jBtnTake.on('mousedown',function(event:JqEvent):Void {
 
           setPacage(data.set[1].url);
+
+        });
+
+        _jBtnTake.on('mouseover',function(event:JqEvent):Void {
+
+          Human.comment(JQuery.cur,'竹セットです。/やや高いです。');
 
         });
 
@@ -62,9 +75,21 @@ class Sidemenu {
 
         });
 
+        _jBtnUme.on('mouseover',function(event:JqEvent):Void {
+
+          Human.comment(JQuery.cur,'梅セットです。/お手頃ですね。');
+
+        });
+
         _jBtnColor.on('mousedown',function(event:JqEvent):Void {
 
           Color.show(JQuery.cur);
+
+        });
+
+        _jBtnColor.on('mouseover',function(event:JqEvent):Void {
+
+          Human.comment(JQuery.cur,'色の変更が出来ます。');
 
         });
 
@@ -74,12 +99,24 @@ class Sidemenu {
 
         });
 
+        _jBtnHelp.on('mouseover',function(event:JqEvent):Void {
+
+          Human.comment(JQuery.cur,'ヘルプです。');
+
+        });
+
         new JQuery('#clear-btn').on('mousedown',function(event:JqEvent):Void {
 
           setPacage('?');
           Price.clear();
           ProductLength.clear();
           Mainmenu.clearDrop('all');
+
+        });
+
+        new JQuery('#clear-btn').on('mouseover',function(event:JqEvent):Void {
+
+          Human.comment(JQuery.cur,'全部消せます。');
 
         });
 
