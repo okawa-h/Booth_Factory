@@ -58,6 +58,111 @@
 		}
 
 /*-------------------------------------------------------------------------
+	Tutorial
+/*-----------------------------------------------------------------------*/
+#tutorial {
+	position: fixed;
+	top: 30px;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+}
+
+	#tutorial h1 {
+		margin-bottom: 20px;
+		text-align: center;
+		opacity: 0;
+	}
+
+		#tutorial h1 img {
+			width: 40%;
+			max-width: 784px;
+			height: auto;
+			max-height: 223px;
+		}
+
+	#tutorial .tutorial {
+		margin-bottom: 30px;
+		padding: 0 30px;
+		text-align: center;
+	}
+
+		#tutorial .tutorial .tutorial-img {
+			display: block;
+			float: left;
+			width: 49%;
+			max-height: 403px;
+			opacity: 0;
+			text-align: right;
+		}
+
+			#tutorial .tutorial .tutorial-img img {
+				width: 100%;
+				max-width: 507px;
+				height: auto;
+				max-height: 403px;
+			}
+
+		#tutorial .tutorial .tutorial-text {
+			display: block;
+			float: left;
+			width: 48%;
+			height: 100%;
+			margin-left: 2%;
+			text-align: left;
+			opacity: 0;
+		}
+
+			#tutorial .tutorial .tutorial-text h3 {
+				margin-bottom: 5px;
+			}
+
+				#tutorial .tutorial .tutorial-text h3 img {
+					width: 100%;
+					max-width: 297px;
+					height: auto;
+					max-height: 70px;
+				}
+
+			#tutorial .tutorial .tutorial-text p {
+				font-size: 20px;
+			}
+
+	#tutorial .start-btn {
+		opacity: 0;
+		display: inline-block;
+		cursor: pointer;
+	}
+
+		#tutorial .start-btn span {
+			display: block;
+			position: absolute;
+			top: 12px;
+			left: 12px;
+			width: 17px;
+			height: 17px;
+			background: url(../img/tutorial/bolt.png) no-repeat center center;
+			background-size: contain;
+		}
+
+		#tutorial .start-btn span:nth-child(2) {
+			top: 72px;
+		}
+
+		#tutorial .start-btn span:nth-child(3) {
+			top: 12px;
+			right: 12px;
+			left: auto;
+		}
+
+		#tutorial .start-btn span:nth-child(4) {
+			top: 72px;
+			right: 12px;
+			left: auto;
+		}
+
+/*-------------------------------------------------------------------------
 	Common
 /*-----------------------------------------------------------------------*/
 .wrap {
@@ -89,6 +194,7 @@
 	#mainboard p.grab {
 		position: fixed !important;
 		z-index: 3000 !important;
+		opacity: 0.9 !important;
 	}
 
 	#mainboard p:before {
@@ -304,6 +410,7 @@
 	position: absolute;
 	top: 165px;
 	left: 0;
+	text-align: right;
 	z-index: 600;
 }
 
@@ -342,24 +449,21 @@
 				}
 
 	#sidemenu-left #clear-btn {
-		position: fixed;
-		left: 50px;
-		bottom: 100px;
-		width: 60px;
-		height: 60px;
-		border-radius: 50%;
-		background-color: #3b3b3b;
+		display: inline-block;
+		padding: 8px 12px 7px;
+		border-radius: 8px;
+		background-color: #4c3410;
 		color: #fff;
-		font-weight: bold;
+		font-size: 18px;
 		text-align: center;
-		line-height: 60px;
 		cursor: pointer;
 	}
 
-	#sidemenu-left #clear-btn:hover {
-		background-color: #eee;
-		color: #3b3b3b;
-	}
+		#sidemenu-left #clear-btn span {
+			margin-right: 5px;
+			font-size: 140%;
+			line-height: 10px;
+		}
 
 /*-------------------------------------------------------------------------
 	Sidemenu Right

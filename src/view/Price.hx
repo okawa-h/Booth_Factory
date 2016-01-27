@@ -7,114 +7,120 @@ import tween.easing.Elastic;
 
 class Price {
 
-  private static var _jContact    : JQuery;
-  private static var _jContactBox : JQuery;
-  private static var _jImg        : JQuery;
-  private static var _jPrice      : JQuery;
-  private static var _price       : Int;
+    private static var _jContact    : JQuery;
+    private static var _jContactBox : JQuery;
+    private static var _jImg        : JQuery;
+    private static var _jPrice      : JQuery;
+    private static var _price       : Int;
 
-  public static function init():Void {
+    /* =======================================================================
+    Init
+    ========================================================================== */
+    public static function init():Void {
 
-    _jContact    = new JQuery('#contact');
-    _jContactBox = _jContact.find('.contact-box');
-    _jImg        = _jContactBox.find('#price').find('img');
-    _jPrice      = _jContactBox.find('#price').find('span');
-    _price       = 0;
+        _jContact    = new JQuery('#contact');
+        _jContactBox = _jContact.find('.contact-box');
+        _jImg        = _jContactBox.find('#price').find('img');
+        _jPrice      = _jContactBox.find('#price').find('span');
+        _price       = 0;
 
-    _jImg.on('mousedown',function(event:JqEvent) {
-      event.preventDefault();
-      var target : JQuery = JQuery.cur;
-      target.parent().append(target.clone().addClass('coin').css({position:'absolute',left:'15px'}));
-      TweenMaxHaxe.to(target.parent().find('.coin'),0.3,{y:-60,opacity:0,
-        onComplete:function() {
-          target.parent().find('.coin').remove();
-        }
-      });
-    });
+        _jImg.on('mousedown',function(event:JqEvent) {
+            
+            event.preventDefault();
+            var jTarget : JQuery = JQuery.cur;
+            jTarget.parent().append(jTarget.clone().addClass('coin').css({position:'absolute',left:'15px'}));
 
-  }
+            TweenMaxHaxe.to(jTarget.parent().find('.coin'),0.3,{y:-60,opacity:0,
+                onComplete:function() {
 
-  /* =======================================================================
-  Change
-  ========================================================================== */
-  public static function change(price:Int):Void {
+                    jTarget.parent().find('.coin').remove();
+                }
+            });
+        });
 
-    if (_price == price) return;
+    }
 
-    _price = price;
+    /* =======================================================================
+    Change
+    ========================================================================== */
+    public static function change(price:Int):Void {
 
-    motion(Estimate.insertComma(Std.string(price)));
-    calPriceSize(price);
+        if (_price == price) return;
 
-  }
+        _price = price;
 
-      /* =======================================================================
-      Price Motion
-      ========================================================================== */
-      private static function motion(str:String):Void {
+        motion(Estimate.insertComma(Std.string(price)));
+        calPriceSize(price);
 
-        var array : Array<String> = str.split("");
-        var html  : String        = "";
+    }
 
-        for (i in 0 ... array.length) {
+            /* =======================================================================
+            Price Motion
+            ========================================================================== */
+            private static function motion(str:String):Void {
 
-          html += "<span>" + array[i] + "</span>";
+                var array : Array<String> = str.split("");
+                var html  : String        = "";
 
-        }
+                for (i in 0 ... array.length) {
 
-        _jPrice.html(html);
+                    html += "<span>" + array[i] + "</span>";
 
-        var price  : JQuery = _jPrice.find('span');
-        var length : Int    = price.length;
-        var g      : Int    = length;
-        TweenMaxHaxe.set(price,{top:-40,opacity:0});
+                }
 
-        for (i in 0 ... length) {
-    
-          g--;
-          TweenMaxHaxe.to(price.eq(g),0.1,{top:0,opacity:1,ease:Elastic.easeOut,delay:i*0.1});
+                _jPrice.html(html);
 
-        }
+                var price  : JQuery = _jPrice.find('span');
+                var length : Int    = price.length;
+                var g      : Int    = length;
+                TweenMaxHaxe.set(price,{top:-40,opacity:0});
 
-      }
+                for (i in 0 ... length) {
 
-      /* =======================================================================
-      Price Size
-      ========================================================================== */
-      private static function calPriceSize(price:Int):Void {
+                    g--;
+                    TweenMaxHaxe.to(price.eq(g),0.1,{top:0,opacity:1,ease:Elastic.easeOut,delay:i*0.1});
 
-        var jImg : JQuery        = _jContactBox.find('#price').find('img');
+                }
 
-        var array: Array<String> = jImg.prop('src').split('/');
-        var len  : Int           = jImg.prop('src').split('/').length;
-        var now  : String        = array[len - 1];
-        var val  : String        = "ss.png";
+            }
 
-        if (price < 10000) val = 'ss.png';
+            /* =======================================================================
+            Price Size
+            ========================================================================== */
+            private static function calPriceSize(price:Int):Void {
 
-        if (price > 10000 && price < 100000) val = 's.png';
+                var jImg : JQuery        = _jContactBox.find('#price').find('img');
 
-        if (price > 100000 && price < 200000) val = 'm.png';
+                var array: Array<String> = jImg.prop('src').split('/');
+                var len  : Int           = jImg.prop('src').split('/').length;
+                var now  : String        = array[len - 1];
+                var val  : String        = "ss.png";
 
-        if (price > 200000) val = 'l.png';
+                if (price < 10000) val = 'ss.png';
+
+                if (price > 10000 && price < 100000) val = 's.png';
+
+                if (price > 100000 && price < 200000) val = 'm.png';
+
+                if (price > 200000) val = 'l.png';
 
 
-        var newImg : Array<String> = now.split('_');
-        newImg[newImg.length-1] = val;
-        var newSrc = newImg.join('_');
-        array[len - 1] = newSrc;
+                var newImg : Array<String> = now.split('_');
+                newImg[newImg.length-1] = val;
+                var newSrc = newImg.join('_');
+                array[len - 1] = newSrc;
 
-        jImg.prop('src',array.join('/'));
+                jImg.prop('src',array.join('/'));
 
-      }
+            }
 
-  /* =======================================================================
-  Clear
-  ========================================================================== */
-  public static function clear():Void {
+    /* =======================================================================
+    Clear
+    ========================================================================== */
+    public static function clear():Void {
 
-    _jPrice.text('0');
+        _jPrice.text('0');
 
-  }
+    }
 
 }

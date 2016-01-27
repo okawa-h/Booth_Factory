@@ -1,326 +1,312 @@
 package src.utils;
 
 import js.JQuery;
+import src.Manager;
+import src.utils.Html;
+import src.utils.ItemData;
+import src.utils.UrlParameter;
+import src.view.Mainboard;
+import src.view.Mainmenu;
+import src.view.Trash;
 import jp.saken.utils.Dom;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Expo;
-import src.utils.Html;
-import src.Manager;
-import src.view.Trash;
-import src.view.mainmenu.Mainmenu;
 
 class Drag {
 
-  private static var _diffX    : Float;
-  private static var _diffY    : Float;
-  private static var _isGrabbed: Bool;
-  private static var _jArea    : JQuery;
-  private static var _jAreaObj : JQuery;
-  private static var _jMenu    : JQuery;
+    private static var _isGrabbed  : Bool;
+    private static var _jGrabObj   : JQuery;
+    private static var _jMainboard : JQuery;
+    private static var _jBoardObj  : JQuery;
+    private static var _jMainmenu  : JQuery;
+    private static var _diffX      : Float;
+    private static var _diffY      : Float;
 
-  public static function init(jArea:JQuery,jAreaObj:JQuery,jMenu:JQuery):Void {
+    /* =======================================================================
+    Init
+    ========================================================================== */
+    public static function init():Void {
 
-    _isGrabbed = false;
-    _jArea     = jArea;
-    _jAreaObj  = jAreaObj;
-    _jMenu     = jMenu;
+        _isGrabbed  = false;
+        _jMainboard = Mainboard.getMainboardDom();
+        _jMainmenu  = Mainmenu.getMainmenuDom();
 
-    _jMenu.find('.slider').find('li').on({ 'mousedown' : grabList });
+        _jMainmenu.find('.slider').find('li').find('.img').on({ 'mousedown touchstart' : grab });
 
-    Dom.jWindow.on({
+        Dom.jWindow.on({
 
-      'mousemove':mousemove,
-      'mouseup'  :mouseup
-
-    });
-
-    _jAreaObj.on('mousedown',function(event:JqEvent) {
-
-      grabObject(JQuery.cur,event);
-
-    });
-
-    _jAreaObj.on('mouseover',function(event:JqEvent) {
-
-      showOption(JQuery.cur);
-
-    });
-
-  }
-
-      /* =======================================================================
-      Grab
-      ========================================================================== */
-      private static function grabList(event:JqEvent):Void {
-
-        event.preventDefault();
-
-        var target : JQuery = JQuery.cur;
-
-        if (target.hasClass('drop')) return;
-
-        Manager._DragObj = target.find('.img');
-        _isGrabbed = true;
-        getDiff(event,target);
-
-        var w : Float = (Manager._DragObj.width() - Manager._DragObj.find('img').width())/2;
-
-        Manager._DragObj.css({
-
-          'top'  : untyped event.clientY - _diffY,
-          'left' : untyped event.clientX - _diffX + w
+            'mousemove':mousemove,
+            'touchmove':mousemove,
+            'mouseup'  :mouseup,
+            'touchend' :mouseup
 
         });
 
-        Manager._DragObj.addClass('grab');
+        setBoardObj();
 
-      }
+    }
 
-  /* =======================================================================
-  Drag Img
-  ========================================================================== */
-  public static function grabObject(target:JQuery,event:JqEvent):Void {
+    /* =======================================================================
+    Set Grab Obj
+    ========================================================================== */
+    public static function setBoardObj():Void {
 
-    event.preventDefault();
+        _jBoardObj = _jMainboard.find('.object');
 
-    Manager._DragObj = target;
+        _jBoardObj.on({ 'mousedown touchstart' : grab });
+        _jBoardObj.on({ 'mouseover touchstart' : showOption });
 
-    getDiff(event,Manager._DragObj);
+    }
 
-    var h : Int = new JQuery('#header').height();
-    var w : Int = _jArea.offset().left;
+            /* =======================================================================
+            Grab
+            ========================================================================== */
+            private static function grab(event:JqEvent):Void {
 
-    Manager._DragObj.css({
+                event.preventDefault();
 
-      'top'  : untyped event.clientY - _diffY,
-      'left' : untyped event.clientX - _diffX
+                _jGrabObj = JQuery.cur;
 
-    });
+                if (_jGrabObj.hasClass('drop')) return;
+                getDiff(event);
+                var w : Float = 0;
+                if (_jGrabObj.hasClass('img')) w = (_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/2;
 
-    trace(untyped event.clientX - _diffX);
+                _jGrabObj.css({
 
-    Manager._DragObj.addClass('grab');
-    _isGrabbed = true;
+                    'top'  : untyped event.clientY - _diffY,
+                    'left' : untyped event.clientX - _diffX + w
 
-    Trash.show();
+                });
 
-  }
+                _isGrabbed = true;
 
-      /* =======================================================================
-      Get Diff
-      ========================================================================== */
-      private static function getDiff(event:Dynamic,target:JQuery):Void {
+                if (_jGrabObj.hasClass('object')) Trash.show();
+                _jGrabObj.addClass('grab');
 
-        _diffY = event.offsetY;
-        _diffX = event.offsetX;
+            }
 
-      }
+            /* =======================================================================
+            Mouse Move
+            ========================================================================== */
+            private static function mousemove(event:JqEvent):Void {
 
-      /* =======================================================================
-      Mouse Move
-      ========================================================================== */
-      private static function mousemove(event:JqEvent):Void {
+                if (_isGrabbed) {
 
-        if (_isGrabbed) {
+                    _jGrabObj.css({
 
-          Manager._DragObj.css({
+                        'top'     : untyped event.clientY - _diffY,
+                        'left'    : untyped event.clientX - _diffX
 
-            'top'     : untyped event.clientY - _diffY,
-            'left'    : untyped event.clientX - _diffX
+                    });
 
-          });
+                    Trash.onObj(_jGrabObj);
 
-          Trash.onObj(Manager._DragObj);
+                }
 
-        }
+            }
 
-      }
+            /* =======================================================================
+            Mouse Up
+            ========================================================================== */
+            private static function mouseup(event:JqEvent):Void {
 
-      /* =======================================================================
-      Mouse Up
-      ========================================================================== */
-      private static function mouseup(event:JqEvent):Void {
+                _isGrabbed = false;
+                if (_jGrabObj == null) return;
 
-        _isGrabbed = false;
+                if (_jGrabObj.hasClass('grab')) {
 
-        if (Manager._DragObj == null) return;
+                    Trash.leaveObj(_jGrabObj);
 
-        if (Manager._DragObj.hasClass('grab')) {
-          
-          Trash.leaveObj(Manager._DragObj);
+                    var h : Int = new JQuery('#header').height();
+                    var w : Int = _jMainboard.offset().left;
 
-          var h : Int = new JQuery('#header').height();
-          var w : Int = _jArea.offset().left;
+                    _jGrabObj.css({
 
-          trace('kiteru');
+                        'top'  : event.pageY - h - _diffY,
+                        'left' : event.pageX - w - _diffX
 
-          Manager._DragObj.css({
+                    });
 
-            'top'  : event.pageY - h - _diffY,
-            'left' : event.pageX - w - _diffX
+                    _jGrabObj.removeClass('grab');
 
-          });
+                }
 
-          Manager._DragObj.removeClass('grab');
+                if (_jGrabObj.hasClass('img')) {
 
-        }
+                    if (_jMainmenu.find('.current').offset().top > event.pageY) {
 
-        //if (Manager._DragObj.parent().parent('li').length > 0) {
-        if (Manager._DragObj.hasClass('img')) {
+                        _jGrabObj.parent().parent('li').addClass('drop');
+                        listToObj(_jGrabObj.parent().parent('li'),event);
 
-          if (_jMenu.find('.current').offset().top > event.pageY) {
+                        _jBoardObj.unbind('mousedown');
+                        setBoardObj();
 
-            Manager._DragObj.parent().parent('li').addClass('drop');
-            createListToObj(Manager._DragObj.parent().parent('li'),event);
+                    }
+                }
 
-            _jAreaObj.unbind('mousedown');
-            getObject();
+                isOnBoard(_jGrabObj);
+                _jGrabObj.css({'opacity':1});
+                _jGrabObj = null;
 
-          }
-        }
-
-        judgeArea(Manager._DragObj);
-        Manager._DragObj = null;
+            }
 
-      }
+            /* =======================================================================
+            Get Diff
+            ========================================================================== */
+            private static function getDiff(event:Dynamic):Void {
 
-      /* =======================================================================
-      Create Img
-      ========================================================================== */
-      private static function createListToObj(target:JQuery,event:JqEvent):Void {
+                _diffY = event.offsetY;
+                _diffX = event.offsetX;
 
-        var id    : String = target.data('id');
-        var type  : String = target.data('type');
-        var cat   : String = target.data('cat');
-        var icon  : String = target.data('icon');
-        var price : String = Std.string(target.data('price'));
-        if (price.indexOf(',') > -1) price = price.split(',').join('');
-        var length: String = target.find('dl').find('dd.length').text();
-        var color : String = Param.getParamOption('color');
-        var top   : Float  = event.pageY - new JQuery('#header').height() - _diffY;
-        var left  : Float  = event.pageX - _jArea.offset().left - _diffX;
+            }
 
-        if (type == "accessory" || type == "clothes") {
+            /* =======================================================================
+            Create Img
+            ========================================================================== */
+            private static function listToObj(jTarget:JQuery,event:JqEvent):Void {
 
-          var abs : Array<String> = target.data('abs').split(',');
-          top  = Std.parseFloat(abs[0]);
-          left = Std.parseFloat(abs[1]);
+                var id    : String = jTarget.data('id');
+                var type  : String = jTarget.data('type');
+                var cat   : String = jTarget.data('cat');
+                var icon  : String = jTarget.data('icon');
+                var price : String = Std.string(jTarget.data('price'));
+                if (price.indexOf(',') > -1) price = price.split(',').join('');
+                var length: String = jTarget.find('dl').find('dd.length').text();
+                var color : String = UrlParameter.getParamOption('color');
+                var top   : Float  = event.pageY - new JQuery('#header').height() - _diffY;
+                var left  : Float  = event.pageX - _jMainboard.offset().left - _diffX;
 
-        }
+                if (type == "accessory" || type == "clothes") {
 
-        if (type == "clothes") {
+                    var abs : Array<String> = jTarget.data('abs').split(',');
+                    top  = Std.parseFloat(abs[0]);
+                    left = Std.parseFloat(abs[1]);
 
-          Mainmenu.clearDrop(_jAreaObj.filter('.clothes').data('id'));
-          _jAreaObj.filter('.clothes').remove();
+                }
 
-        }
-        
-        var html   : String = Html.getObj(id,top,left,type,cat,Std.parseInt(price),length,icon,color);
-        var jBoard : JQuery = _jArea.find('.board');
+                if (type == "clothes") {
 
-        jBoard.append(html);
-        Manager._DragObj = jBoard.find('.object.' + id);
+                    Mainmenu.clearDrop(_jBoardObj.filter('.clothes').data('id'));
+                    _jBoardObj.filter('.clothes').remove();
 
-        TweenMaxHaxe.set(Manager._DragObj, {scaleX:1.4, scaleY:1.4});
-        TweenMaxHaxe.to(Manager._DragObj, 0.3,{scaleX:1, scaleY:1, ease:Elastic.easeOut,delay:0.1,
-          onComplete:function() {
+                }
 
-            Manager.resizeDom(jBoard.find('.object.' + id),false);
-            
-          }
-        });
+                var html   : String = Html.getObj(id,top,left,type,cat,Std.parseInt(price),length,icon,color);
+                var jBoard : JQuery = _jMainboard.find('.board');
 
-      }
+                jBoard.append(html);
+                _jGrabObj = jBoard.find('.object.' + id);
 
-      /* =======================================================================
-      Judge Area
-      ========================================================================== */
-      private static function judgeArea(jTarget:JQuery):Void {
+                TweenMaxHaxe.set(_jGrabObj, {scaleX:1.4, scaleY:1.4});
+                TweenMaxHaxe.to(_jGrabObj, 0.3,{scaleX:1, scaleY:1, ease:Elastic.easeOut,delay:0.1,
+                    onComplete:function() {
 
-        var top    : String = jTarget.css('top').split('px').join('');
-        var left   : String = jTarget.css('left').split('px').join('');
-        var t      : Int    = Std.parseInt(top);
-        var l      : Int    = Std.parseInt(left);
-        var bottom : Int    = t + jTarget.height();
-        var right  : Int    = l + jTarget.width();
-        var areaB  : Int    = _jArea.height();
-        var areaR  : Int    = _jArea.width();
+                        Manager.resizeDom(jBoard.find('.object.' + id),false);
 
-        if (top.indexOf('-') == 0)  t = 0;
-        if (left.indexOf('-') == 0) l = 0;
-        if (bottom > areaB) t = areaB - jTarget.height();
-        if (right > areaR)  l = areaR - jTarget.width();
+                    }
+                });
 
-        if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes')) {
+            }
 
-          if (Trash.judgeOnObj(jTarget)) return;
-          var abs : Array<String> = absPosition(jTarget);
-          t = Std.parseInt(abs[0]);
-          l = Std.parseInt(abs[1]);
-          
-        }
+            /* =======================================================================
+            Is On Board
+            ========================================================================== */
+            private static function isOnBoard(jTarget:JQuery):Void {
 
-        TweenMaxHaxe.to(jTarget,0.5,{top: t, left : l,delay:0.05,ease:Expo.easeOut});
-      
-      }
+                var top    : String = jTarget.css('top').split('px').join('');
+                var left   : String = jTarget.css('left').split('px').join('');
+                var t      : Int    = Std.parseInt(top);
+                var l      : Int    = Std.parseInt(left);
+                var bottom : Int    = t + jTarget.height();
+                var right  : Int    = l + jTarget.width();
+                var areaB  : Int    = _jMainboard.height();
+                var areaR  : Int    = _jMainboard.width();
 
-      /* =======================================================================
-      Absolute Position
-      ========================================================================== */
-      private static function absPosition(target:JQuery):Array<String> {
+                if (top.indexOf('-') == 0)  t = 0;
+                if (left.indexOf('-') == 0) l = 0;
+                if (bottom > areaB) t = areaB - jTarget.height();
+                if (right > areaR)  l = areaR - jTarget.width();
 
-        var id    : String        = target.data('id');
-        var data  : Dynamic       = Manager._Data;
-        var array : Array<String> = [];
+                if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes')) {
 
-        for (i in 0 ... data.object.length) {
+                    if (Trash.isOnObj(jTarget)) return;
+                    var abs : Array<String> = getAbsPoint(jTarget);
+                    t = Std.parseInt(abs[0]);
+                    l = Std.parseInt(abs[1]);
 
-          if (data.object[i].id == Std.string(id)) array = data.object[i].abs;
-          
-        }
+                }
 
-        return array;
+                TweenMaxHaxe.to(jTarget,0.5,{top: t, left : l,delay:0.05,ease:Expo.easeOut});
 
-      }
+            }
 
-  /* =======================================================================
-  Get Obj
-  ========================================================================== */
-  public static function getObject():Void {
+            /* =======================================================================
+            Absolute Position
+            ========================================================================== */
+            private static function getAbsPoint(jTarget:JQuery):Array<String> {
 
-    _jAreaObj = _jArea.find('.object');
-    _jAreaObj.on('mousedown',function(event:JqEvent) {
+                var id    : String        = jTarget.data('id');
+                var data  : Dynamic       = ItemData.getObjData();
+                var length: Int           = data.length;
+                var array : Array<String> = [];
 
-      grabObject(JQuery.cur,event);
+                for (i in 0 ... length) {
 
-    });
+                    if (data[i].id == Std.string(id)) array = data[i].abs;
 
-    _jAreaObj.on('mouseover',function(event:JqEvent) {
+                }
 
-      showOption(JQuery.cur);
+                return array;
+            }
 
-    });
-  }
+            /* =======================================================================
+            Show Option
+            ========================================================================== */
+            private static function showOption(event:JqEvent):Void {
 
-      /* =======================================================================
-      Show Option
-      ========================================================================== */
-      private static function showOption(target:JQuery):Void {
+                var jTarget : JQuery = JQuery.cur;
+                var length  : String = jTarget.data('length');
+                var price   : String = jTarget.data('price');
+                var html    : String = '<span class="object-data"><span>' + length + '<br>';
+                html += price + '円</span></span>';
+                jTarget.append(html);
 
-        var length: String = target.data('length');
-        var price : String = target.data('price');
-        var html  : String = '<span class="object-data"><span>' + length + '<br>';
-        html += price + '円</span></span>';
-        target.append(html);
+                jTarget.on('mouseleave touchend',function(event:JqEvent) {
 
-        target.on('mouseleave',function(event:JqEvent) {
+                    jTarget.find('.object-data').remove();
+                    jTarget.unbind('mouseleave touchend');
 
-          target.find('.object-data').remove();
-          target.unbind('mouseleave');
+                });
 
-        });
+            }
 
-      }
+    /* =======================================================================
+    Get Grab Obj
+    ========================================================================== */
+    public static function getGrabObj():JQuery {
+
+        return _jGrabObj;
+
+    }
+
+    /* =======================================================================
+    Get Board Obj
+    ========================================================================== */
+    public static function getBoardObj():JQuery {
+
+        return _jBoardObj;
+
+    }
+
+    /* =======================================================================
+    Add Board Obj
+    ========================================================================== */
+    public static function addBoardObj(jBoardObj:JQuery):Void {
+
+        _jBoardObj = jBoardObj;
+
+    }
 
 }
