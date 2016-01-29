@@ -141,21 +141,20 @@ class Mainmenu {
             ========================================================================== */
             private static function clickClose():Void {
 
-                Dom.jWindow.on('mousedown touchstart',function(event:JqEvent) {
+                Dom.jWindow.on('mousedown touchstart',function(event:Dynamic) {
 
-                    if (_jMainmenu.find('.current').offset().top - 100 > event.pageY) {
+                    var y : Int = (event.pageY != null) ? event.pageY : event.originalEvent.touches[0].pageY;
+
+                    if (_jMainmenu.find('.current').offset().top - 100 > y) {
 
                         if(_jMainmenu.hasClass('open')) {
 
                             _jMainmenu.removeClass('open');
                             _jMainmenu.addClass('close');
                             TweenMaxHaxe.to(_jMainmenu.find('.inner'), 1, { top : 0, ease:Elastic.easeOut});
-                            Dom.jWindow.unbind('mousedown touchstart');
-                            
+
                         }
-
                     }
-
                 });
 
             }

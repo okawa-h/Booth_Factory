@@ -6,7 +6,8 @@ import tween.easing.Elastic;
 
 class Lightbox extends Sidemenu {
 
-    private static var _jLightBox : JQuery;
+    private static var _jLightBox   : JQuery;
+    private static var _jLightBoxBg : JQuery;
 
     /* =======================================================================
     New
@@ -22,7 +23,8 @@ class Lightbox extends Sidemenu {
     ========================================================================== */
     public static function init():Void {
 
-        _jLightBox = new JQuery('#lightbox');
+        _jLightBox   = new JQuery('#lightbox');
+        _jLightBoxBg = _jLightBox.find('.lightbox-bg');
 
     }
 
@@ -44,12 +46,30 @@ class Lightbox extends Sidemenu {
 
         jBox.find('.close-btn').on('mousedown',function(event:JqEvent) {
 
-            jBox.fadeOut(sPEED);
-            _jLightBox.fadeOut(sPEED);
-
-            jBox.find('.close-btn').unbind('mousedown');
+            hide(jBox,sPEED);
 
         });
+
+        _jLightBoxBg.on('mousedown',function(event:JqEvent) {
+
+            hide(jBox,sPEED);
+            _jLightBoxBg.unbind('mousedown');
+
+        });
+
+
+
+    }
+
+    /* =======================================================================
+    Hide
+    ========================================================================== */
+    public static function hide(jBox:JQuery,sPEED:Int):Void {
+
+        jBox.fadeOut(sPEED);
+        _jLightBox.fadeOut(sPEED);
+
+        jBox.find('.close-btn').unbind('mousedown');
 
     }
 

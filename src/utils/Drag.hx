@@ -1,6 +1,7 @@
 package src.utils;
 
 import js.JQuery;
+import haxe.Timer;
 import src.Manager;
 import src.utils.Html;
 import src.utils.ItemData;
@@ -12,6 +13,7 @@ import jp.saken.utils.Dom;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Expo;
+import tween.easing.Back;
 
 class Drag {
 
@@ -22,6 +24,7 @@ class Drag {
     private static var _jMainmenu  : JQuery;
     private static var _diffX      : Float;
     private static var _diffY      : Float;
+    private static var _posiAnimate: Bool;
 
     /* =======================================================================
     Init
@@ -29,10 +32,17 @@ class Drag {
     public static function init():Void {
 
         _isGrabbed  = false;
+        _posiAnimate= false;
         _jMainboard = Mainboard.getMainboardDom();
         _jMainmenu  = Mainmenu.getMainmenuDom();
 
         _jMainmenu.find('.slider').find('li').find('.img').on({ 'mousedown touchstart' : grab });
+
+        Dom.jWindow.on('mousedown touchstart',function(event:JqEvent) {
+
+            touchAnimate(event);
+
+        });
 
         Dom.jWindow.on({
 
@@ -68,18 +78,11 @@ class Drag {
 
                 _jGrabObj = JQuery.cur;
 
-                if (_jGrabObj.hasClass('drop')) return;
+                if (_jGrabObj.hasClass('drop') || _posiAnimate) return;
                 getDiff(event);
-                var w : Float = 0;
-                if (_jGrabObj.hasClass('img')) w = (_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/2;
+                var w : Int = (_jGrabObj.hasClass('img')) ? Math.round((_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/2) : 0;
 
-                _jGrabObj.css({
-
-                    'top'  : untyped event.clientY - _diffY,
-                    'left' : untyped event.clientX - _diffX + w
-
-                });
-
+                setPosition(event,0,w);
                 _isGrabbed = true;
 
                 if (_jGrabObj.hasClass('object')) Trash.show();
@@ -94,15 +97,8 @@ class Drag {
 
                 if (_isGrabbed) {
 
-                    _jGrabObj.css({
-
-                        'top'     : untyped event.clientY - _diffY,
-                        'left'    : untyped event.clientX - _diffX
-
-                    });
-
+                    setPosition(event);
                     Trash.onObj(_jGrabObj);
-
                 }
 
             }
@@ -118,37 +114,81 @@ class Drag {
                 if (_jGrabObj.hasClass('grab')) {
 
                     Trash.leaveObj(_jGrabObj);
-
                     var h : Int = new JQuery('#header').height();
                     var w : Int = _jMainboard.offset().left;
-
-                    _jGrabObj.css({
-
-                        'top'  : event.pageY - h - _diffY,
-                        'left' : event.pageX - w - _diffX
-
-                    });
-
+                    setPosition(event,-h,-w);
                     _jGrabObj.removeClass('grab');
 
                 }
 
                 if (_jGrabObj.hasClass('img')) {
 
-                    if (_jMainmenu.find('.current').offset().top > event.pageY) {
+                    var y : Int = (event.pageY != null) ? event.pageY : untyped event.originalEvent.changedTouches[0].pageY;
+
+                    if (_jMainmenu.find('.current').offset().top > y) {
 
                         _jGrabObj.parent().parent('li').addClass('drop');
                         listToObj(_jGrabObj.parent().parent('li'),event);
 
-                        _jBoardObj.unbind('mousedown');
+                        _jBoardObj.unbind('mousedown touchstart');
                         setBoardObj();
 
                     }
                 }
 
-                isOnBoard(_jGrabObj);
+                judgeOnBoard(_jGrabObj);
                 _jGrabObj.css({'opacity':1});
                 _jGrabObj = null;
+
+            }
+
+            /* =======================================================================
+            Set Position
+            ========================================================================== */
+            private static function setPosition(event:Dynamic,top:Int = 0,left:Int = 0):Void {
+
+                var type : Dynamic = event.type;
+
+                if (type == "mousedown" || type == "mousemove") {
+
+                    _jGrabObj.css({
+
+                        'top'  : event.clientY - _diffY + top,
+                        'left' : event.clientX - _diffX + left
+
+                    });
+                    
+                } else if (type == "mouseup") {
+
+                    _jGrabObj.css({
+
+                        'top'  : event.pageY - _diffY + top,
+                        'left' : event.pageX - _diffX + left
+
+                    });
+
+                } else {
+
+                    if (type == "touchend") {
+
+                        _jGrabObj.css({
+
+                            'top'  : event.originalEvent.changedTouches[0].pageY - _diffY + top,
+                            'left' : event.originalEvent.changedTouches[0].pageX - _diffX + left 
+
+                        });
+
+                        return;
+                    }
+
+                    _jGrabObj.css({
+
+                        'top'  : event.originalEvent.touches[0].pageY - _diffY + top,
+                        'left' : event.originalEvent.touches[0].pageX - _diffX + left 
+
+                    });
+
+                }
 
             }
 
@@ -157,15 +197,15 @@ class Drag {
             ========================================================================== */
             private static function getDiff(event:Dynamic):Void {
 
-                _diffY = event.offsetY;
-                _diffX = event.offsetX;
+                _diffY = (event.offsetY != null) ? event.offsetY : Math.round(event.originalEvent.touches[0].pageY - _jGrabObj.offset().top);
+                _diffX = (event.offsetX != null) ? event.offsetX : Math.round(event.originalEvent.touches[0].pageX - _jGrabObj.offset().left);
 
             }
 
             /* =======================================================================
             Create Img
             ========================================================================== */
-            private static function listToObj(jTarget:JQuery,event:JqEvent):Void {
+            private static function listToObj(jTarget:JQuery,event:Dynamic):Void {
 
                 var id    : String = jTarget.data('id');
                 var type  : String = jTarget.data('type');
@@ -175,8 +215,10 @@ class Drag {
                 if (price.indexOf(',') > -1) price = price.split(',').join('');
                 var length: String = jTarget.find('dl').find('dd.length').text();
                 var color : String = UrlParameter.getParamOption('color');
-                var top   : Float  = event.pageY - new JQuery('#header').height() - _diffY;
-                var left  : Float  = event.pageX - _jMainboard.offset().left - _diffX;
+                var h     : Int    = new JQuery('#header').height();
+                var w     : Int    = _jMainboard.offset().left;
+                var top   : Float  = (event.pageY != null) ? event.pageY - h - _diffY : event.originalEvent.changedTouches[0].pageY - h - _diffY;
+                var left  : Float  = (event.pageX != null) ? event.pageX - w - _diffX : event.originalEvent.changedTouches[0].pageX - w - _diffX;
 
                 if (type == "accessory" || type == "clothes") {
 
@@ -211,9 +253,9 @@ class Drag {
             }
 
             /* =======================================================================
-            Is On Board
+            Judge On Board
             ========================================================================== */
-            private static function isOnBoard(jTarget:JQuery):Void {
+            private static function judgeOnBoard(jTarget:JQuery):Void {
 
                 var top    : String = jTarget.css('top').split('px').join('');
                 var left   : String = jTarget.css('left').split('px').join('');
@@ -223,11 +265,12 @@ class Drag {
                 var right  : Int    = l + jTarget.width();
                 var areaB  : Int    = _jMainboard.height();
                 var areaR  : Int    = _jMainboard.width();
+                var judge  : Bool   = false;
 
-                if (top.indexOf('-') == 0)  t = 0;
-                if (left.indexOf('-') == 0) l = 0;
-                if (bottom > areaB) t = areaB - jTarget.height();
-                if (right > areaR)  l = areaR - jTarget.width();
+                if (top.indexOf('-') == 0)  { t = 0; judge = true; }
+                if (left.indexOf('-') == 0) { l = 0; judge = true; }
+                if (bottom > areaB) { t = areaB - jTarget.height(); judge = true; }
+                if (right > areaR)  { l = areaR - jTarget.width(); judge = true; }
 
                 if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes')) {
 
@@ -235,10 +278,21 @@ class Drag {
                     var abs : Array<String> = getAbsPoint(jTarget);
                     t = Std.parseInt(abs[0]);
                     l = Std.parseInt(abs[1]);
+                    judge = true;
 
                 }
 
-                TweenMaxHaxe.to(jTarget,0.5,{top: t, left : l,delay:0.05,ease:Expo.easeOut});
+                if (judge) {
+
+                    _posiAnimate = true;
+                    TweenMaxHaxe.to(jTarget,0.5,{top: t, left : l,delay: 0.05,ease:Expo.easeOut,
+                        onComplete:function() {
+
+                            Manager.setCounter();
+                            _posiAnimate = false;
+                        }
+                    });
+                }
 
             }
 
@@ -308,5 +362,25 @@ class Drag {
         _jBoardObj = jBoardObj;
 
     }
+
+                /* =======================================================================
+                Touch Animate
+                ========================================================================== */
+                private static function touchAnimate(event:JqEvent):Void {
+
+                    var html : String = '<div class="touch" style="top:' + untyped event.clientY + 'px;';
+                    html += 'left:' + untyped event.clientX + 'px;"></div>';
+                    _jMainmenu.append(html);
+                    var jTar : JQuery = _jMainmenu.find('.touch');
+                    TweenMaxHaxe.to(jTar, 0.3,{opacity:0.2,scaleX:4, scaleY:4, ease:Back.easeOut});
+
+                    var timer : Timer = new Timer(200);
+                    timer.run = function() {
+
+                        jTar.remove();
+                        timer.stop();
+                    }
+
+                }
 
 }

@@ -7,9 +7,9 @@
 /*-----------------------------------------------------------------------*/
 body,html {
 	position: relative;
-  width: 100%;
-  min-width: 960px;
-  height: 100%;
+	width: 100%;
+	min-width: 960px;
+	height: 100%;
 	background: url(../../img/bg/bg_main.gif);
 	user-select:none;
 	-webkit-user-select:none;
@@ -19,10 +19,10 @@ body,html {
 	-khtml-user-drag:none;
 }
 
+
 #all {
   min-width: 960px;
 }
-
 .grab {
 	position: fixed;
 	opacity: .9;

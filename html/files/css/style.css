@@ -12,50 +12,16 @@
 	opacity: 0;
 }
 
-/*-------------------------------------------------------------------------
-	Intro
-/*-----------------------------------------------------------------------*/
-#intro {
+.touch {
 	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: url(../img/bg/bg_main.gif);
-	z-index: 10000;
+	width: 10px;
+	height: 10px;
+	margin-top: -5px;
+	margin-left: -5px;
+	border-radius: 50%;
+	background: #fff;
+	z-index: 100000;
 }
-
-	#intro h1 {
-		opacity: 0;
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		margin-top: -179px;
-		margin-left: -130px;
-	}
-
-	#intro .intro-metar {
-		overflow: hidden;
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		width: 30%;
-		height: 20px;
-		margin-top: 20px;
-		margin-left: -15%;
-		border-radius: 10px;
-		border: 3px solid #333;
-		-webkit-box-sizing: border-box;
-		   -moz-box-sizing: border-box;
-		        box-sizing: border-box;
-	}
-
-		#intro .intro-metar span {
-			display: block;
-			width: 0px;
-			height: 100%;
-			background: url(../img/mainmenu/bg_accessory.jpg);
-		}
 
 /*-------------------------------------------------------------------------
 	Tutorial
@@ -897,9 +863,18 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0,0,0,0.3);
 	z-index: 10000;
 }
+
+	#lightbox .lightbox-bg {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0.3);
+		z-index: 0;
+	}
 
 	#lightbox .lightbox-content {
 		position: absolute;

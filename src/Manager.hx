@@ -27,7 +27,7 @@ class Manager {
     public static function init(event:JqEvent):Void {
 
         getWindowRatio();
-        //Intro.start();
+        Intro.start();
         Tutorial.start();
         ItemData.set(start);
         Log.write();
@@ -108,10 +108,14 @@ class Manager {
                     resizeDom(jMainboard.find('.board .desk .desk-left'),true);
                     resizeDom(jMainboard.find('.board .desk .desk-right'),true);
 
-                    var jSidemenu : JQuery = new JQuery('#sidemenu-right');
-                    TweenMaxHaxe.set(jSidemenu,{scaleX:_ratio, scaleY:_ratio});
-                    var top : Int = Std.parseInt(jSidemenu.css('top'));
-                    jSidemenu.css({'top': Math.round(top * _ratio)});
+                    var jSidemenuR : JQuery = new JQuery('#sidemenu-right');
+                    var jSidemenuL : JQuery = new JQuery('#sidemenu-left');
+                    TweenMaxHaxe.set(jSidemenuR,{scaleX:_ratio, scaleY:_ratio});
+                    TweenMaxHaxe.set(jSidemenuL,{scaleX:_ratio, scaleY:_ratio});
+                    var topR : Int = Std.parseInt(jSidemenuR.css('top'));
+                    jSidemenuR.css({'top': Math.round(topR * _ratio)});
+                    var topL : Int = Std.parseInt(jSidemenuL.css('top'));
+                    jSidemenuL.css({'top': Math.round(topL * _ratio)});
 
                 }
 

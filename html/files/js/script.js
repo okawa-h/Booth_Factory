@@ -307,6 +307,7 @@ src.Manager = function() { };
 src.Manager.__name__ = true;
 src.Manager.init = function(event) {
 	src.Manager.getWindowRatio();
+	src.view.Intro.start();
 	src.view.Tutorial.start();
 	src.utils.ItemData.set(src.Manager.start);
 	src.utils.Log.write();
@@ -360,10 +361,14 @@ src.Manager.getWindowRatio = function() {
 		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
 		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
 		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
-		var jSidemenu = new js.JQuery("#sidemenu-right");
-		TweenMax.set(jSidemenu,{ scaleX : src.Manager._ratio, scaleY : src.Manager._ratio});
-		var top = Std.parseInt(jSidemenu.css("top"));
-		jSidemenu.css({ top : Math.round(top * src.Manager._ratio)});
+		var jSidemenuR = new js.JQuery("#sidemenu-right");
+		var jSidemenuL = new js.JQuery("#sidemenu-left");
+		TweenMax.set(jSidemenuR,{ scaleX : src.Manager._ratio, scaleY : src.Manager._ratio});
+		TweenMax.set(jSidemenuL,{ scaleX : src.Manager._ratio, scaleY : src.Manager._ratio});
+		var topR = Std.parseInt(jSidemenuR.css("top"));
+		jSidemenuR.css({ top : Math.round(topR * src.Manager._ratio)});
+		var topL = Std.parseInt(jSidemenuL.css("top"));
+		jSidemenuL.css({ top : Math.round(topL * src.Manager._ratio)});
 	}
 };
 src.Manager.resizeDom = function(jTarget,isPosi,isMLeft) {
@@ -393,9 +398,13 @@ src.utils.Drag = function() { };
 src.utils.Drag.__name__ = true;
 src.utils.Drag.init = function() {
 	src.utils.Drag._isGrabbed = false;
+	src.utils.Drag._posiAnimate = false;
 	src.utils.Drag._jMainboard = src.view.Mainboard.getMainboardDom();
 	src.utils.Drag._jMainmenu = src.view.Mainmenu.getMainmenuDom();
 	src.utils.Drag._jMainmenu.find(".slider").find("li").find(".img").on({ 'mousedown touchstart' : src.utils.Drag.grab});
+	jp.saken.utils.Dom.jWindow.on("mousedown touchstart",function(event) {
+		src.utils.Drag.touchAnimate(event);
+	});
 	jp.saken.utils.Dom.jWindow.on({ mousemove : src.utils.Drag.mousemove, touchmove : src.utils.Drag.mousemove, mouseup : src.utils.Drag.mouseup, touchend : src.utils.Drag.mouseup});
 	src.utils.Drag.setBoardObj();
 };
@@ -407,18 +416,18 @@ src.utils.Drag.setBoardObj = function() {
 src.utils.Drag.grab = function(event) {
 	event.preventDefault();
 	src.utils.Drag._jGrabObj = $(this);
-	if(src.utils.Drag._jGrabObj.hasClass("drop")) return;
+	if(src.utils.Drag._jGrabObj.hasClass("drop") || src.utils.Drag._posiAnimate) return;
 	src.utils.Drag.getDiff(event);
-	var w = 0;
-	if(src.utils.Drag._jGrabObj.hasClass("img")) w = (src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 2;
-	src.utils.Drag._jGrabObj.css({ top : event.clientY - src.utils.Drag._diffY, left : event.clientX - src.utils.Drag._diffX + w});
+	var w;
+	if(src.utils.Drag._jGrabObj.hasClass("img")) w = Math.round((src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 2); else w = 0;
+	src.utils.Drag.setPosition(event,0,w);
 	src.utils.Drag._isGrabbed = true;
 	if(src.utils.Drag._jGrabObj.hasClass("object")) src.view.Trash.show();
 	src.utils.Drag._jGrabObj.addClass("grab");
 };
 src.utils.Drag.mousemove = function(event) {
 	if(src.utils.Drag._isGrabbed) {
-		src.utils.Drag._jGrabObj.css({ top : event.clientY - src.utils.Drag._diffY, left : event.clientX - src.utils.Drag._diffX});
+		src.utils.Drag.setPosition(event);
 		src.view.Trash.onObj(src.utils.Drag._jGrabObj);
 	}
 };
@@ -429,24 +438,38 @@ src.utils.Drag.mouseup = function(event) {
 		src.view.Trash.leaveObj(src.utils.Drag._jGrabObj);
 		var h = new js.JQuery("#header").height();
 		var w = src.utils.Drag._jMainboard.offset().left;
-		src.utils.Drag._jGrabObj.css({ top : event.pageY - h - src.utils.Drag._diffY, left : event.pageX - w - src.utils.Drag._diffX});
+		src.utils.Drag.setPosition(event,-h,-w);
 		src.utils.Drag._jGrabObj.removeClass("grab");
 	}
 	if(src.utils.Drag._jGrabObj.hasClass("img")) {
-		if(src.utils.Drag._jMainmenu.find(".current").offset().top > event.pageY) {
+		var y;
+		if(event.pageY != null) y = event.pageY; else y = event.originalEvent.changedTouches[0].pageY;
+		if(src.utils.Drag._jMainmenu.find(".current").offset().top > y) {
 			src.utils.Drag._jGrabObj.parent().parent("li").addClass("drop");
 			src.utils.Drag.listToObj(src.utils.Drag._jGrabObj.parent().parent("li"),event);
-			src.utils.Drag._jBoardObj.unbind("mousedown");
+			src.utils.Drag._jBoardObj.unbind("mousedown touchstart");
 			src.utils.Drag.setBoardObj();
 		}
 	}
-	src.utils.Drag.isOnBoard(src.utils.Drag._jGrabObj);
+	src.utils.Drag.judgeOnBoard(src.utils.Drag._jGrabObj);
 	src.utils.Drag._jGrabObj.css({ opacity : 1});
 	src.utils.Drag._jGrabObj = null;
 };
+src.utils.Drag.setPosition = function(event,top,left) {
+	if(left == null) left = 0;
+	if(top == null) top = 0;
+	var type = event.type;
+	if(type == "mousedown" || type == "mousemove") src.utils.Drag._jGrabObj.css({ top : event.clientY - src.utils.Drag._diffY + top, left : event.clientX - src.utils.Drag._diffX + left}); else if(type == "mouseup") src.utils.Drag._jGrabObj.css({ top : event.pageY - src.utils.Drag._diffY + top, left : event.pageX - src.utils.Drag._diffX + left}); else {
+		if(type == "touchend") {
+			src.utils.Drag._jGrabObj.css({ top : event.originalEvent.changedTouches[0].pageY - src.utils.Drag._diffY + top, left : event.originalEvent.changedTouches[0].pageX - src.utils.Drag._diffX + left});
+			return;
+		}
+		src.utils.Drag._jGrabObj.css({ top : event.originalEvent.touches[0].pageY - src.utils.Drag._diffY + top, left : event.originalEvent.touches[0].pageX - src.utils.Drag._diffX + left});
+	}
+};
 src.utils.Drag.getDiff = function(event) {
-	src.utils.Drag._diffY = event.offsetY;
-	src.utils.Drag._diffX = event.offsetX;
+	if(event.offsetY != null) src.utils.Drag._diffY = event.offsetY; else src.utils.Drag._diffY = Math.round(event.originalEvent.touches[0].pageY - src.utils.Drag._jGrabObj.offset().top);
+	if(event.offsetX != null) src.utils.Drag._diffX = event.offsetX; else src.utils.Drag._diffX = Math.round(event.originalEvent.touches[0].pageX - src.utils.Drag._jGrabObj.offset().left);
 };
 src.utils.Drag.listToObj = function(jTarget,event) {
 	var id = jTarget.data("id");
@@ -457,8 +480,12 @@ src.utils.Drag.listToObj = function(jTarget,event) {
 	if(price.indexOf(",") > -1) price = price.split(",").join("");
 	var length = jTarget.find("dl").find("dd.length").text();
 	var color = src.utils.UrlParameter.getParamOption("color");
-	var top = event.pageY - new js.JQuery("#header").height() - src.utils.Drag._diffY;
-	var left = event.pageX - src.utils.Drag._jMainboard.offset().left - src.utils.Drag._diffX;
+	var h = new js.JQuery("#header").height();
+	var w = src.utils.Drag._jMainboard.offset().left;
+	var top;
+	if(event.pageY != null) top = event.pageY - h - src.utils.Drag._diffY; else top = event.originalEvent.changedTouches[0].pageY - h - src.utils.Drag._diffY;
+	var left;
+	if(event.pageX != null) left = event.pageX - w - src.utils.Drag._diffX; else left = event.originalEvent.changedTouches[0].pageX - w - src.utils.Drag._diffX;
 	if(type == "accessory" || type == "clothes") {
 		var abs = jTarget.data("abs").split(",");
 		top = Std.parseFloat(abs[0]);
@@ -477,7 +504,7 @@ src.utils.Drag.listToObj = function(jTarget,event) {
 		src.Manager.resizeDom(jBoard.find(".object." + id),false);
 	}});
 };
-src.utils.Drag.isOnBoard = function(jTarget) {
+src.utils.Drag.judgeOnBoard = function(jTarget) {
 	var top = jTarget.css("top").split("px").join("");
 	var left = jTarget.css("left").split("px").join("");
 	var t = Std.parseInt(top);
@@ -486,17 +513,37 @@ src.utils.Drag.isOnBoard = function(jTarget) {
 	var right = l + jTarget.width();
 	var areaB = src.utils.Drag._jMainboard.height();
 	var areaR = src.utils.Drag._jMainboard.width();
-	if(top.indexOf("-") == 0) t = 0;
-	if(left.indexOf("-") == 0) l = 0;
-	if(bottom > areaB) t = areaB - jTarget.height();
-	if(right > areaR) l = areaR - jTarget.width();
+	var judge = false;
+	if(top.indexOf("-") == 0) {
+		t = 0;
+		judge = true;
+	}
+	if(left.indexOf("-") == 0) {
+		l = 0;
+		judge = true;
+	}
+	if(bottom > areaB) {
+		t = areaB - jTarget.height();
+		judge = true;
+	}
+	if(right > areaR) {
+		l = areaR - jTarget.width();
+		judge = true;
+	}
 	if(jTarget.hasClass("accessory") || jTarget.hasClass("clothes")) {
 		if(src.view.Trash.isOnObj(jTarget)) return;
 		var abs = src.utils.Drag.getAbsPoint(jTarget);
 		t = Std.parseInt(abs[0]);
 		l = Std.parseInt(abs[1]);
+		judge = true;
 	}
-	TweenMax.to(jTarget,0.5,{ top : t, left : l, delay : 0.05, ease : Expo.easeOut});
+	if(judge) {
+		src.utils.Drag._posiAnimate = true;
+		TweenMax.to(jTarget,0.5,{ top : t, left : l, delay : 0.05, ease : Expo.easeOut, onComplete : function() {
+			src.Manager.setCounter();
+			src.utils.Drag._posiAnimate = false;
+		}});
+	}
 };
 src.utils.Drag.getAbsPoint = function(jTarget) {
 	var id = jTarget.data("id");
@@ -530,6 +577,18 @@ src.utils.Drag.getBoardObj = function() {
 };
 src.utils.Drag.addBoardObj = function(jBoardObj) {
 	src.utils.Drag._jBoardObj = jBoardObj;
+};
+src.utils.Drag.touchAnimate = function(event) {
+	var html = "<div class=\"touch\" style=\"top:" + (event.clientY + "px;");
+	html += "left:" + (event.clientX + "px;\"></div>");
+	src.utils.Drag._jMainmenu.append(html);
+	var jTar = src.utils.Drag._jMainmenu.find(".touch");
+	TweenMax.to(jTar,0.3,{ opacity : 0.2, scaleX : 4, scaleY : 4, ease : Back.easeOut});
+	var timer = new haxe.Timer(200);
+	timer.run = function() {
+		jTar.remove();
+		timer.stop();
+	};
 };
 src.utils.Html = function() { };
 src.utils.Html.__name__ = true;
@@ -756,63 +815,19 @@ src.view = {};
 src.view.Intro = function() { };
 src.view.Intro.__name__ = true;
 src.view.Intro.start = function() {
-	var introSwitch = false;
-	src.view.Intro._jIntro = new js.JQuery("#intro");
-	src.view.Intro._jTtl = src.view.Intro._jIntro.find("h1");
-	src.view.Intro._jLoad = src.view.Intro._jIntro.find(".intro-metar");
-	src.view.Intro._jMater = src.view.Intro._jLoad.find("span");
-	if(introSwitch) src.view.Intro.timeline(); else {
-		src.view.Intro.hide();
-		src.view.Intro.domEffect();
-	}
+	var input = [];
+	var konami = [38,38,40,40,37,39,37,39,66,65];
+	jp.saken.utils.Dom.jWindow.on("keyup",function(event) {
+		input.push(event.keyCode);
+		var arrayStr = input.join("");
+		if(arrayStr.indexOf(konami.join("")) >= 0) {
+			input = [];
+			src.view.Intro.changeMouse();
+		}
+	});
 };
-src.view.Intro.timeline = function() {
-	TweenMax.set(src.view.Intro._jTtl,{ opacity : 0, y : -50});
-	TweenMax.to(src.view.Intro._jTtl,2,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 0});
-	TweenMax.set(src.view.Intro._jLoad,{ y : -50});
-	TweenMax.to(src.view.Intro._jLoad,1.8,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 0.4});
-	TweenMax.to(src.view.Intro._jMater,1.5,{ width : src.view.Intro._jLoad.width(), ease : Quart.easeOut, delay : 1.4, onComplete : function() {
-		src.view.Intro._jIntro.fadeOut(1000,function() {
-			src.view.Intro.hide();
-			src.view.Intro.domEffect();
-		});
-	}});
-};
-src.view.Intro.hide = function() {
-	src.view.Intro._jIntro.hide();
-};
-src.view.Intro.domEffect = function() {
-	src.view.Intro.fadeIn(new js.JQuery("#header"));
-	src.view.Intro.fadeUp(new js.JQuery("#footer"),0.4);
-	src.view.Intro.fadeUp(new js.JQuery("#mainmenu"),0.4);
-	src.view.Intro.fadeLeft(new js.JQuery("#sidemenu-left"),0.2);
-	src.view.Intro.fadeRight(new js.JQuery("#sidemenu-right"),0.2);
-	src.view.Intro.fadeDown(new js.JQuery("#mainboard"),0.6);
-};
-src.view.Intro.fadeIn = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ y : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Intro.fadeDown = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginTop : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginTop : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Intro.fadeUp = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginBottom : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginBottom : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Intro.fadeLeft = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginLeft : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginLeft : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Intro.fadeRight = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginRight : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginRight : 0, ease : Expo.easeOut, delay : i});
+src.view.Intro.changeMouse = function() {
+	jp.saken.utils.Dom.jBody.addClass("secretMode");
 };
 src.view.Mainboard = function() { };
 src.view.Mainboard.__name__ = true;
@@ -907,12 +922,13 @@ src.view.Mainmenu.addCurrent = function(cls) {
 };
 src.view.Mainmenu.clickClose = function() {
 	jp.saken.utils.Dom.jWindow.on("mousedown touchstart",function(event) {
-		if(src.view.Mainmenu._jMainmenu.find(".current").offset().top - 100 > event.pageY) {
+		var y;
+		if(event.pageY != null) y = event.pageY; else y = event.originalEvent.touches[0].pageY;
+		if(src.view.Mainmenu._jMainmenu.find(".current").offset().top - 100 > y) {
 			if(src.view.Mainmenu._jMainmenu.hasClass("open")) {
 				src.view.Mainmenu._jMainmenu.removeClass("open");
 				src.view.Mainmenu._jMainmenu.addClass("close");
 				TweenMax.to(src.view.Mainmenu._jMainmenu.find(".inner"),1,{ top : 0, ease : Elastic.easeOut});
-				jp.saken.utils.Dom.jWindow.unbind("mousedown touchstart");
 			}
 		}
 	});
@@ -1216,11 +1232,15 @@ src.view.Tutorial.start = function() {
 			src.view.Tutorial._jBtn.mouseover();
 		}
 	});
-	src.view.Tutorial._jBtn.on("mousedown",function(event1) {
+	jp.saken.utils.Dom.jWindow.on("touchstart",function(event1) {
+		src.view.Tutorial.hide();
+		jp.saken.utils.Dom.jWindow.unbind("touchstart");
+	});
+	src.view.Tutorial._jBtn.on("mousedown",function(event2) {
 		src.view.Tutorial.hide();
 		jp.saken.utils.Dom.jWindow.unbind("keydown");
 	});
-	src.view.Tutorial._jBtn.on("mouseover",function(event2) {
+	src.view.Tutorial._jBtn.on("mouseover",function(event3) {
 		src.view.Tutorial.onBtn();
 	});
 };
@@ -1370,7 +1390,9 @@ src.view.mainmenu.Scrollbar.init = function(jMainmenu) {
 	src.view.mainmenu.Scrollbar.set();
 	jp.saken.utils.Dom.jWindow.on("resize",src.view.mainmenu.Scrollbar.set);
 	src.view.mainmenu.Scrollbar._jSlider.on(mouseevent,src.view.mainmenu.Scrollbar.onMousewheel);
-	src.view.mainmenu.Scrollbar._jMainmenu.find(".scroll-navi").on("mousedown",src.view.mainmenu.Scrollbar.onMousedown);
+	src.view.mainmenu.Scrollbar._jSlider.on("touchstart",src.view.mainmenu.Scrollbar.setTouchPosition);
+	src.view.mainmenu.Scrollbar._jSlider.on("touchmove",src.view.mainmenu.Scrollbar.onMousewheel);
+	src.view.mainmenu.Scrollbar._jMainmenu.find(".scroll-navi").on("mousedown touchstart",src.view.mainmenu.Scrollbar.onMousedown);
 };
 src.view.mainmenu.Scrollbar.set = function(event) {
 	var length = src.view.mainmenu.Scrollbar._jSlider.length;
@@ -1399,16 +1421,21 @@ src.view.mainmenu.Scrollbar.getScale = function() {
 	return scale;
 };
 src.view.mainmenu.Scrollbar.onMousewheel = function(event) {
-	var target = $(this);
+	var jTarget = $(this);
 	var delta = event.originalEvent.wheelDelta;
 	if(delta == null) delta = Math.round(event.originalEvent.deltaY * -120);
-	src.view.mainmenu.Scrollbar.getDom(target);
+	if(event.type == "touchmove") {
+		var y;
+		if(src.view.mainmenu.Scrollbar._touchPosiY > event.originalEvent.touches[0].pageY) y = -1; else y = 1;
+		delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
+	}
+	src.view.mainmenu.Scrollbar.getDom(jTarget);
 	src.view.mainmenu.Scrollbar.move(delta);
 };
 src.view.mainmenu.Scrollbar.onMousedown = function(event) {
-	var target = $(this).parent(".slider-scroll").siblings(".slider");
+	var jTarget = $(this).parent(".slider-scroll").siblings(".slider");
 	var base = event.pageY;
-	src.view.mainmenu.Scrollbar.getDom(target);
+	src.view.mainmenu.Scrollbar.getDom(jTarget);
 	var onMousemove = function(event1) {
 		var diff = base - event1.pageY;
 		src.view.mainmenu.Scrollbar.move(diff * 15);
@@ -1430,6 +1457,9 @@ src.view.mainmenu.Scrollbar.move = function(delta) {
 	TweenMax.to(src.view.mainmenu.Scrollbar._jInner,0.1,{ marginTop : val, ease : "linear"});
 	val = (val * src.view.mainmenu.Scrollbar._ratio / 100 | 0) * -1;
 	TweenMax.to(src.view.mainmenu.Scrollbar._jNavi,0.1,{ marginTop : val, ease : "linear"});
+};
+src.view.mainmenu.Scrollbar.setTouchPosition = function(event) {
+	src.view.mainmenu.Scrollbar._touchPosiY = event.originalEvent.touches[0].pageY;
 };
 src.view.sidemenu = {};
 src.view.sidemenu.Color = function() { };
@@ -1495,6 +1525,7 @@ src.view.sidemenu.Lightbox = function() {
 src.view.sidemenu.Lightbox.__name__ = true;
 src.view.sidemenu.Lightbox.init = function() {
 	src.view.sidemenu.Lightbox._jLightBox = new js.JQuery("#lightbox");
+	src.view.sidemenu.Lightbox._jLightBoxBg = src.view.sidemenu.Lightbox._jLightBox.find(".lightbox-bg");
 };
 src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
 	var jBox = src.view.sidemenu.Lightbox._jLightBox.find("." + cls);
@@ -1505,10 +1536,17 @@ src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
 		TweenMax.to(jBox,1,{ width : 300, ease : Elastic.easeOut});
 	});
 	jBox.find(".close-btn").on("mousedown",function(event) {
-		jBox.fadeOut(sPEED);
-		src.view.sidemenu.Lightbox._jLightBox.fadeOut(sPEED);
-		jBox.find(".close-btn").unbind("mousedown");
+		src.view.sidemenu.Lightbox.hide(jBox,sPEED);
 	});
+	src.view.sidemenu.Lightbox._jLightBoxBg.on("mousedown",function(event1) {
+		src.view.sidemenu.Lightbox.hide(jBox,sPEED);
+		src.view.sidemenu.Lightbox._jLightBoxBg.unbind("mousedown");
+	});
+};
+src.view.sidemenu.Lightbox.hide = function(jBox,sPEED) {
+	jBox.fadeOut(sPEED);
+	src.view.sidemenu.Lightbox._jLightBox.fadeOut(sPEED);
+	jBox.find(".close-btn").unbind("mousedown");
 };
 src.view.sidemenu.Lightbox.__super__ = src.view.Sidemenu;
 src.view.sidemenu.Lightbox.prototype = $extend(src.view.Sidemenu.prototype,{

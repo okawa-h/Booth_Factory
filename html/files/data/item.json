@@ -8,8 +8,8 @@
             "type" : "paper",
             "cat"  : "paper",
             "icon" : "paper_a4.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "img"  : "paper.png",
+            "bgImg": "paper.png"
         }, {
             "id"   : "13",
             "name" : "中綴じ冊子",
@@ -18,8 +18,8 @@
             "type" : "paper",
             "cat"  : "paper",
             "icon" : "booklet_a4.png",
-            "img"  : "utiwa.png",
-            "bgImg": "utiwa.png"
+            "img"  : "book.png",
+            "bgImg": "book.png"
         }, {
             "id"   : "14",
             "name" : "クリアファイル",
@@ -182,24 +182,24 @@
             "bgImg": "banner.png"
         }, {
             "id"   : "19",
-            "name" : "卓上三角POP印刷",
+            "name" : "封筒・長",
             "price": "3000",
             "length": "10セット",
             "type" : "paper",
             "cat" : "accessory",
             "icon" : "table_2.png",
-            "img"  : "table_pop_2.png",
-            "bgImg": "table_pop_2.png"
+            "img"  : "envelope_long.png",
+            "bgImg": "envelope_long.png"
         }, {
             "id"   : "20",
-            "name" : "卓上三角POP印刷",
+            "name" : "封筒・角",
             "price": "3000",
             "length": "10セット",
             "type" : "paper",
             "cat" : "accessory",
             "icon" : "table_3.png",
-            "img"  : "table_pop_3.png",
-            "bgImg": "table_pop_3.png"
+            "img"  : "envelope.png",
+            "bgImg": "envelope.png"
         }, {
             "id"   : "21",
             "name" : "スタンドPOP印刷",

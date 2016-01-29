@@ -39,6 +39,13 @@ class Tutorial {
 
         });
 
+        Dom.jWindow.on('touchstart',function(event:JqEvent){
+
+            hide();
+            Dom.jWindow.unbind('touchstart');
+
+        });
+
         _jBtn.on('mousedown',function(event:JqEvent) {
 
             hide();

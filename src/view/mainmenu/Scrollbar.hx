@@ -14,6 +14,7 @@ class Scrollbar {
     private static var _jNavi     : JQuery;
     private static var _max       : Int;
     private static var _posi      : Int;
+    private static var _touchPosiY: Int;
     private static var _ratio     : Float;
 
     /* =======================================================================
@@ -31,7 +32,9 @@ class Scrollbar {
         set();
         Dom.jWindow.on("resize",set);
         _jSlider.on(mouseevent,onMousewheel);
-        _jMainmenu.find('.scroll-navi').on("mousedown",onMousedown);
+        _jSlider.on("touchstart",setTouchPosition);
+        _jSlider.on("touchmove",onMousewheel);
+        _jMainmenu.find('.scroll-navi').on("mousedown touchstart",onMousedown);
 
     }
 
@@ -87,11 +90,18 @@ class Scrollbar {
             ========================================================================== */
             private static function onMousewheel(event:Dynamic):Void {
 
-                var target : JQuery = JQuery.cur;
-                var delta  : Int    = event.originalEvent.wheelDelta;
-                if (delta == null) delta = Math.round(event.originalEvent.deltaY * -120);//Firefox
+                var jTarget : JQuery = JQuery.cur;
+                var delta   : Int    = event.originalEvent.wheelDelta;
 
-                getDom(target);
+                if (delta == null) delta = Math.round(event.originalEvent.deltaY * -120);//Firefox
+                if (event.type == "touchmove") {
+
+                    var y = (_touchPosiY > event.originalEvent.touches[0].pageY) ? -1 : 1;
+
+                    delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
+                }
+
+                getDom(jTarget);
                 move(delta);
 
             }
@@ -101,9 +111,9 @@ class Scrollbar {
             ========================================================================== */
             private static function onMousedown(event:Dynamic):Void {
 
-                var target : JQuery = JQuery.cur.parent('.slider-scroll').siblings('.slider');
-                var base   : Int    = event.pageY;
-                getDom(target);
+                var jTarget : JQuery = JQuery.cur.parent('.slider-scroll').siblings('.slider');
+                var base    : Int    = event.pageY;
+                getDom(jTarget);
 
                 function onMousemove(event:JqEvent) {
 
@@ -138,6 +148,14 @@ class Scrollbar {
                 TweenMaxHaxe.to(_jInner,0.1,{marginTop: val,ease:'linear'});
                 val = Std.int((val * _ratio)/100) * -1;
                 TweenMaxHaxe.to(_jNavi,0.1,{marginTop: val,ease:'linear'});
+
+            }
+            /* =======================================================================
+            Move
+            ========================================================================== */
+            private static function setTouchPosition(event:Dynamic):Void {
+
+                _touchPosiY = event.originalEvent.touches[0].pageY;
 
             }
 

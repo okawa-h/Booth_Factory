@@ -139,8 +139,6 @@ class Trash {
             }
         });
 
-        //TweenMaxHaxe.to(_jTrashBg,0.8,{y:20,x:10,width:180,height:180,repeat:-1,yoyo : true});
-
         _arrowAnimate = TweenMaxHaxe.to(_jTrashArrow , 0.8 , {y:30,repeat:-1,yoyo : true,ease: Circ.easeOut});
 
     }
