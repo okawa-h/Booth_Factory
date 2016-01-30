@@ -2,6 +2,7 @@ package src.view;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import src.Manager;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Quart;
@@ -27,6 +28,12 @@ class Tutorial {
         _jImg      = _jBox.find('.tutorial-img');
         _jText     = _jBox.find('.tutorial-text');
         _jBtn      = _jTutorial.find('.start-btn');
+
+        if (Manager.getRatio() < 1) {
+            _jTutorial.css({'top':0});
+            TweenMaxHaxe.set(_jTutorial,{scaleX:Manager.getRatio(), scaleY:Manager.getRatio()});
+            _jTutorial.css({'top':'-30px'});
+        }
 
         timeline();
 
@@ -99,6 +106,8 @@ class Tutorial {
             private static function domEffect():Void {
 
                 fadeIn(new JQuery('#header'));
+                fadeIn(new JQuery('#header .caution'));
+                fadeIn(new JQuery('#contact'));
                 fadeUp(new JQuery('#footer'),0.4);
                 fadeUp(new JQuery('#mainmenu'),0.4);
                 fadeLeft(new JQuery('#sidemenu-left'),0.2);

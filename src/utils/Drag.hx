@@ -80,9 +80,11 @@ class Drag {
 
                 if (_jGrabObj.hasClass('drop') || _posiAnimate) return;
                 getDiff(event);
-                var w : Int = (_jGrabObj.hasClass('img')) ? Math.round((_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/2) : 0;
+                trace(event);
+                var w : Int = (_jGrabObj.hasClass('img')) ? Math.round((_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/5) : 0;
+                _diffX = _diffX - w;
 
-                setPosition(event,0,w);
+                setPosition(event,0,0);
                 _isGrabbed = true;
 
                 if (_jGrabObj.hasClass('object')) Trash.show();

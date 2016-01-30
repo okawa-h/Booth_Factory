@@ -2,6 +2,7 @@ package src.view;
 
 import js.JQuery;
 import haxe.Timer;
+import src.Manager;
 import src.view.Mainboard;
 import src.view.mainmenu.Scrollbar;
 import jp.saken.utils.Dom;
@@ -22,6 +23,8 @@ class Mainmenu {
 
         _jMainmenu = new JQuery('#mainmenu');
         _jBtn      = _jMainmenu.find('.ttl').find('p');
+
+        if (Manager.getRatio() < 0.75) _jMainmenu.addClass('ratio');
 
         var jRevertBtn : JQuery = _jMainmenu.find('.slider').find('ul li').find('.revertObj');
 
@@ -98,7 +101,7 @@ class Mainmenu {
 
                 addCurrent(cls);
 
-                if(_jMainmenu.prop('class') == 'close') open(jTarget,h);
+                if(_jMainmenu.hasClass('close')) open(jTarget,h);
 
             }
 

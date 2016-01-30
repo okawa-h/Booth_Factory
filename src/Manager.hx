@@ -107,7 +107,20 @@ class Manager {
                     resizeDom(jMainboard.find('.board .desk .desk-table'),true);
                     resizeDom(jMainboard.find('.board .desk .desk-left'),true);
                     resizeDom(jMainboard.find('.board .desk .desk-right'),true);
+                    var jTrashDiv = new JQuery('#trash').find('div');
+                    for (i in 0 ... jTrashDiv.length) {
 
+                        resizeDom(jTrashDiv.eq(i),false,true);
+
+                        if (jTrashDiv.eq(i).hasClass('trash-bg')) {
+
+                            var bottom  : Int = Std.parseInt(jTrashDiv.eq(i).css('bottom'));
+                            jTrashDiv.eq(i).css({'bottom': Math.round(bottom * _ratio)});
+                            
+                        }
+
+                    }
+                    
                     var jSidemenuR : JQuery = new JQuery('#sidemenu-right');
                     var jSidemenuL : JQuery = new JQuery('#sidemenu-left');
                     TweenMaxHaxe.set(jSidemenuR,{scaleX:_ratio, scaleY:_ratio});

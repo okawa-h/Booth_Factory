@@ -97,7 +97,6 @@ class Scrollbar {
                 if (event.type == "touchmove") {
 
                     var y = (_touchPosiY > event.originalEvent.touches[0].pageY) ? -1 : 1;
-
                     delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
                 }
 

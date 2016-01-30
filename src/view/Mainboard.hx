@@ -13,6 +13,7 @@ class Mainboard {
     public static function init():Void {
 
         _jMainboard = new JQuery('#mainboard');
+
         Human.init(_jMainboard);
 
     }

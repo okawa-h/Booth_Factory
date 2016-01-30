@@ -361,6 +361,17 @@ src.Manager.getWindowRatio = function() {
 		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
 		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
 		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
+		var jTrashDiv = new js.JQuery("#trash").find("div");
+		var _g1 = 0;
+		var _g = jTrashDiv.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			src.Manager.resizeDom(jTrashDiv.eq(i),false,true);
+			if(jTrashDiv.eq(i).hasClass("trash-bg")) {
+				var bottom = Std.parseInt(jTrashDiv.eq(i).css("bottom"));
+				jTrashDiv.eq(i).css({ bottom : Math.round(bottom * src.Manager._ratio)});
+			}
+		}
 		var jSidemenuR = new js.JQuery("#sidemenu-right");
 		var jSidemenuL = new js.JQuery("#sidemenu-left");
 		TweenMax.set(jSidemenuR,{ scaleX : src.Manager._ratio, scaleY : src.Manager._ratio});
@@ -418,9 +429,11 @@ src.utils.Drag.grab = function(event) {
 	src.utils.Drag._jGrabObj = $(this);
 	if(src.utils.Drag._jGrabObj.hasClass("drop") || src.utils.Drag._posiAnimate) return;
 	src.utils.Drag.getDiff(event);
+	console.log(event);
 	var w;
-	if(src.utils.Drag._jGrabObj.hasClass("img")) w = Math.round((src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 2); else w = 0;
-	src.utils.Drag.setPosition(event,0,w);
+	if(src.utils.Drag._jGrabObj.hasClass("img")) w = Math.round((src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 5); else w = 0;
+	src.utils.Drag._diffX = src.utils.Drag._diffX - w;
+	src.utils.Drag.setPosition(event,0,0);
 	src.utils.Drag._isGrabbed = true;
 	if(src.utils.Drag._jGrabObj.hasClass("object")) src.view.Trash.show();
 	src.utils.Drag._jGrabObj.addClass("grab");
@@ -610,7 +623,7 @@ src.utils.Html.getList = function(id,type,cat,icon,price,bgImg,img,name,length,a
 	html += "data-cat=\"" + cat + "\" ";
 	html += "data-icon=\"" + icon + "\" ";
 	html += "data-price=\"" + price + "\">";
-	html += "<div class=\"revertObj\">×</div>";
+	html += "<div class=\"revertObj\"></div>";
 	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + bgImg + ") no-repeat center center;\">";
 	html += "<div class=\"img\">";
 	html += "<img src=\"files/img/product/image/" + img + "\">";
@@ -828,6 +841,8 @@ src.view.Intro.start = function() {
 };
 src.view.Intro.changeMouse = function() {
 	jp.saken.utils.Dom.jBody.addClass("secretMode");
+	TweenMax.set(jp.saken.utils.Dom.jBody,{ scaleX : 0.9, scaleY : 0.9});
+	TweenMax.to(jp.saken.utils.Dom.jBody,0.8,{ scaleX : 1.1, scaleY : 1.1, repeat : -1, yoyo : true, ease : Circ.easeOut});
 };
 src.view.Mainboard = function() { };
 src.view.Mainboard.__name__ = true;
@@ -872,6 +887,7 @@ src.view.Mainmenu.__name__ = true;
 src.view.Mainmenu.init = function() {
 	src.view.Mainmenu._jMainmenu = new js.JQuery("#mainmenu");
 	src.view.Mainmenu._jBtn = src.view.Mainmenu._jMainmenu.find(".ttl").find("p");
+	if(src.Manager.getRatio() < 0.75) src.view.Mainmenu._jMainmenu.addClass("ratio");
 	var jRevertBtn = src.view.Mainmenu._jMainmenu.find(".slider").find("ul li").find(".revertObj");
 	src.view.mainmenu.Scrollbar.init(src.view.Mainmenu._jMainmenu);
 	src.view.Mainmenu._jBtn.on("mousedown",function(event) {
@@ -902,7 +918,7 @@ src.view.Mainmenu.clickBtn = function(jThis,event) {
 	var jTarget = src.view.Mainmenu._jMainmenu.find(".inner");
 	var h = jTarget.find("#" + cls).outerHeight() * -1 + 1;
 	src.view.Mainmenu.addCurrent(cls);
-	if(src.view.Mainmenu._jMainmenu.prop("class") == "close") src.view.Mainmenu.open(jTarget,h);
+	if(src.view.Mainmenu._jMainmenu.hasClass("close")) src.view.Mainmenu.open(jTarget,h);
 };
 src.view.Mainmenu.open = function(jTarget,h) {
 	src.view.Mainmenu.clickClose();
@@ -1225,6 +1241,11 @@ src.view.Tutorial.start = function() {
 	src.view.Tutorial._jImg = src.view.Tutorial._jBox.find(".tutorial-img");
 	src.view.Tutorial._jText = src.view.Tutorial._jBox.find(".tutorial-text");
 	src.view.Tutorial._jBtn = src.view.Tutorial._jTutorial.find(".start-btn");
+	if(src.Manager.getRatio() < 1) {
+		src.view.Tutorial._jTutorial.css({ top : 0});
+		TweenMax.set(src.view.Tutorial._jTutorial,{ scaleX : src.Manager.getRatio(), scaleY : src.Manager.getRatio()});
+		src.view.Tutorial._jTutorial.css({ top : "-30px"});
+	}
 	src.view.Tutorial.timeline();
 	jp.saken.utils.Dom.jWindow.on("keydown",function(event) {
 		if(event.keyCode == 32) {
@@ -1263,6 +1284,8 @@ src.view.Tutorial.hide = function() {
 };
 src.view.Tutorial.domEffect = function() {
 	src.view.Tutorial.fadeIn(new js.JQuery("#header"));
+	src.view.Tutorial.fadeIn(new js.JQuery("#header .caution"));
+	src.view.Tutorial.fadeIn(new js.JQuery("#contact"));
 	src.view.Tutorial.fadeUp(new js.JQuery("#footer"),0.4);
 	src.view.Tutorial.fadeUp(new js.JQuery("#mainmenu"),0.4);
 	src.view.Tutorial.fadeLeft(new js.JQuery("#sidemenu-left"),0.2);
@@ -1314,11 +1337,10 @@ src.view.mainboard.Human.init = function(jMainboard) {
 	src.view.mainboard.Human._SPEED = 0.08;
 	src.view.mainboard.Human.talk("ようこそ",1000);
 	src.view.mainboard.Human._INTERVAL = 8000;
-	src.view.mainboard.Human._timer = new haxe.Timer(src.view.mainboard.Human._INTERVAL);
-	src.view.mainboard.Human._timer.run = src.view.mainboard.Human.randamtalk;
 };
 src.view.mainboard.Human.talk = function(str,delay) {
 	if(delay == null) delay = 0;
+	return;
 	src.view.mainboard.Human._jText.children().remove();
 	if(str == "quiet") {
 		src.view.mainboard.Human._jTalk.hide();
@@ -1333,12 +1355,11 @@ src.view.mainboard.Human.talk = function(str,delay) {
 	};
 };
 src.view.mainboard.Human.comment = function(jTarget,str) {
-	src.view.mainboard.Human._timer.stop();
+	return;
 	src.view.mainboard.Human.talk(str);
 	jTarget.on("mouseleave",function(event) {
 		src.view.mainboard.Human.talk("quiet");
-		src.view.mainboard.Human._timer = new haxe.Timer(src.view.mainboard.Human._INTERVAL);
-		src.view.mainboard.Human._timer.run = src.view.mainboard.Human.randamtalk;
+		src.view.mainboard.Human._jText.children().remove();
 		jTarget.unbind("mouseleave");
 	});
 };
@@ -1360,14 +1381,22 @@ src.view.mainboard.Human.typing = function(str) {
 	var _g1 = 0;
 	var _g = array.length;
 	while(_g1 < _g) {
-		var i = [_g1++];
-		var text = [src.view.mainboard.Human.wordWrap(array[i[0]])];
-		TweenMax.to(src.view.mainboard.Human._jText,0,{ delay : src.view.mainboard.Human._SPEED * i[0], onComplete : (function(text,i) {
-			return function() {
-				if(array[i[0]] == "/") text[0] = text[0].split("<span>/</span>").join("<br>");
-				src.view.mainboard.Human._jText.append(text[0]);
-			};
-		})(text,i)});
+		var i = _g1++;
+		var text = src.view.mainboard.Human.wordWrap(array[i]);
+		if(array[i] == "/") text = text.split("<span>/</span>").join("<br>");
+		src.view.mainboard.Human._jText.append(text);
+		var jSpan = src.view.mainboard.Human._jText.find("span");
+		var length = jSpan.length;
+		var _g2 = 0;
+		while(_g2 < length) {
+			var i1 = [_g2++];
+			src.view.mainboard.Human._jText.find("span").eq(i1[0]).hide();
+			TweenMax.to(src.view.mainboard.Human._jText.find("span").eq(i1[0]),0,{ delay : src.view.mainboard.Human._SPEED * i1[0], onComplete : (function(i1) {
+				return function() {
+					src.view.mainboard.Human._jText.find("span").eq(i1[0]).show();
+				};
+			})(i1)});
+		}
 	}
 };
 src.view.mainboard.Human.wordWrap = function(str) {

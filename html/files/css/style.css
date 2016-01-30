@@ -3,6 +3,8 @@
 @import "common/layout.css";
 
 #header,
+#header .caution,
+#contact,
 #footer,
 #mainmenu,
 #sidemenu-left,
@@ -310,13 +312,8 @@
 /*-------------------------------------------------------------------------
 	Trash
 /*-----------------------------------------------------------------------*/
-/*#trash {
-	position: fixed;
-	top: 78%;
-	left: 50%;
-	margin-left: -39px;
-	z-index: 0;
-}*/
+#trash {
+}
 
 	#trash .trash-arrow {
 		display: none;
@@ -327,6 +324,7 @@
 		height: 34px;
 		margin-left: -15px;
 		background: url(../img/icon/icon_trash_arrow.png) no-repeat center center;
+		background-size: contain;
 		z-index: 4000;
 	}
 
@@ -339,6 +337,7 @@
 		height: 80px;
 		margin-left: -39px;
 		background: url(../img/icon/icon_trash_front.png) no-repeat center center;
+		background-size: contain;
 		cursor: pointer;
 		z-index: 4000;
 	}
@@ -352,6 +351,7 @@
 		height: 80px;
 		margin-left: -39px;
 		background: url(../img/icon/icon_trash.png) no-repeat center center;
+		background-size: contain;
 		cursor: pointer;
 		z-index: 700;
 	}
@@ -623,9 +623,9 @@
 		left: 0;
 		top: 0;
 		width: 88%;
-    padding: 15px 6%;
-    border-top: 6px solid #4c3410;
-    border-bottom: 6px solid #4c3410;
+	    padding: 15px 6%;
+	    border-top: 6px solid #4c3410;
+	    border-bottom: 6px solid #4c3410;
 	}
 
 	#mainmenu .current {
@@ -643,10 +643,15 @@
 	#mainmenu #sale-accessory {
 		background: url(../img/mainmenu/bg_accessory.jpg);
 	}
+
 		#mainmenu div .ttl {
 			position: absolute;
 			top: -81px;
 			left: 50%;
+		}
+	
+		#mainmenu.ratio div .ttl {
+			top: -58px;
 		}
 
 		#mainmenu #sale-paper .ttl {
@@ -664,17 +669,28 @@
 
 			#mainmenu div .ttl p {
 				padding: 10px 15px 10px;
-		    border-top: 6px solid #4c3410;
-		    border-left: 6px solid #4c3410;
-		    border-right: 6px solid #4c3410;
-		    border-radius: 8px 8px 8px 8px / 8px 8px 0px 0px;
-		    color: #4c3410;
-		    font-size: 20px;
-		    font-weight: bold;
-		    line-height: 53px;
-		    cursor: pointer;
+			    border-top: 6px solid #4c3410;
+			    border-left: 6px solid #4c3410;
+			    border-right: 6px solid #4c3410;
+			    border-radius: 8px 8px 8px 8px / 8px 8px 0px 0px;
+			    color: #4c3410;
+			    font-size: 20px;
+			    font-weight: bold;
+			    line-height: 53px;
+			    cursor: pointer;
 				z-index: 1;
 			}
+
+			#mainmenu.ratio div .ttl p {
+				padding: 10px 15px 10px;
+			    font-size: 16px;
+			    line-height: 30px;
+			}
+
+				#mainmenu.ratio div .ttl p img {
+					width: 37px;
+					height: 32px
+				}
 
 			#mainmenu #sale-paper .ttl p {
 				background: url(../img/mainmenu/bg_paper.jpg);
@@ -691,11 +707,15 @@
 			#mainmenu div .slider-scroll {
 				position: absolute;
 				top: 15px;
-				right: 111px;
+				right: 6%;
 				width: 15px;
 				height: 200px;
 				border-radius: 10px;
 				background-color: #be7b0f;
+			}
+
+			#mainmenu.ratio div .slider-scroll {
+				height: 120px;
 			}
 
 				#mainmenu div .slider-scroll .scroll-navi {
@@ -707,15 +727,20 @@
 				}
 
 		#mainmenu div .slider {
-			overflow-y: scroll;
+			/*overflow-y: scroll;*/
 			overflow: hidden;
 			height: 200px;
+		}
+
+		#mainmenu.ratio div .slider {
+			height: 120px;
 		}
 
 			#mainmenu div .slider ul {
 				position: relative;
 				top: 0;
 				width: 100%;
+				margin-left: 1%;
 				text-align: center;
 			}
 
@@ -727,12 +752,53 @@
 					display: block;
 					float: left;
 					position: relative;
-					width: 160px;
-					margin: 0 20px 20px 0;
+					width: 14.6%;
+					margin: 0 20px 1% 0;
 					border: 5px solid #fff000;
 					box-sizing: border-box;
 					background-color: #fff;
 					cursor: pointer;
+				}
+
+				@media screen and (max-width: 1500px) {
+
+					#mainmenu div .slider ul {
+						margin-left: 2%;
+					}
+
+					#mainmenu div .slider ul li {
+						width: 18%;
+						margin: 0 20px 2% 0;
+					}	
+				}
+
+				@media screen and (max-width: 1200px) {
+
+					#mainmenu div .slider ul {
+						margin-left: 5%;
+					}
+
+					#mainmenu div .slider ul li {
+						width: 20%;
+						margin: 0 20px 5% 0;
+					}	
+				}
+
+				@media screen and (max-width: 980px) {
+
+					#mainmenu div .slider ul {
+						margin-left: 0;
+					}
+
+					#mainmenu div .slider ul li {
+						width: 30%;
+						margin: 0 20px 3% 0;
+					}	
+				}
+
+				#mainmenu.ratio div .slider ul li {
+					width: 270px;
+					margin: 0 15px 20px 0;
 				}
 
 				#mainmenu div .slider ul li.drop {
@@ -742,11 +808,11 @@
 					#mainmenu div .slider ul li .revertObj {
 						display: none;
 						position: absolute;
-						top: -3px;
-						right: -3px;
+						top: 0px;
+						right: 0px;
 						width: 30px;
 						height: 30px;
-						background-color: #999;
+						background: url(../img/icon/icon_revert.png) no-repeat center center #999;
 						color: #3b3b3b;
 						text-align: center;
 						line-height: 28px;
@@ -781,8 +847,14 @@
 					}
 
 					#mainmenu div .slider ul li .img-box {
-						width: 100%;
+						width: 160px;
 						height: 110px;
+						margin: 0 auto;
+					}
+
+					#mainmenu.ratio div .slider ul li .img-box {
+						float: left;
+						width: 130px;
 					}
 
 						#mainmenu div .slider ul li .img {
@@ -811,10 +883,20 @@
 						padding: 0 5px;
 					}
 
+					#mainmenu.ratio div .slider ul li dl {
+						float: right;
+						margin-top: 20px;
+						float: left;
+					}
+
 						#mainmenu div .slider ul li dl dt {
 							color: #4c3410;
 							font-size: 13px;
 							font-weight: bold;
+						}
+
+						#mainmenu.ratio div .slider ul li dl dt {
+							font-size: 12px;
 						}
 
 						#mainmenu div .slider ul li dl .length,
@@ -824,7 +906,16 @@
 							font-weight: bold;
 						}
 
+						#mainmenu.ratio div .slider ul li dl .length,
+						#mainmenu.ratio div .slider ul li dl .price {
+							font-size: 12px;
+						}
+
 							#mainmenu div .slider ul li dl .price span {
+								font-size: 170%;
+							}
+
+							#mainmenu.ratio div .slider ul li dl .price span {
 								font-size: 170%;
 							}
 

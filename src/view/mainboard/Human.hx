@@ -30,8 +30,8 @@ class Human {
 
         talk('ようこそ',1000);
         _INTERVAL  = 8000;
-        _timer     = new Timer(_INTERVAL);
-        _timer.run = randamtalk;
+        // _timer     = new Timer(_INTERVAL);
+        // _timer.run = randamtalk;
 
     }
 
@@ -39,6 +39,8 @@ class Human {
     Talk
     ========================================================================== */
     public static function talk(str:String,delay:Int = 0):Void {
+
+        return;
 
         _jText.children().remove();
 
@@ -67,14 +69,17 @@ class Human {
     ========================================================================== */
     public static function comment(jTarget:JQuery,str:String):Void {
 
-        _timer.stop();
+        return;
+
+        // _timer.stop();
         talk(str);
 
         jTarget.on('mouseleave',function(event:JqEvent) {
 
             talk("quiet");
-            _timer = new Timer(_INTERVAL);
-            _timer.run = randamtalk;
+            _jText.children().remove();
+            // _timer = new Timer(_INTERVAL);
+            // _timer.run = randamtalk;
             jTarget.unbind('mouseleave');
 
         });
@@ -118,15 +123,23 @@ class Human {
                 for (i in 0 ... array.length) {
 
                     var text : String = wordWrap(array[i]);
+                    if (array[i] == "/") text = text.split('<span>/</span>').join('<br>');
+                    _jText.append(text);
+                    var jSpan  : JQuery = _jText.find('span');
+                    var length : Int    = jSpan.length;
 
-                    TweenMaxHaxe.to(_jText,0,{delay:_SPEED * i,
-                        onComplete:function() {
+                    for (i in 0 ... length) {
+                        _jText.find('span').eq(i).hide();
 
-                            if (array[i] == "/") text = text.split('<span>/</span>').join('<br>');
-                            _jText.append(text);
+                        TweenMaxHaxe.to(_jText.find('span').eq(i),0,{delay:_SPEED * i,
+                            onComplete:function() {
 
-                        }
-                    });
+                                _jText.find('span').eq(i).show();
+
+                            }
+                        });
+                        
+                    }
 
                 }
 

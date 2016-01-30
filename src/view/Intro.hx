@@ -2,6 +2,8 @@ package src.view;
 
 import js.JQuery;
 import jp.saken.utils.Dom;
+import tween.TweenMaxHaxe;
+import tween.easing.Circ;
 
 class Intro {
 
@@ -34,6 +36,8 @@ class Intro {
                 private static function changeMouse():Void {
 
                     Dom.jBody.addClass('secretMode');
+                    TweenMaxHaxe.set(Dom.jBody , {scaleX:0.9, scaleY:0.9});
+                    TweenMaxHaxe.to(Dom.jBody , 0.8 , {scaleX:1.1, scaleY:1.1,repeat:-1,yoyo : true,ease: Circ.easeOut});
 
                 }
 
