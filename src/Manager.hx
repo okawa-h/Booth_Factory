@@ -6,7 +6,6 @@ import src.utils.Drag;
 import src.utils.ItemData;
 import src.utils.Log;
 import src.utils.UrlParameter;
-import src.view.Intro;
 import src.view.Mainboard;
 import src.view.Mainmenu;
 import src.view.Price;
@@ -27,7 +26,6 @@ class Manager {
     public static function init(event:JqEvent):Void {
 
         getWindowRatio();
-        Intro.start();
         Tutorial.start();
         ItemData.set(start);
         Log.write();

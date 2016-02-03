@@ -30,8 +30,6 @@ class Human {
 
         talk('ようこそ',1000);
         _INTERVAL  = 8000;
-        // _timer     = new Timer(_INTERVAL);
-        // _timer.run = randamtalk;
 
     }
 

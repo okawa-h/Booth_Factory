@@ -60,12 +60,12 @@ class Scrollbar {
             /* =======================================================================
             Get using Dom
             ========================================================================== */
-            private static function getDom(target:JQuery):Void {
+            private static function getDom(jTarget:JQuery):Void {
 
-                _jInner  = target.find('ul');
-                _jScroll = target.siblings('.slider-scroll');
+                _jInner  = jTarget.find('ul');
+                _jScroll = jTarget.siblings('.slider-scroll');
                 _jNavi   = _jScroll.find('.scroll-navi');
-                _max     = (_jInner.height() - _jSlider.height()) * -1 + 20;
+                _max     = (_jInner.height() - _jSlider.height()) * -1 + 20; //Std.parseInt(_jInner.find('li').css('margin-bottom'));
                 _posi    = Std.parseInt(_jInner.css('margin-top'));
                 _ratio   = getScale();
 
@@ -76,9 +76,9 @@ class Scrollbar {
             ========================================================================== */
             private static function getScale():Float {
 
-                var vH    : Int = _jSlider.height();
-                var tH    : Int = _jInner.height() - 20;
-                var sH    : Int = _jScroll.height();
+                var vH    : Int   = _jSlider.height();
+                var tH    : Int   = _jInner.height() - 20;
+                var sH    : Int   = _jScroll.height();
                 var scale : Float = (vH * 100)/tH;
 
                 return scale;
@@ -90,8 +90,7 @@ class Scrollbar {
             ========================================================================== */
             private static function onMousewheel(event:Dynamic):Void {
 
-                var jTarget : JQuery = JQuery.cur;
-                var delta   : Int    = event.originalEvent.wheelDelta;
+                var delta : Int = event.originalEvent.wheelDelta;
 
                 if (delta == null) delta = Math.round(event.originalEvent.deltaY * -120);//Firefox
                 if (event.type == "touchmove") {
@@ -100,7 +99,7 @@ class Scrollbar {
                     delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
                 }
 
-                getDom(jTarget);
+                getDom(JQuery.cur);
                 move(delta);
 
             }

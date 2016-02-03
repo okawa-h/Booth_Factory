@@ -10,6 +10,7 @@ import src.view.Mainboard;
 import src.view.Mainmenu;
 import src.view.Trash;
 import jp.saken.utils.Dom;
+import jp.okawa.utils.Estimate;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Expo;
@@ -63,7 +64,6 @@ class Drag {
     public static function setBoardObj():Void {
 
         _jBoardObj = _jMainboard.find('.object');
-
         _jBoardObj.on({ 'mousedown touchstart' : grab });
         _jBoardObj.on({ 'mouseover touchstart' : showOption });
 
@@ -80,8 +80,7 @@ class Drag {
 
                 if (_jGrabObj.hasClass('drop') || _posiAnimate) return;
                 getDiff(event);
-                trace(event);
-                var w : Int = (_jGrabObj.hasClass('img')) ? Math.round((_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/5) : 0;
+                var w : Int = (_jGrabObj.hasClass('img')) ? Math.round((_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/2) : 0;
                 _diffX = _diffX - w;
 
                 setPosition(event,0,0);
@@ -129,9 +128,10 @@ class Drag {
 
                     if (_jMainmenu.find('.current').offset().top > y) {
 
-                        _jGrabObj.parent().parent('li').addClass('drop');
-                        listToObj(_jGrabObj.parent().parent('li'),event);
+                        var jTarList : JQuery = _jGrabObj.parent().parent('li');
 
+                        jTarList.addClass('drop');
+                        listToObj(jTarList,event);
                         _jBoardObj.unbind('mousedown touchstart');
                         setBoardObj();
 
@@ -139,7 +139,7 @@ class Drag {
                 }
 
                 judgeOnBoard(_jGrabObj);
-                _jGrabObj.css({'opacity':1});
+                _jGrabObj.css({ 'opacity':1 });
                 _jGrabObj = null;
 
             }
@@ -150,47 +150,40 @@ class Drag {
             private static function setPosition(event:Dynamic,top:Int = 0,left:Int = 0):Void {
 
                 var type : Dynamic = event.type;
+                var t    : Float   = 0;
+                var l    : Float   = 0;
 
                 if (type == "mousedown" || type == "mousemove") {
 
-                    _jGrabObj.css({
-
-                        'top'  : event.clientY - _diffY + top,
-                        'left' : event.clientX - _diffX + left
-
-                    });
+                    t = event.clientY;
+                    l = event.clientX;
                     
                 } else if (type == "mouseup") {
 
-                    _jGrabObj.css({
-
-                        'top'  : event.pageY - _diffY + top,
-                        'left' : event.pageX - _diffX + left
-
-                    });
+                    t = event.pageY;
+                    l = event.pageX;
 
                 } else {
 
                     if (type == "touchend") {
 
-                        _jGrabObj.css({
-
-                            'top'  : event.originalEvent.changedTouches[0].pageY - _diffY + top,
-                            'left' : event.originalEvent.changedTouches[0].pageX - _diffX + left 
-
-                        });
-
+                        t = event.originalEvent.changedTouches[0].pageY;
+                        l = event.originalEvent.changedTouches[0].pageX;
                         return;
+
+                    } else {
+
+                        t = event.originalEvent.touches[0].pageY;
+                        l = event.originalEvent.touches[0].pageX;
+
                     }
 
-                    _jGrabObj.css({
-
-                        'top'  : event.originalEvent.touches[0].pageY - _diffY + top,
-                        'left' : event.originalEvent.touches[0].pageX - _diffX + left 
-
-                    });
-
                 }
+
+                t = t - _diffY + top;
+                l = l - _diffX + left;
+
+                _jGrabObj.css({ 'top'  : t,'left' : l });
 
             }
 
@@ -224,13 +217,16 @@ class Drag {
 
                 if (type == "accessory" || type == "clothes") {
 
-                    var abs : Array<String> = jTarget.data('abs').split(',');
-                    top  = Std.parseFloat(abs[0]);
-                    left = Std.parseFloat(abs[1]);
+                    var ratio : Float         = Manager.getRatio();
+                    var abs   : Array<String> = jTarget.data('abs').split(',');
+                    top  = Std.parseInt(abs[0]) * ratio;
+                    left = Std.parseInt(abs[1]) * ratio;
+
 
                 }
 
                 if (type == "clothes") {
+
 
                     Mainmenu.clearDrop(_jBoardObj.filter('.clothes').data('id'));
                     _jBoardObj.filter('.clothes').remove();
@@ -248,7 +244,6 @@ class Drag {
                     onComplete:function() {
 
                         Manager.resizeDom(jBoard.find('.object.' + id),false);
-
                     }
                 });
 
@@ -259,27 +254,26 @@ class Drag {
             ========================================================================== */
             private static function judgeOnBoard(jTarget:JQuery):Void {
 
-                var top    : String = jTarget.css('top').split('px').join('');
-                var left   : String = jTarget.css('left').split('px').join('');
-                var t      : Int    = Std.parseInt(top);
-                var l      : Int    = Std.parseInt(left);
-                var bottom : Int    = t + jTarget.height();
-                var right  : Int    = l + jTarget.width();
-                var areaB  : Int    = _jMainboard.height();
-                var areaR  : Int    = _jMainboard.width();
-                var judge  : Bool   = false;
+                var top    : Int  = Std.parseInt(jTarget.css('top'));
+                var left   : Int  = Std.parseInt(jTarget.css('left'));
+                var bottom : Int  = top + jTarget.height();
+                var right  : Int  = left + jTarget.width();
+                var areaB  : Int  = _jMainboard.height();
+                var areaR  : Int  = 698;//_jMainboard.width();
+                var judge  : Bool = false;
 
-                if (top.indexOf('-') == 0)  { t = 0; judge = true; }
-                if (left.indexOf('-') == 0) { l = 0; judge = true; }
-                if (bottom > areaB) { t = areaB - jTarget.height(); judge = true; }
-                if (right > areaR)  { l = areaR - jTarget.width(); judge = true; }
+                if (top < 53)  { top = 53; judge = true; }
+                if (left < 53) { left = 53; judge = true; }
+                if (bottom > areaB) { top = areaB - jTarget.height(); judge = true; }
+                if (right > areaR)  { left = areaR - jTarget.width(); judge = true; }
 
                 if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes')) {
 
                     if (Trash.isOnObj(jTarget)) return;
-                    var abs : Array<String> = getAbsPoint(jTarget);
-                    t = Std.parseInt(abs[0]);
-                    l = Std.parseInt(abs[1]);
+                    var ratio : Float         = Manager.getRatio();
+                    var abs   : Array<String> = getAbsPoint(jTarget);
+                    top  = Math.round(Std.parseInt(abs[0]) * ratio);
+                    left = Math.round(Std.parseInt(abs[1]) * ratio);
                     judge = true;
 
                 }
@@ -287,7 +281,7 @@ class Drag {
                 if (judge) {
 
                     _posiAnimate = true;
-                    TweenMaxHaxe.to(jTarget,0.5,{top: t, left : l,delay: 0.05,ease:Expo.easeOut,
+                    TweenMaxHaxe.to(jTarget,0.5,{top: top, left : left,delay: 0.05,ease:Expo.easeOut,
                         onComplete:function() {
 
                             Manager.setCounter();
@@ -310,7 +304,7 @@ class Drag {
 
                 for (i in 0 ... length) {
 
-                    if (data[i].id == Std.string(id)) array = data[i].abs;
+                    if (data[i].id == id) array = data[i].abs;
 
                 }
 
@@ -324,9 +318,9 @@ class Drag {
 
                 var jTarget : JQuery = JQuery.cur;
                 var length  : String = jTarget.data('length');
-                var price   : String = jTarget.data('price');
-                var html    : String = '<span class="object-data"><span>' + length + '<br>';
-                html += price + '円</span></span>';
+                var price   : String = Estimate.insertComma(Std.string(jTarget.data('price')));
+                var html    : String = '<span class="object-data"><span>' + price + '円<br>';
+                html += length + '</span></span>';
                 jTarget.append(html);
 
                 jTarget.on('mouseleave touchend',function(event:JqEvent) {
@@ -368,10 +362,10 @@ class Drag {
                 /* =======================================================================
                 Touch Animate
                 ========================================================================== */
-                private static function touchAnimate(event:JqEvent):Void {
+                private static function touchAnimate(event:Dynamic):Void {
 
-                    var html : String = '<div class="touch" style="top:' + untyped event.clientY + 'px;';
-                    html += 'left:' + untyped event.clientX + 'px;"></div>';
+                    var html : String = '<div class="touch" style="top:' + event.clientY + 'px;';
+                    html += 'left:' + event.clientX + 'px;"></div>';
                     _jMainmenu.append(html);
                     var jTar : JQuery = _jMainmenu.find('.touch');
                     TweenMaxHaxe.to(jTar, 0.3,{opacity:0.2,scaleX:4, scaleY:4, ease:Back.easeOut});

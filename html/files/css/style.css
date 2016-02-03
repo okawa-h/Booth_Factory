@@ -727,7 +727,6 @@
 				}
 
 		#mainmenu div .slider {
-			/*overflow-y: scroll;*/
 			overflow: hidden;
 			height: 200px;
 		}
@@ -740,8 +739,12 @@
 				position: relative;
 				top: 0;
 				width: 100%;
-				margin-left: 1%;
+				margin-left: -1%;
 				text-align: center;
+			}
+
+			#mainmenu.ratio div .slider ul {
+				margin-left: -5%;
 			}
 
 /*-------------------------------------------------------------------------
@@ -753,52 +756,59 @@
 					float: left;
 					position: relative;
 					width: 14.6%;
-					margin: 0 20px 1% 0;
+					margin: 0 0 1% 2%;
 					border: 5px solid #fff000;
 					box-sizing: border-box;
 					background-color: #fff;
 					cursor: pointer;
 				}
 
+				#mainmenu.ratio div .slider ul li {
+					width: 20%;
+					margin: 0 0 2% 5%;
+				}
+
 				@media screen and (max-width: 1500px) {
 
 					#mainmenu div .slider ul {
-						margin-left: 2%;
+						margin-left: -2%;
 					}
-
-					#mainmenu div .slider ul li {
-						width: 18%;
-						margin: 0 20px 2% 0;
-					}	
 				}
 
 				@media screen and (max-width: 1200px) {
 
 					#mainmenu div .slider ul {
-						margin-left: 5%;
+						margin-left: -5%;
 					}
 
 					#mainmenu div .slider ul li {
 						width: 20%;
-						margin: 0 20px 5% 0;
+						margin: 0 0 5% 5%;
+					}	
+				}
+
+				@media screen and (max-width: 1400px) {
+
+					#mainmenu.ratio div .slider ul {
+						margin-left: -3%;
+					}
+
+					#mainmenu.ratio div .slider ul li {
+						width: 30%;
+						margin: 0 0 3% 3%;
 					}	
 				}
 
 				@media screen and (max-width: 980px) {
 
 					#mainmenu div .slider ul {
-						margin-left: 0;
+						margin-left: -3%;
 					}
 
 					#mainmenu div .slider ul li {
 						width: 30%;
-						margin: 0 20px 3% 0;
+						margin: 0 0 3% 3%;
 					}	
-				}
-
-				#mainmenu.ratio div .slider ul li {
-					width: 270px;
-					margin: 0 15px 20px 0;
 				}
 
 				#mainmenu div .slider ul li.drop {
@@ -854,7 +864,8 @@
 
 					#mainmenu.ratio div .slider ul li .img-box {
 						float: left;
-						width: 130px;
+						width: 50%;
+						min-width: 120px;
 					}
 
 						#mainmenu div .slider ul li .img {
@@ -879,20 +890,24 @@
 								margin-top: 1px;
 							}
 
+							#mainmenu.ratio div .slider ul li .img img {
+								height: auto;
+							}
+
 					#mainmenu div .slider ul li dl {
 						padding: 0 5px;
 					}
 
 					#mainmenu.ratio div .slider ul li dl {
 						float: right;
+						width: 44%;
 						margin-top: 20px;
-						float: left;
+						padding: 0 2%;
 					}
 
 						#mainmenu div .slider ul li dl dt {
 							color: #4c3410;
-							font-size: 13px;
-							font-weight: bold;
+							font-size: 12px;
 						}
 
 						#mainmenu.ratio div .slider ul li dl dt {
@@ -997,7 +1012,6 @@
 		}
 
 		#lightbox .lightbox-content .lightbox-ttl {
-			/*width: 300px;*/
 			margin-bottom: 5px;
 			padding: 5px 0 3px;
 			background-color: #1a580b;
@@ -1007,15 +1021,15 @@
 		}
 
 		#lightbox .lightbox-content .caution {
-			width: 300px;
-			text-align: center;
 			margin-bottom: 5px;
+			padding: 30px 30px 0;
+			text-align: left;
 		}
 
 	#lightbox .help {
 		display: none;
-		width: 300px;
-		height: 80px;
+		width: 800px;
+		height: 400px;
 		border: 6px solid #4c3410;
 		border-radius: 8px;
 		background-color: #fff;

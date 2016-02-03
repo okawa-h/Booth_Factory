@@ -40,7 +40,7 @@ class Lightbox extends Sidemenu {
         _jLightBox.fadeIn(sPEED,function() {
 
             jBox.show();
-            TweenMaxHaxe.to(jBox, 1, { width : 300 , ease:Elastic.easeOut});
+            TweenMaxHaxe.to(jBox, 1, { width : 800 , ease:Elastic.easeOut});
 
         });
 

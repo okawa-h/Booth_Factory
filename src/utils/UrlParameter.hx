@@ -207,7 +207,6 @@ class UrlParameter {
     ========================================================================== */
     public static function change(string:String):Void {
 
-        // Dom.window.history.replaceState('','',string);
         var param : String = "";
 
         if (string.indexOf('utm_content') == -1) {

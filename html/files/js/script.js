@@ -307,7 +307,6 @@ src.Manager = function() { };
 src.Manager.__name__ = true;
 src.Manager.init = function(event) {
 	src.Manager.getWindowRatio();
-	src.view.Intro.start();
 	src.view.Tutorial.start();
 	src.utils.ItemData.set(src.Manager.start);
 	src.utils.Log.write();
@@ -429,9 +428,8 @@ src.utils.Drag.grab = function(event) {
 	src.utils.Drag._jGrabObj = $(this);
 	if(src.utils.Drag._jGrabObj.hasClass("drop") || src.utils.Drag._posiAnimate) return;
 	src.utils.Drag.getDiff(event);
-	console.log(event);
 	var w;
-	if(src.utils.Drag._jGrabObj.hasClass("img")) w = Math.round((src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 5); else w = 0;
+	if(src.utils.Drag._jGrabObj.hasClass("img")) w = Math.round((src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 2); else w = 0;
 	src.utils.Drag._diffX = src.utils.Drag._diffX - w;
 	src.utils.Drag.setPosition(event,0,0);
 	src.utils.Drag._isGrabbed = true;
@@ -458,8 +456,9 @@ src.utils.Drag.mouseup = function(event) {
 		var y;
 		if(event.pageY != null) y = event.pageY; else y = event.originalEvent.changedTouches[0].pageY;
 		if(src.utils.Drag._jMainmenu.find(".current").offset().top > y) {
-			src.utils.Drag._jGrabObj.parent().parent("li").addClass("drop");
-			src.utils.Drag.listToObj(src.utils.Drag._jGrabObj.parent().parent("li"),event);
+			var jTarList = src.utils.Drag._jGrabObj.parent().parent("li");
+			jTarList.addClass("drop");
+			src.utils.Drag.listToObj(jTarList,event);
 			src.utils.Drag._jBoardObj.unbind("mousedown touchstart");
 			src.utils.Drag.setBoardObj();
 		}
@@ -472,13 +471,25 @@ src.utils.Drag.setPosition = function(event,top,left) {
 	if(left == null) left = 0;
 	if(top == null) top = 0;
 	var type = event.type;
-	if(type == "mousedown" || type == "mousemove") src.utils.Drag._jGrabObj.css({ top : event.clientY - src.utils.Drag._diffY + top, left : event.clientX - src.utils.Drag._diffX + left}); else if(type == "mouseup") src.utils.Drag._jGrabObj.css({ top : event.pageY - src.utils.Drag._diffY + top, left : event.pageX - src.utils.Drag._diffX + left}); else {
-		if(type == "touchend") {
-			src.utils.Drag._jGrabObj.css({ top : event.originalEvent.changedTouches[0].pageY - src.utils.Drag._diffY + top, left : event.originalEvent.changedTouches[0].pageX - src.utils.Drag._diffX + left});
-			return;
-		}
-		src.utils.Drag._jGrabObj.css({ top : event.originalEvent.touches[0].pageY - src.utils.Drag._diffY + top, left : event.originalEvent.touches[0].pageX - src.utils.Drag._diffX + left});
+	var t = 0;
+	var l = 0;
+	if(type == "mousedown" || type == "mousemove") {
+		t = event.clientY;
+		l = event.clientX;
+	} else if(type == "mouseup") {
+		t = event.pageY;
+		l = event.pageX;
+	} else if(type == "touchend") {
+		t = event.originalEvent.changedTouches[0].pageY;
+		l = event.originalEvent.changedTouches[0].pageX;
+		return;
+	} else {
+		t = event.originalEvent.touches[0].pageY;
+		l = event.originalEvent.touches[0].pageX;
 	}
+	t = t - src.utils.Drag._diffY + top;
+	l = l - src.utils.Drag._diffX + left;
+	src.utils.Drag._jGrabObj.css({ top : t, left : l});
 };
 src.utils.Drag.getDiff = function(event) {
 	if(event.offsetY != null) src.utils.Drag._diffY = event.offsetY; else src.utils.Drag._diffY = Math.round(event.originalEvent.touches[0].pageY - src.utils.Drag._jGrabObj.offset().top);
@@ -500,9 +511,10 @@ src.utils.Drag.listToObj = function(jTarget,event) {
 	var left;
 	if(event.pageX != null) left = event.pageX - w - src.utils.Drag._diffX; else left = event.originalEvent.changedTouches[0].pageX - w - src.utils.Drag._diffX;
 	if(type == "accessory" || type == "clothes") {
+		var ratio = src.Manager.getRatio();
 		var abs = jTarget.data("abs").split(",");
-		top = Std.parseFloat(abs[0]);
-		left = Std.parseFloat(abs[1]);
+		top = Std.parseInt(abs[0]) * ratio;
+		left = Std.parseInt(abs[1]) * ratio;
 	}
 	if(type == "clothes") {
 		src.view.Mainmenu.clearDrop(src.utils.Drag._jBoardObj.filter(".clothes").data("id"));
@@ -518,41 +530,40 @@ src.utils.Drag.listToObj = function(jTarget,event) {
 	}});
 };
 src.utils.Drag.judgeOnBoard = function(jTarget) {
-	var top = jTarget.css("top").split("px").join("");
-	var left = jTarget.css("left").split("px").join("");
-	var t = Std.parseInt(top);
-	var l = Std.parseInt(left);
-	var bottom = t + jTarget.height();
-	var right = l + jTarget.width();
+	var top = Std.parseInt(jTarget.css("top"));
+	var left = Std.parseInt(jTarget.css("left"));
+	var bottom = top + jTarget.height();
+	var right = left + jTarget.width();
 	var areaB = src.utils.Drag._jMainboard.height();
-	var areaR = src.utils.Drag._jMainboard.width();
+	var areaR = 698;
 	var judge = false;
-	if(top.indexOf("-") == 0) {
-		t = 0;
+	if(top < 53) {
+		top = 53;
 		judge = true;
 	}
-	if(left.indexOf("-") == 0) {
-		l = 0;
+	if(left < 53) {
+		left = 53;
 		judge = true;
 	}
 	if(bottom > areaB) {
-		t = areaB - jTarget.height();
+		top = areaB - jTarget.height();
 		judge = true;
 	}
 	if(right > areaR) {
-		l = areaR - jTarget.width();
+		left = areaR - jTarget.width();
 		judge = true;
 	}
 	if(jTarget.hasClass("accessory") || jTarget.hasClass("clothes")) {
 		if(src.view.Trash.isOnObj(jTarget)) return;
+		var ratio = src.Manager.getRatio();
 		var abs = src.utils.Drag.getAbsPoint(jTarget);
-		t = Std.parseInt(abs[0]);
-		l = Std.parseInt(abs[1]);
+		top = Math.round(Std.parseInt(abs[0]) * ratio);
+		left = Math.round(Std.parseInt(abs[1]) * ratio);
 		judge = true;
 	}
 	if(judge) {
 		src.utils.Drag._posiAnimate = true;
-		TweenMax.to(jTarget,0.5,{ top : t, left : l, delay : 0.05, ease : Expo.easeOut, onComplete : function() {
+		TweenMax.to(jTarget,0.5,{ top : top, left : left, delay : 0.05, ease : Expo.easeOut, onComplete : function() {
 			src.Manager.setCounter();
 			src.utils.Drag._posiAnimate = false;
 		}});
@@ -566,16 +577,16 @@ src.utils.Drag.getAbsPoint = function(jTarget) {
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
-		if(data[i].id == (id == null?"null":"" + id)) array = data[i].abs;
+		if(data[i].id == id) array = data[i].abs;
 	}
 	return array;
 };
 src.utils.Drag.showOption = function(event) {
 	var jTarget = $(this);
 	var length = jTarget.data("length");
-	var price = jTarget.data("price");
-	var html = "<span class=\"object-data\"><span>" + length + "<br>";
-	html += price + "円</span></span>";
+	var price = jp.okawa.utils.Estimate.insertComma(Std.string(jTarget.data("price")));
+	var html = "<span class=\"object-data\"><span>" + price + "円<br>";
+	html += length + "</span></span>";
 	jTarget.append(html);
 	jTarget.on("mouseleave touchend",function(event1) {
 		jTarget.find(".object-data").remove();
@@ -592,8 +603,8 @@ src.utils.Drag.addBoardObj = function(jBoardObj) {
 	src.utils.Drag._jBoardObj = jBoardObj;
 };
 src.utils.Drag.touchAnimate = function(event) {
-	var html = "<div class=\"touch\" style=\"top:" + (event.clientY + "px;");
-	html += "left:" + (event.clientX + "px;\"></div>");
+	var html = "<div class=\"touch\" style=\"top:" + Std.string(event.clientY) + "px;";
+	html += "left:" + Std.string(event.clientX) + "px;\"></div>";
 	src.utils.Drag._jMainmenu.append(html);
 	var jTar = src.utils.Drag._jMainmenu.find(".touch");
 	TweenMax.to(jTar,0.3,{ opacity : 0.2, scaleX : 4, scaleY : 4, ease : Back.easeOut});
@@ -825,25 +836,6 @@ src.utils.UrlParameter.getParamOption = function(string) {
 	return param;
 };
 src.view = {};
-src.view.Intro = function() { };
-src.view.Intro.__name__ = true;
-src.view.Intro.start = function() {
-	var input = [];
-	var konami = [38,38,40,40,37,39,37,39,66,65];
-	jp.saken.utils.Dom.jWindow.on("keyup",function(event) {
-		input.push(event.keyCode);
-		var arrayStr = input.join("");
-		if(arrayStr.indexOf(konami.join("")) >= 0) {
-			input = [];
-			src.view.Intro.changeMouse();
-		}
-	});
-};
-src.view.Intro.changeMouse = function() {
-	jp.saken.utils.Dom.jBody.addClass("secretMode");
-	TweenMax.set(jp.saken.utils.Dom.jBody,{ scaleX : 0.9, scaleY : 0.9});
-	TweenMax.to(jp.saken.utils.Dom.jBody,0.8,{ scaleX : 1.1, scaleY : 1.1, repeat : -1, yoyo : true, ease : Circ.easeOut});
-};
 src.view.Mainboard = function() { };
 src.view.Mainboard.__name__ = true;
 src.view.Mainboard.init = function() {
@@ -1434,9 +1426,9 @@ src.view.mainmenu.Scrollbar.set = function(event) {
 		src.view.mainmenu.Scrollbar._jNavi.height(nH);
 	}
 };
-src.view.mainmenu.Scrollbar.getDom = function(target) {
-	src.view.mainmenu.Scrollbar._jInner = target.find("ul");
-	src.view.mainmenu.Scrollbar._jScroll = target.siblings(".slider-scroll");
+src.view.mainmenu.Scrollbar.getDom = function(jTarget) {
+	src.view.mainmenu.Scrollbar._jInner = jTarget.find("ul");
+	src.view.mainmenu.Scrollbar._jScroll = jTarget.siblings(".slider-scroll");
 	src.view.mainmenu.Scrollbar._jNavi = src.view.mainmenu.Scrollbar._jScroll.find(".scroll-navi");
 	src.view.mainmenu.Scrollbar._max = (src.view.mainmenu.Scrollbar._jInner.height() - src.view.mainmenu.Scrollbar._jSlider.height()) * -1 + 20;
 	src.view.mainmenu.Scrollbar._posi = Std.parseInt(src.view.mainmenu.Scrollbar._jInner.css("margin-top"));
@@ -1450,7 +1442,6 @@ src.view.mainmenu.Scrollbar.getScale = function() {
 	return scale;
 };
 src.view.mainmenu.Scrollbar.onMousewheel = function(event) {
-	var jTarget = $(this);
 	var delta = event.originalEvent.wheelDelta;
 	if(delta == null) delta = Math.round(event.originalEvent.deltaY * -120);
 	if(event.type == "touchmove") {
@@ -1458,7 +1449,7 @@ src.view.mainmenu.Scrollbar.onMousewheel = function(event) {
 		if(src.view.mainmenu.Scrollbar._touchPosiY > event.originalEvent.touches[0].pageY) y = -1; else y = 1;
 		delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
 	}
-	src.view.mainmenu.Scrollbar.getDom(jTarget);
+	src.view.mainmenu.Scrollbar.getDom($(this));
 	src.view.mainmenu.Scrollbar.move(delta);
 };
 src.view.mainmenu.Scrollbar.onMousedown = function(event) {
@@ -1562,7 +1553,7 @@ src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
 	jBox.width(50);
 	src.view.sidemenu.Lightbox._jLightBox.fadeIn(sPEED,function() {
 		jBox.show();
-		TweenMax.to(jBox,1,{ width : 300, ease : Elastic.easeOut});
+		TweenMax.to(jBox,1,{ width : 800, ease : Elastic.easeOut});
 	});
 	jBox.find(".close-btn").on("mousedown",function(event) {
 		src.view.sidemenu.Lightbox.hide(jBox,sPEED);

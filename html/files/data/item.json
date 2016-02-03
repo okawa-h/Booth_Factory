@@ -1,228 +1,318 @@
 {
     "object": [
         {
-            "id"   : "16",
-            "name" : "チラシ・フライヤー",
+            "id"   : "01",
+            "name" : "A4・チラシ・フライヤー",
             "price": "5,740",
             "length": "1000部",
             "type" : "paper",
             "cat"  : "paper",
-            "icon" : "paper_a4.png",
-            "img"  : "paper.png",
-            "bgImg": "paper.png"
+            "icon" : "flyer_a4.png",
+            "img"  : "flyer.png",
+            "bgImg": "flyer.png"
         }, {
-            "id"   : "13",
-            "name" : "中綴じ冊子",
+            "id"   : "02",
+            "name" : "A5・チラシ・フライヤー",
+            "price": "4,640",
+            "length": "1000部",
+            "type" : "paper",
+            "cat"  : "paper",
+            "icon" : "flyer_a5.png",
+            "img"  : "flyer.png",
+            "bgImg": "flyer.png"
+        }, {
+            "id"   : "03",
+            "name" : "B5・チラシ・フライヤー",
+            "price": "5,450",
+            "length": "1000部",
+            "type" : "paper",
+            "cat"  : "paper",
+            "icon" : "flyer_b5.png",
+            "img"  : "flyer.png",
+            "bgImg": "flyer.png"
+        }, {
+            "id"   : "04",
+            "name" : "A4・中綴じ冊子",
             "price": "29,550",
             "length": "500部",
             "type" : "paper",
             "cat"  : "paper",
             "icon" : "booklet_a4.png",
-            "img"  : "book.png",
-            "bgImg": "book.png"
+            "img"  : "booklet.png",
+            "bgImg": "booklet.png"
         }, {
-            "id"   : "14",
-            "name" : "クリアファイル",
-            "price": "58,200",
-            "length": "100部",
+            "id"   : "05",
+            "name" : "A5・中綴じ冊子",
+            "price": "23,640",
+            "length": "500部",
             "type" : "paper",
             "cat"  : "paper",
-            "icon" : "file_a4.png",
-            "img"  : "clearfile.png",
-            "bgImg": "clearfile.png"
+            "icon" : "booklet_a5.png",
+            "img"  : "booklet.png",
+            "bgImg": "booklet.png"
         }, {
-            "id"   : "15",
-            "name" : "ポケットホルダー",
-            "price": "65,000",
-            "length": "100部",
+            "id"   : "06",
+            "name" : "B5・中綴じ冊子",
+            "price": "28,070",
+            "length": "500部",
             "type" : "paper",
             "cat"  : "paper",
-            "icon" : "folder_a4.png",
-            "img"  : "folder.png",
-            "bgImg": "folder.png"
+            "icon" : "booklet_b5.png",
+            "img"  : "booklet.png",
+            "bgImg": "booklet.png"
         }, {
-            "id"   : "01",
+            "id"   : "07",
             "name" : "A0・ポスター",
-            "price": "10000",
-            "length": "10セット",
+            "price": "3,690",
+            "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a0.png",
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "02",
+            "id"   : "08",
             "name" : "A1・ポスター",
-            "price": "8000",
-            "length": "10セット",
+            "price": "2,230",
+            "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a1.png",
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "03",
+            "id"   : "09",
             "name" : "A2・ポスター",
-            "price": "6000",
-            "length": "10セット",
+            "price": "1,370",
+            "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_a2.png",
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "04",
-            "name" : "A3・ポスター",
-            "price": "5000",
-            "length": "10セット",
-            "type" : "poster",
-            "cat"  : "paper",
-            "icon" : "poster_a3.png",
-            "img"  : "poster.png",
-            "bgImg": "poster.png"
-        }, {
-            "id"   : "05",
-            "name" : "A4・ポスター",
-            "price": "3000",
-            "length": "10セット",
-            "type" : "poster",
-            "cat"  : "paper",
-            "icon" : "poster_a4.png",
-            "img"  : "poster.png",
-            "bgImg": "poster.png"
-        }, {
-            "id"   : "06",
-            "name" : "A5・ポスター",
-            "price": "1000",
-            "length": "10セット",
-            "type" : "poster",
-            "cat"  : "paper",
-            "icon" : "poster_a5.png",
-            "img"  : "poster.png",
-            "bgImg": "poster.png"
-        }, {
-            "id"   : "07",
+            "id"   : "10",
             "name" : "B0・ポスター",
-            "price": "10000",
-            "length": "10セット",
+            "price": "4,540",
+            "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b0.png",
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "08",
+            "id"   : "11",
             "name" : "B1・ポスター",
-            "price": "8000",
-            "length": "10セット",
+            "price": "2,830",
+            "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b1.png",
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "09",
+            "id"   : "12",
             "name" : "B2・ポスター",
-            "price": "6000",
-            "length": "10セット",
+            "price": "1,710",
+            "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "poster_b2.png",
             "img"  : "poster.png",
             "bgImg": "poster.png"
         }, {
-            "id"   : "10",
-            "name" : "B3・ポスター",
-            "price": "5000",
-            "length": "10セット",
-            "type" : "poster",
+            "id"   : "13",
+            "name" : "ポケットホルダー",
+            "price": "65,000",
+            "length": "100部",
+            "type" : "paper",
             "cat"  : "paper",
-            "icon" : "poster_b3.png",
-            "img"  : "poster.png",
-            "bgImg": "poster.png"
+            "icon" : "holder_a4.png",
+            "img"  : "holder.png",
+            "bgImg": "holder.png"
         }, {
-            "id"   : "11",
-            "name" : "B4・ポスター",
-            "price": "3000",
-            "length": "10セット",
+            "id"   : "14",
+            "name" : "A4・折りパンフレット",
+            "price": "10,400",
+            "length": "100部",
             "type" : "poster",
             "cat"  : "paper",
-            "icon" : "poster_b4.png",
-            "img"  : "poster.png",
-            "bgImg": "poster.png"
+            "icon" : "pamphlet_a4.png",
+            "img"  : "pamphlet.png",
+            "bgImg": "pamphlet.png"
         }, {
-            "id"   : "12",
-            "name" : "B5・ポスター",
-            "price": "1000",
-            "length": "10セット",
+            "id"   : "15",
+            "name" : "A5・折りパンフレット",
+            "price": "6,440",
+            "length": "100部",
             "type" : "poster",
             "cat"  : "paper",
-            "icon" : "poster_b5.png",
-            "img"  : "poster.png",
-            "bgImg": "poster.png"
+            "icon" : "pamphlet_a5.png",
+            "img"  : "pamphlet.png",
+            "bgImg": "pamphlet.png"
+        }, {
+            "id"   : "16",
+            "name" : "A1・貼り合わせパネル",
+            "price": "5,570",
+            "length": "1部",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "banner_b1.png",
+            "img"  : "panel.png",
+            "bgImg": "panel.png"
         }, {
             "id"   : "17",
+            "name" : "A2・貼り合わせパネル",
+            "price": "3,550",
+            "length": "1部",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "banner_b1.png",
+            "img"  : "panel.png",
+            "bgImg": "panel.png"
+        }, {
+            "id"   : "18",
+            "name" : "B1・貼り合わせパネル",
+            "price": "7,050",
+            "length": "1部",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "banner_b1.png",
+            "img"  : "panel.png",
+            "bgImg": "panel.png"
+        }, {
+            "id"   : "19",
+            "name" : "B2・貼り合わせパネル",
+            "price": "4,710",
+            "length": "1部",
+            "type" : "poster",
+            "cat"  : "paper",
+            "icon" : "banner_b1.png",
+            "img"  : "panel.png",
+            "bgImg": "panel.png"
+        }, {
+            "id"   : "20",
+            "name" : "封筒・長（刷込）",
+            "price": "4,300",
+            "length": "100部",
+            "type" : "paper",
+            "cat" : "paper",
+            "icon" : "envelope_long.png",
+            "img"  : "envelope_long.png",
+            "bgImg": "envelope_long.png"
+        }, {
+            "id"   : "21",
+            "name" : "封筒・角（刷込）",
+            "price": "3,400",
+            "length": "100部",
+            "type" : "paper",
+            "cat" : "paper",
+            "icon" : "envelope_corner.png",
+            "img"  : "envelope.png",
+            "bgImg": "envelope.png"
+        }, {
+            "id"   : "22",
+            "name" : "三角POP大",
+            "price": "4,510",
+            "length": "5部",
+            "type" : "paper",
+            "cat" : "paper",
+            "icon" : "tablepop.png",
+            "img"  : "table_pop.png",
+            "bgImg": "table_pop.png"
+        }, {
+            "id"   : "23",
+            "name" : "A1・タペストリー",
+            "price": "5,420",
+            "length": "1個",
+            "type" : "poster",
+            "cat"  : "banner",
+            "icon" : "tapestry_a1.png",
+            "img"  : "tapestry.png",
+            "bgImg": "tapestry.png"
+        }, {
+            "id"   : "24",
+            "name" : "A2・タペストリー",
+            "price": "4,370",
+            "length": "1個",
+            "type" : "poster",
+            "cat"  : "banner",
+            "icon" : "tapestry_a2.png",
+            "img"  : "tapestry.png",
+            "bgImg": "tapestry.png"
+        }, {
+            "id"   : "25",
             "name" : "B1・タペストリー",
             "price": "6,070",
             "length": "1個",
             "type" : "poster",
             "cat"  : "banner",
-            "icon" : "banner_b1.png",
-            "img"  : "banner_b1.png",
-            "bgImg": "banner_b1.png"
+            "icon" : "tapestry_b1.png",
+            "img"  : "tapestry.png",
+            "bgImg": "tapestry.png"
         }, {
-            "id"   : "18",
-            "name" : "A型看板",
-            "price": "10000",
-            "length": "1セット",
+            "id"   : "26",
+            "name" : "B2・タペストリー",
+            "price": "4,850",
+            "length": "1個",
+            "type" : "poster",
+            "cat"  : "banner",
+            "icon" : "tapestry_b2.png",
+            "img"  : "tapestry.png",
+            "bgImg": "tapestry.png"
+        }, {
+            "id"   : "27",
+            "name" : "イージーバナー",
+            "price": "9,900",
+            "length": "1式",
             "type" : "panel",
             "cat"  : "banner",
             "icon" : "board_a.png",
             "img"  : "banner.png",
             "bgImg": "banner.png"
         }, {
-            "id"   : "19",
-            "name" : "封筒・長",
-            "price": "3000",
-            "length": "10セット",
-            "type" : "paper",
-            "cat" : "accessory",
-            "icon" : "table_2.png",
-            "img"  : "envelope_long.png",
-            "bgImg": "envelope_long.png"
+            "id"   : "28",
+            "name" : "A看板レギュラータイプ",
+            "price": "16,800",
+            "length": "1台",
+            "type" : "panel",
+            "cat"  : "banner",
+            "icon" : "board_a.png",
+            "img"  : "signboard.png",
+            "bgImg": "signboard.png"
         }, {
-            "id"   : "20",
-            "name" : "封筒・角",
-            "price": "3000",
-            "length": "10セット",
+            "id"   : "29",
+            "name" : "A4・クリアファイル",
+            "price": "58,200",
+            "length": "100部",
             "type" : "paper",
-            "cat" : "accessory",
-            "icon" : "table_3.png",
-            "img"  : "envelope.png",
-            "bgImg": "envelope.png"
+            "cat"  : "accessory",
+            "icon" : "clearfile_a4.png",
+            "img"  : "clearfile.png",
+            "bgImg": "clearfile.png"
         }, {
-            "id"   : "21",
-            "name" : "スタンドPOP印刷",
-            "price": "3000",
-            "length": "10セット",
+            "id"   : "30",
+            "name" : "A5・クリアファイル",
+            "price": "38,700",
+            "length": "100部",
             "type" : "paper",
-            "cat" : "accessory",
-            "icon" : "table_pop.png",
-            "img"  : "table_pop.png",
-            "bgImg": "table_pop.png"
+            "cat"  : "accessory",
+            "icon" : "clearfile_a5.png",
+            "img"  : "clearfile.png",
+            "bgImg": "clearfile.png"
         }, {
-            "id"   : "22",
+            "id"   : "31",
             "name" : "ポケットティッシュ",
             "price": "11,000",
             "length": "1000個",
             "type" : "paper",
             "cat" : "accessory",
-            "icon" : "table_tisuue.png",
+            "icon" : "tissue.png",
             "img"  : "tissue.png",
             "bgImg": "tissue.png"
         }, {
-            "id"   : "26",
-            "name" : "帽子",
+            "id"   : "32",
+            "name" : "エコキャップ",
             "price": "82,100",
             "length": "500部",
             "type" : "accessory",
@@ -232,19 +322,8 @@
             "img"  : "hat.png",
             "bgImg": "hat.png"
         }, {
-            "id"   : "27",
-            "name" : "メガホン",
-            "price": "61,300",
-            "length": "500セット",
-            "type" : "accessory",
-            "abs" : ["224","-144"],
-            "cat" : "accessory",
-            "icon" : "megaphone.png",
-            "img"  : "megaphone.png",
-            "bgImg": "megaphone.png"
-        }, {
-            "id"   : "29",
-            "name" : "うちわ",
+            "id"   : "33",
+            "name" : "うちわ（ファンファン）",
             "price": "30,000",
             "length": "500部",
             "type" : "accessory",
@@ -254,60 +333,71 @@
             "img"  : "utiwa.png",
             "bgImg": "utiwa.png"
         }, {
-            "id"   : "24",
-            "name" : "イベントブルゾン",
-            "price": "9,600",
-            "length": "3着",
-            "type" : "clothes",
-            "abs" : ["230","-125"],
+            "id"   : "34",
+            "name" : "メガホン",
+            "price": "61,300",
+            "length": "500部",
+            "type" : "accessory",
+            "abs" : ["224","-144"],
             "cat" : "accessory",
-            "icon" : "buruzon.png",
-            "img"  : "buruzon.png",
-            "bgImg": "buruzon.png"
+            "icon" : "megaphone.png",
+            "img"  : "megaphone.png",
+            "bgImg": "megaphone.png"
         }, {
-            "id"   : "25",
+            "id"   : "35",
             "name" : "イベントハッピ",
             "price": "11,700",
             "length": "3着",
             "type" : "clothes",
             "abs" : ["232","-130"],
             "cat" : "accessory",
-            "icon" : "hapi.png",
-            "img"  : "hapi.png",
-            "bgImg": "hapi.png"
+            "icon" : "happi.png",
+            "img"  : "happi.png",
+            "bgImg": "happi.png"
         }, {
-            "id"   : "28",
-            "name" : "Tシャツ",
+            "id"   : "36",
+            "name" : "イベントブルゾン",
+            "price": "9,600",
+            "length": "3着",
+            "type" : "clothes",
+            "abs" : ["230","-125"],
+            "cat" : "accessory",
+            "icon" : "blouson.png",
+            "img"  : "blouson.png",
+            "bgImg": "blouson.png"
+        }, {
+            "id"   : "37",
+            "name" : "イベントTシャツ",
             "price": "6,000",
             "length": "3着",
             "type" : "clothes",
             "abs" : ["233","-124"],
             "cat" : "accessory",
-            "icon" : "tshirts.png",
-            "img"  : "tshirts.png",
-            "bgImg": "tshirts.png"
+            "icon" : "tshirt.png",
+            "img"  : "tshirt.png",
+            "bgImg": "tshirt.png"
         }, {
-            "id"   : "23",
+            "id"   : "38",
             "name" : "イベントベスト",
-            "price": "1000000",
-            "length": "10000セット",
+            "price": "9,000",
+            "length": "3着",
             "type" : "clothes",
             "abs" : ["230","-124"],
             "cat" : "accessory",
-            "icon" : "best.png",
-            "img"  : "best.png",
-            "bgImg": "best.png"
+            "icon" : "vest.png",
+            "img"  : "vest.png",
+            "bgImg": "vest.png"
         }],
 
     "set": [
         {
             "name": "matu",
-            "url" : "?color=blue&16_x=365&16_y=295&13_x=433&13_y=291&02_x=542&02_y=79&15_x=490&15_y=300&14_x=592&14_y=296&17_x=69&17_y=68&18_x=681&18_y=332&29_x=-33&29_y=222&22_x=653.5&22_y=330&price=223560"
+            "url" : "?color=red&32_x=-87&32_y=135&31_x=524&31_y=329&33_x=-33&33_y=222&34_x=-144&34_y=224&38_x=-124&38_y=230&30_x=467&30_y=303&23_x=65&23_y=62&28_x=595&28_y=334&01_x=562&01_y=257&04_x=378&04_y=291&07_x=347&07_y=87&08_x=213&08_y=85&20_x=634&20_y=265&price=299830"
         }, {
             "name": "take",
-            "url" : "?color=blue&16_x=444&16_y=297&13_x=524&13_y=295&02_x=542&02_y=79&15_x=597&15_y=303&14_x=691&14_y=301&17_x=69.5&17_y=68&price=172560"
+            "url" : "?color=red&01_x=371&01_y=289&06_x=453&06_y=284&07_x=63&07_y=68&22_x=556&22_y=301&21_x=622&21_y=282&23_x=551&23_y=69&28_x=595&28_y=334&36_x=-125&36_y=230&34_x=-144&34_y=224&price=138530"
         }, {
             "name": "ume",
-            "url" : "?color=blue&16_x=562.5&16_y=293&13_x=472&13_y=292&02_x=100&02_y=84&price=43290"
+            "url" : "?color=red&01_x=644&01_y=300&07_x=66&07_y=71&31_x=582&31_y=332&price=20430"
         }]
 }
