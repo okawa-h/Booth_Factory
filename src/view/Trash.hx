@@ -11,14 +11,16 @@ import tween.easing.Elastic;
 
 class Trash {
 
-    private static var _jTrash      : JQuery;
-    private static var _jTrashBox   : JQuery;
-    private static var _jTrashFront : JQuery;
-    private static var _jTrashArrow : JQuery;
-    private static var _jTrashBg    : JQuery;
-    private static var _arrowAnimate: TweenMaxHaxe;
-    private static var _isGrabbed   : Bool;
-    private static var _isAnimate   : Bool;
+    private static var _jTrash       : JQuery;
+    private static var _jTrashBox    : JQuery;
+    private static var _jTrashFront  : JQuery;
+    private static var _jTrashArrow  : JQuery;
+    private static var _jTrashBg     : JQuery;
+    private static var _arrowAnimate : TweenMaxHaxe;
+    private static var _isGrabbed    : Bool;
+    private static var _isAnimate    : Bool;
+    private static var _isShow       : Bool;
+    private static var _grabPosition : Float;
 
     /* =======================================================================
     Init
@@ -32,6 +34,7 @@ class Trash {
         _jTrashBg    = _jTrash.find('.trash-bg');
         _isGrabbed   = false;
         _isAnimate   = false;
+        _isShow      = false;
 
     }
 
@@ -78,6 +81,8 @@ class Trash {
     ========================================================================== */
     public static function hide():Void {
 
+        _isShow = false;
+
         if (!_isGrabbed) {
 
             TweenMaxHaxe.to(_jTrashArrow,0.05,{y:60,
@@ -116,7 +121,14 @@ class Trash {
     /* =======================================================================
     Show
     ========================================================================== */
-    public static function show():Void {
+    public static function show(event:Dynamic):Void {
+
+        if (_grabPosition + 80 > event.pageY &&
+             _grabPosition - 80 < event.pageY) return;
+
+        if (_isShow) return;
+
+        _isShow = true;
 
         TweenMaxHaxe.set(_jTrashArrow,{y:60});
 
@@ -208,6 +220,16 @@ class Trash {
         var judge  : Bool = ( top < h && left < w && bottom > y && right > x ) ? true : false;
 
         return judge;
+    }
+
+    /* =======================================================================
+    Get Grab Position
+    ========================================================================== */
+    public static function getGrabPosi(event:Dynamic):Void {
+
+        _grabPosition = event.pageY;
+        trace(_grabPosition);
+
     }
 
 }

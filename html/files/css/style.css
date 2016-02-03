@@ -98,8 +98,9 @@
 			}
 
 	#tutorial .start-btn {
-		opacity: 0;
 		display: inline-block;
+		position: relative;
+		opacity: 0;
 		cursor: pointer;
 	}
 
@@ -452,6 +453,7 @@
 
 	#sidemenu-right .set-config {
 		margin-bottom: 50px;
+		overflow: hidden;
 	}
 
 		#sidemenu-right .item-set p {
@@ -485,7 +487,8 @@
 				background: url(../img/icon/icon_ume.png) no-repeat center center;
 			}
 
-		#sidemenu-right .set-config > ul {
+		#sidemenu-right .set-config ul {
+			float: left;
 			padding: 10px 0;
 		}
 
@@ -493,11 +496,13 @@
 				width: 60px;
 				height: 61px;
 				margin: 0 auto;
+				padding: 0 15px;
 				cursor: pointer;
 			}
 
 			#sidemenu-right .set-config ul #color-btn,
 			#sidemenu-right .set-config ul #color-btn.blue {
+				margin-bottom: 10px;
 				background: url(../img/icon/icon_color_blue.png) no-repeat center center;
 			}
 
@@ -526,10 +531,15 @@
 					overflow: hidden;
 				}
 
-					#sidemenu-right .set-config .color-config .close-btn {
+					#sidemenu-right .set-config .color-inner {
+						width: 300px;
+					}
+
+					#sidemenu-right .set-config .close-btn {
+						display: none;
 						position: absolute;
-						top: -12px;
 						right: -10px;
+						bottom: 203px;
 						width: 23px;
 						height: 23px;
 						border-radius: 50%;
@@ -540,7 +550,7 @@
 						cursor: pointer;
 					}
 
-					#sidemenu-right .set-config .color-config .close-btn:hover {
+					#sidemenu-right .set-config .close-btn:hover {
 						background-color: #eee;
 						color: #888;
 					}
@@ -552,40 +562,36 @@
 						color: #fff;
 					}
 
-					#sidemenu-right .set-config .color-config ul {
-						display: none;
-						padding: 0 13px;
-						text-align: center;
-					}
-
-						#sidemenu-right .set-config .color-config ul li {
-							display: inline-block;
-							width: 20px;
+						#sidemenu-right .set-config .color-list li {
+							float: none;
 							height: 20px;
 							margin: 0 auto 10px;
-							border-radius: 50%;
 							-webkit-box-sizing: border-box;
-							   -moz-box-sizing: border-box;
-							        box-sizing: border-box;
+						    -moz-box-sizing: border-box;
+						    box-sizing: border-box;
 						}
 
-						#sidemenu-right .set-config .color-config ul li.current {
+						#sidemenu-right .set-config .color-list li:last-child {
+							margin: 0 auto 0;
+						}
+
+						#sidemenu-right .set-config .color-list li.current {
 							border: 1px solid #000;
 						}
 
-						#sidemenu-right .set-config .color-config ul li.red {
+						#sidemenu-right .set-config .color-list li.red {
 							background-color: red;
 						}
 
-						#sidemenu-right .set-config .color-config ul li.blue {
+						#sidemenu-right .set-config .color-list li.blue {
 							background-color: blue;
 						}
 
-						#sidemenu-right .set-config .color-config ul li.green {
+						#sidemenu-right .set-config .color-list li.green {
 							background-color: green;
 						}
 
-						#sidemenu-right .set-config .color-config ul li.yellow {
+						#sidemenu-right .set-config .color-list li.yellow {
 							background-color: yellow;
 						}
 
@@ -1012,7 +1018,7 @@
 		}
 
 		#lightbox .lightbox-content .lightbox-ttl {
-			margin-bottom: 5px;
+			margin-bottom: 20px;
 			padding: 5px 0 3px;
 			background-color: #1a580b;
 			color: #fff;
@@ -1020,11 +1026,23 @@
 			text-align: center;
 		}
 
+		#lightbox .lightbox-content h3 {
+			margin: 20px;
+			color: #3b3b3b;
+			font-size: 20px;
+			text-align: center;
+		}
+
 		#lightbox .lightbox-content .caution {
-			margin-bottom: 5px;
-			padding: 30px 30px 0;
+			margin-bottom: 20px;
+			padding: 0 30px 0;
+			color: #3b3b3b;
 			text-align: left;
 		}
+
+			#lightbox .lightbox-content .caution span {
+				font-weight: bold;
+			}
 
 	#lightbox .help {
 		display: none;

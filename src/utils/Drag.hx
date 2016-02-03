@@ -86,7 +86,7 @@ class Drag {
                 setPosition(event,0,0);
                 _isGrabbed = true;
 
-                if (_jGrabObj.hasClass('object')) Trash.show();
+                Trash.getGrabPosi(event);
                 _jGrabObj.addClass('grab');
 
             }
@@ -100,6 +100,8 @@ class Drag {
 
                     setPosition(event);
                     Trash.onObj(_jGrabObj);
+                    if (_jGrabObj.hasClass('object')) Trash.show(event);
+
                 }
 
             }

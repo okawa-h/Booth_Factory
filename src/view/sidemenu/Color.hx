@@ -7,6 +7,8 @@ import tween.easing.Expo;
 class Color {
 
     private static var _jSidemenuRight : JQuery;
+    private static var _jCloseBtn      : JQuery;
+    private static var _jColorInner    : JQuery;
     private static var _jColorConfig   : JQuery;
     private static var _jColorList     : JQuery;
 
@@ -16,8 +18,10 @@ class Color {
     public static function show(jBtn:JQuery):Void {
 
         _jSidemenuRight = new JQuery('#sidemenu-right');
+        _jCloseBtn      = _jSidemenuRight.find('.close-btn');
+        _jColorInner    = _jSidemenuRight.find('.color-inner');
         _jColorConfig   = _jSidemenuRight.find('.color-config');
-        _jColorList     = _jColorConfig.find('.color-list');
+        _jColorList     = _jColorInner.find('.color-list');
 
         if (jBtn.hasClass('open')) {
 
@@ -26,25 +30,13 @@ class Color {
 
         }
 
-        _jColorConfig.fadeIn(300,function() {
+        _jCloseBtn.show();
 
-            TweenMaxHaxe.set(_jColorConfig, { x : 0 });
-            TweenMaxHaxe.to(_jColorConfig, 0.2, { width : 100 , x : 0, ease:Expo.easeOut, 
-                onComplete:function() {
-
-                    _jColorList.fadeIn();
-                    jBtn.addClass('open');
-
-                }
-            });
-
-            TweenMaxHaxe.to(_jColorConfig, 0.2, { height : 140,delay : 0.4  , ease:Expo.easeOut});
-
-        });
+        TweenMaxHaxe.to(_jColorInner, 0.5, {x:-78,ease:Expo.easeOut});
 
         changeColor(jBtn,_jColorConfig);
 
-        _jColorConfig.find('.close-btn').on('mousedown',function(event:JqEvent) {
+        _jCloseBtn.on('mousedown',function(event:JqEvent) {
 
             hide(jBtn);
             _jColorConfig.find('.close-btn').unbind('mousedown');
@@ -58,13 +50,9 @@ class Color {
             ========================================================================== */
             private static function hide(jBtn:JQuery):Void {
 
-                _jColorConfig.stop().fadeOut(300,function() {
-
-                    _jColorConfig.css({ width:0, height:0 });
-                    _jColorList.hide();
-                    jBtn.removeClass('open');
-
-                });
+                _jCloseBtn.hide();
+                jBtn.removeClass('open');
+                TweenMaxHaxe.to(_jColorInner, 0.5, {x:0,ease:Expo.easeOut});
 
             }
 

@@ -433,13 +433,14 @@ src.utils.Drag.grab = function(event) {
 	src.utils.Drag._diffX = src.utils.Drag._diffX - w;
 	src.utils.Drag.setPosition(event,0,0);
 	src.utils.Drag._isGrabbed = true;
-	if(src.utils.Drag._jGrabObj.hasClass("object")) src.view.Trash.show();
+	src.view.Trash.getGrabPosi(event);
 	src.utils.Drag._jGrabObj.addClass("grab");
 };
 src.utils.Drag.mousemove = function(event) {
 	if(src.utils.Drag._isGrabbed) {
 		src.utils.Drag.setPosition(event);
 		src.view.Trash.onObj(src.utils.Drag._jGrabObj);
+		if(src.utils.Drag._jGrabObj.hasClass("object")) src.view.Trash.show(event);
 	}
 };
 src.utils.Drag.mouseup = function(event) {
@@ -1131,6 +1132,7 @@ src.view.Trash.init = function() {
 	src.view.Trash._jTrashBg = src.view.Trash._jTrash.find(".trash-bg");
 	src.view.Trash._isGrabbed = false;
 	src.view.Trash._isAnimate = false;
+	src.view.Trash._isShow = false;
 };
 src.view.Trash.onObj = function(jTarget) {
 	if(src.view.Trash.isOnObj(jTarget)) {
@@ -1153,6 +1155,7 @@ src.view.Trash.leaveObj = function(jTarget) {
 	src.view.Trash.deleteObj(jTarget);
 };
 src.view.Trash.hide = function() {
+	src.view.Trash._isShow = false;
 	if(!src.view.Trash._isGrabbed) {
 		TweenMax.to(src.view.Trash._jTrashArrow,0.05,{ y : 60, onComplete : function() {
 			src.view.Trash._jTrashArrow.hide();
@@ -1170,7 +1173,10 @@ src.view.Trash.hide = function() {
 		}});
 	}
 };
-src.view.Trash.show = function() {
+src.view.Trash.show = function(event) {
+	if(src.view.Trash._grabPosition + 80 > event.pageY && src.view.Trash._grabPosition - 80 < event.pageY) return;
+	if(src.view.Trash._isShow) return;
+	src.view.Trash._isShow = true;
 	TweenMax.set(src.view.Trash._jTrashArrow,{ y : 60});
 	src.view.Trash._jTrashArrow.show();
 	src.view.Trash._jTrashBox.show();
@@ -1224,6 +1230,10 @@ src.view.Trash.isOnObj = function(jTarget) {
 	if(top < h && left < w && bottom > y && right > x) judge = true; else judge = false;
 	return judge;
 };
+src.view.Trash.getGrabPosi = function(event) {
+	src.view.Trash._grabPosition = event.pageY;
+	console.log(src.view.Trash._grabPosition);
+};
 src.view.Tutorial = function() { };
 src.view.Tutorial.__name__ = true;
 src.view.Tutorial.start = function() {
@@ -1233,39 +1243,39 @@ src.view.Tutorial.start = function() {
 	src.view.Tutorial._jImg = src.view.Tutorial._jBox.find(".tutorial-img");
 	src.view.Tutorial._jText = src.view.Tutorial._jBox.find(".tutorial-text");
 	src.view.Tutorial._jBtn = src.view.Tutorial._jTutorial.find(".start-btn");
+	src.view.Tutorial._jBtn.hide();
 	if(src.Manager.getRatio() < 1) {
 		src.view.Tutorial._jTutorial.css({ top : 0});
 		TweenMax.set(src.view.Tutorial._jTutorial,{ scaleX : src.Manager.getRatio(), scaleY : src.Manager.getRatio()});
 		src.view.Tutorial._jTutorial.css({ top : "-30px"});
 	}
 	src.view.Tutorial.timeline();
-	jp.saken.utils.Dom.jWindow.on("keydown",function(event) {
-		if(event.keyCode == 32) {
+	jp.saken.utils.Dom.jWindow.on("touchstart",function(event) {
+		src.view.Tutorial.hide();
+		jp.saken.utils.Dom.jWindow.unbind("touchstart");
+	});
+	src.view.Tutorial._jBtn.on("mousedown",function(event1) {
+		src.view.Tutorial.hide();
+		jp.saken.utils.Dom.jWindow.unbind("keydown");
+	});
+	src.view.Tutorial._jBtn.on("mouseover",function(event2) {
+		src.view.Tutorial.onBtn();
+	});
+	jp.saken.utils.Dom.jWindow.on("keydown",function(event3) {
+		if(event3.keyCode == 32) {
 			src.view.Tutorial._jBtn.mousedown();
 			src.view.Tutorial._jBtn.mouseover();
 		}
 	});
-	jp.saken.utils.Dom.jWindow.on("touchstart",function(event1) {
-		src.view.Tutorial.hide();
-		jp.saken.utils.Dom.jWindow.unbind("touchstart");
-	});
-	src.view.Tutorial._jBtn.on("mousedown",function(event2) {
-		src.view.Tutorial.hide();
-		jp.saken.utils.Dom.jWindow.unbind("keydown");
-	});
-	src.view.Tutorial._jBtn.on("mouseover",function(event3) {
-		src.view.Tutorial.onBtn();
-	});
 };
 src.view.Tutorial.timeline = function() {
-	TweenMax.set(src.view.Tutorial._jTtl,{ y : -50});
-	TweenMax.to(src.view.Tutorial._jTtl,2,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 0});
+	TweenMax.set(src.view.Tutorial._jTtl,{ scaleY : 3, scaleX : 3});
+	TweenMax.to(src.view.Tutorial._jTtl,0.8,{ scaleY : 1, scaleX : 1, opacity : 1, ease : Power3.easeOut, delay : 0.8});
 	TweenMax.set(src.view.Tutorial._jImg,{ y : -50});
-	TweenMax.to(src.view.Tutorial._jImg,1.8,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 0.4});
+	TweenMax.to(src.view.Tutorial._jImg,2,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 1.8});
 	TweenMax.set(src.view.Tutorial._jText,{ y : -50});
-	TweenMax.to(src.view.Tutorial._jText,1.8,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 0.8});
-	TweenMax.set(src.view.Tutorial._jBtn,{ y : -50});
-	TweenMax.to(src.view.Tutorial._jBtn,1.8,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 1.2});
+	TweenMax.to(src.view.Tutorial._jText,2,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 1.8});
+	TweenMax.to(src.view.Tutorial._jBtn,2,{ display : "inline-block", opacity : 1, ease : Expo.easeOut, delay : 2.5});
 };
 src.view.Tutorial.hide = function() {
 	TweenMax.to(src.view.Tutorial._jTutorial,20,{ y : 100, ease : Expo.easeOut});
@@ -1311,9 +1321,9 @@ src.view.Tutorial.fadeRight = function(target,i) {
 };
 src.view.Tutorial.onBtn = function() {
 	var jTar = src.view.Tutorial._jBtn.find("span");
-	TweenMax.to(jTar,1,{ css : { rotation : 360}, ease : Expo.easeOut});
+	TweenMax.to(jTar,0.4,{ css : { rotation : 360}, repeat : -1, ease : Power0.easeOut});
 	src.view.Tutorial._jBtn.on("mouseleave",function(event) {
-		TweenMax.to(jTar,1,{ css : { rotation : 0}, ease : Expo.easeOut});
+		TweenMax.to(jTar,0,{ css : { rotation : 0}, ease : Expo.easeOut});
 		src.view.Tutorial._jBtn.unbind("mouseleave");
 	});
 };
@@ -1486,32 +1496,26 @@ src.view.sidemenu.Color = function() { };
 src.view.sidemenu.Color.__name__ = true;
 src.view.sidemenu.Color.show = function(jBtn) {
 	src.view.sidemenu.Color._jSidemenuRight = new js.JQuery("#sidemenu-right");
+	src.view.sidemenu.Color._jCloseBtn = src.view.sidemenu.Color._jSidemenuRight.find(".close-btn");
+	src.view.sidemenu.Color._jColorInner = src.view.sidemenu.Color._jSidemenuRight.find(".color-inner");
 	src.view.sidemenu.Color._jColorConfig = src.view.sidemenu.Color._jSidemenuRight.find(".color-config");
-	src.view.sidemenu.Color._jColorList = src.view.sidemenu.Color._jColorConfig.find(".color-list");
+	src.view.sidemenu.Color._jColorList = src.view.sidemenu.Color._jColorInner.find(".color-list");
 	if(jBtn.hasClass("open")) {
 		src.view.sidemenu.Color.hide(jBtn);
 		return;
 	}
-	src.view.sidemenu.Color._jColorConfig.fadeIn(300,function() {
-		TweenMax.set(src.view.sidemenu.Color._jColorConfig,{ x : 0});
-		TweenMax.to(src.view.sidemenu.Color._jColorConfig,0.2,{ width : 100, x : 0, ease : Expo.easeOut, onComplete : function() {
-			src.view.sidemenu.Color._jColorList.fadeIn();
-			jBtn.addClass("open");
-		}});
-		TweenMax.to(src.view.sidemenu.Color._jColorConfig,0.2,{ height : 140, delay : 0.4, ease : Expo.easeOut});
-	});
+	src.view.sidemenu.Color._jCloseBtn.show();
+	TweenMax.to(src.view.sidemenu.Color._jColorInner,0.5,{ x : -78, ease : Expo.easeOut});
 	src.view.sidemenu.Color.changeColor(jBtn,src.view.sidemenu.Color._jColorConfig);
-	src.view.sidemenu.Color._jColorConfig.find(".close-btn").on("mousedown",function(event) {
+	src.view.sidemenu.Color._jCloseBtn.on("mousedown",function(event) {
 		src.view.sidemenu.Color.hide(jBtn);
 		src.view.sidemenu.Color._jColorConfig.find(".close-btn").unbind("mousedown");
 	});
 };
 src.view.sidemenu.Color.hide = function(jBtn) {
-	src.view.sidemenu.Color._jColorConfig.stop().fadeOut(300,function() {
-		src.view.sidemenu.Color._jColorConfig.css({ width : 0, height : 0});
-		src.view.sidemenu.Color._jColorList.hide();
-		jBtn.removeClass("open");
-	});
+	src.view.sidemenu.Color._jCloseBtn.hide();
+	jBtn.removeClass("open");
+	TweenMax.to(src.view.sidemenu.Color._jColorInner,0.5,{ x : 0, ease : Expo.easeOut});
 };
 src.view.sidemenu.Color.changeColor = function(jBtn,jbox) {
 	src.view.sidemenu.Color._jColorList.find("li").on("mousedown",function(event) {
@@ -1546,14 +1550,22 @@ src.view.sidemenu.Lightbox.__name__ = true;
 src.view.sidemenu.Lightbox.init = function() {
 	src.view.sidemenu.Lightbox._jLightBox = new js.JQuery("#lightbox");
 	src.view.sidemenu.Lightbox._jLightBoxBg = src.view.sidemenu.Lightbox._jLightBox.find(".lightbox-bg");
+	src.view.sidemenu.Lightbox._jLightText = src.view.sidemenu.Lightbox._jLightBox.find(".caution");
+	src.view.sidemenu.Lightbox._jLightSub = src.view.sidemenu.Lightbox._jLightBox.find("h3");
+	src.view.sidemenu.Lightbox._jLightText.hide();
 };
 src.view.sidemenu.Lightbox.show = function(cls,jBtn) {
 	var jBox = src.view.sidemenu.Lightbox._jLightBox.find("." + cls);
 	var sPEED = 300;
 	jBox.width(50);
 	src.view.sidemenu.Lightbox._jLightBox.fadeIn(sPEED,function() {
+		src.view.sidemenu.Lightbox._jLightText.hide();
+		src.view.sidemenu.Lightbox._jLightSub.hide();
 		jBox.show();
-		TweenMax.to(jBox,1,{ width : 800, ease : Elastic.easeOut});
+		TweenMax.to(jBox,1,{ width : 800, ease : Elastic.easeOut, onComplete : function() {
+			src.view.sidemenu.Lightbox._jLightText.fadeIn(100);
+			src.view.sidemenu.Lightbox._jLightSub.fadeIn(100);
+		}});
 	});
 	jBox.find(".close-btn").on("mousedown",function(event) {
 		src.view.sidemenu.Lightbox.hide(jBox,sPEED);

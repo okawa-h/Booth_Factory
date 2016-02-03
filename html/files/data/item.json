@@ -138,8 +138,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "pamphlet_a4.png",
-            "img"  : "pamphlet.png",
-            "bgImg": "pamphlet.png"
+            "img"  : "dammy.png",
+            "bgImg": "dammy.png"
         }, {
             "id"   : "15",
             "name" : "A5・折りパンフレット",
@@ -148,8 +148,8 @@
             "type" : "poster",
             "cat"  : "paper",
             "icon" : "pamphlet_a5.png",
-            "img"  : "pamphlet.png",
-            "bgImg": "pamphlet.png"
+            "img"  : "dammy.png",
+            "bgImg": "dammy.png"
         }, {
             "id"   : "16",
             "name" : "A1・貼り合わせパネル",
@@ -157,7 +157,7 @@
             "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
-            "icon" : "banner_b1.png",
+            "icon" : "poster_a1.png",
             "img"  : "panel.png",
             "bgImg": "panel.png"
         }, {
@@ -167,7 +167,7 @@
             "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
-            "icon" : "banner_b1.png",
+            "icon" : "poster_a2.png",
             "img"  : "panel.png",
             "bgImg": "panel.png"
         }, {
@@ -177,7 +177,7 @@
             "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
-            "icon" : "banner_b1.png",
+            "icon" : "poster_b1.png",
             "img"  : "panel.png",
             "bgImg": "panel.png"
         }, {
@@ -187,7 +187,7 @@
             "length": "1部",
             "type" : "poster",
             "cat"  : "paper",
-            "icon" : "banner_b1.png",
+            "icon" : "poster_b2.png",
             "img"  : "panel.png",
             "bgImg": "panel.png"
         }, {
@@ -218,8 +218,8 @@
             "type" : "paper",
             "cat" : "paper",
             "icon" : "tablepop.png",
-            "img"  : "table_pop.png",
-            "bgImg": "table_pop.png"
+            "img"  : "dammy.png",
+            "bgImg": "dammy.png"
         }, {
             "id"   : "23",
             "name" : "A1・タペストリー",

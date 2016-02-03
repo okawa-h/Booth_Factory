@@ -5,7 +5,7 @@ import jp.saken.utils.Dom;
 import src.Manager;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
-import tween.easing.Quart;
+import tween.easing.Power3;
 import tween.easing.Expo;
 
 class Tutorial {
@@ -29,22 +29,17 @@ class Tutorial {
         _jText     = _jBox.find('.tutorial-text');
         _jBtn      = _jTutorial.find('.start-btn');
 
+        _jBtn.hide();
+
         if (Manager.getRatio() < 1) {
+
             _jTutorial.css({'top':0});
             TweenMaxHaxe.set(_jTutorial,{scaleX:Manager.getRatio(), scaleY:Manager.getRatio()});
             _jTutorial.css({'top':'-30px'});
+
         }
 
         timeline();
-
-        Dom.jWindow.on('keydown',function(event:JqEvent){
-
-            if (event.keyCode == 32) {
-                _jBtn.mousedown();
-                _jBtn.mouseover();
-            }
-
-        });
 
         Dom.jWindow.on('touchstart',function(event:JqEvent){
 
@@ -66,24 +61,35 @@ class Tutorial {
 
         });
 
+        Dom.jWindow.on('keydown',function(event:JqEvent){
+
+            if (event.keyCode == 32) {
+
+                _jBtn.mousedown();
+                _jBtn.mouseover();
+            }
+
+        });
+
     }
 
-        /* =======================================================================
-        Time Line
-        ========================================================================== */
-        private static function timeline():Void {
+            /* =======================================================================
+            Time Line
+            ========================================================================== */
+            private static function timeline():Void {
 
-            TweenMaxHaxe.set(_jTtl,{y:-50});
-            TweenMaxHaxe.to(_jTtl,2,{opacity:1,y:0,ease:Expo.easeOut,delay:0});
+                TweenMaxHaxe.set(_jTtl,{scaleY:3,scaleX:3});
+                TweenMaxHaxe.to(_jTtl,0.8,{scaleY:1,scaleX:1,opacity:1,ease:Power3.easeOut,delay:0.8});
 
-            TweenMaxHaxe.set(_jImg,{y:-50});
-            TweenMaxHaxe.to(_jImg,1.8,{opacity:1,y:0,ease:Expo.easeOut,delay:0.4});
-            TweenMaxHaxe.set(_jText,{y:-50});
-            TweenMaxHaxe.to(_jText,1.8,{opacity:1,y:0,ease:Expo.easeOut,delay:0.8});
-            TweenMaxHaxe.set(_jBtn,{y:-50});
-            TweenMaxHaxe.to(_jBtn,1.8,{opacity:1,y:0,ease:Expo.easeOut,delay:1.2});
+                TweenMaxHaxe.set(_jImg,{y:-50});
+                TweenMaxHaxe.to(_jImg,2,{opacity:1,y:0,ease:Expo.easeOut,delay:1.8});
 
-        }
+                TweenMaxHaxe.set(_jText,{y:-50});
+                TweenMaxHaxe.to(_jText,2,{opacity:1,y:0,ease:Expo.easeOut,delay:1.8});
+
+                TweenMaxHaxe.to(_jBtn,2,{display:'inline-block',opacity:1,ease:Expo.easeOut,delay:2.5});
+
+            }
 
             /* =======================================================================
             Hide
@@ -172,11 +178,11 @@ class Tutorial {
             private static function onBtn():Void {
 
                 var jTar : JQuery = _jBtn.find('span');
-                TweenMaxHaxe.to(jTar,1,{css:{rotation:360},ease:Expo.easeOut});
+                TweenMaxHaxe.to(jTar,0.4,{css:{rotation:360},repeat:-1,ease:tween.easing.Power0.easeOut});
 
                 _jBtn.on('mouseleave',function(event:JqEvent) {
 
-                    TweenMaxHaxe.to(jTar,1,{css:{rotation:0},ease:Expo.easeOut});
+                    TweenMaxHaxe.to(jTar,0,{css:{rotation:0},ease:Expo.easeOut});
                     _jBtn.unbind('mouseleave');
 
                 });

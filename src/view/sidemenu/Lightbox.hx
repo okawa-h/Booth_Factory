@@ -8,6 +8,8 @@ class Lightbox extends Sidemenu {
 
     private static var _jLightBox   : JQuery;
     private static var _jLightBoxBg : JQuery;
+    private static var _jLightText  : JQuery;
+    private static var _jLightSub   : JQuery;
 
     /* =======================================================================
     New
@@ -25,6 +27,9 @@ class Lightbox extends Sidemenu {
 
         _jLightBox   = new JQuery('#lightbox');
         _jLightBoxBg = _jLightBox.find('.lightbox-bg');
+        _jLightText  = _jLightBox.find('.caution');
+        _jLightSub   = _jLightBox.find('h3');
+        _jLightText.hide();
 
     }
 
@@ -38,9 +43,16 @@ class Lightbox extends Sidemenu {
 
         jBox.width(50);
         _jLightBox.fadeIn(sPEED,function() {
+            _jLightText.hide();
+            _jLightSub.hide();
 
             jBox.show();
-            TweenMaxHaxe.to(jBox, 1, { width : 800 , ease:Elastic.easeOut});
+            TweenMaxHaxe.to(jBox, 1, { width : 800 , ease:Elastic.easeOut,
+                onComplete:function() {
+                    _jLightText.fadeIn(100);
+                    _jLightSub.fadeIn(100);
+                }
+            });
 
         });
 
