@@ -5,7 +5,7 @@ import jp.saken.utils.Dom;
 import src.Manager;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
-import tween.easing.Power3;
+import tween.easing.Bounce;
 import tween.easing.Expo;
 
 class Tutorial {
@@ -78,16 +78,16 @@ class Tutorial {
             ========================================================================== */
             private static function timeline():Void {
 
-                TweenMaxHaxe.set(_jTtl,{scaleY:3,scaleX:3});
-                TweenMaxHaxe.to(_jTtl,0.8,{scaleY:1,scaleX:1,opacity:1,ease:Power3.easeOut,delay:0.8});
+                TweenMaxHaxe.set(_jTtl,{scaleY:1.3,scaleX:1.3});
+                TweenMaxHaxe.to(_jTtl,1,{scaleY:1,scaleX:1,opacity:1,ease:Elastic.easeOut,delay:0.8});
 
-                TweenMaxHaxe.set(_jImg,{y:-50});
-                TweenMaxHaxe.to(_jImg,2,{opacity:1,y:0,ease:Expo.easeOut,delay:1.8});
+                TweenMaxHaxe.set(_jImg,{y:-30});
+                TweenMaxHaxe.to(_jImg,1.8,{opacity:1,y:0,ease:Elastic.easeOut,delay:1.3});
 
-                TweenMaxHaxe.set(_jText,{y:-50});
-                TweenMaxHaxe.to(_jText,2,{opacity:1,y:0,ease:Expo.easeOut,delay:1.8});
+                TweenMaxHaxe.set(_jText,{y:-30});
+                TweenMaxHaxe.to(_jText,1.8,{opacity:1,y:0,ease:Elastic.easeOut,delay:1.5});
 
-                TweenMaxHaxe.to(_jBtn,2,{display:'inline-block',opacity:1,ease:Expo.easeOut,delay:2.5});
+                TweenMaxHaxe.to(_jBtn,2,{display:'inline-block',opacity:1,ease:Expo.easeOut,delay:2.3});
 
             }
 

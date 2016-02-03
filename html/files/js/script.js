@@ -1269,13 +1269,13 @@ src.view.Tutorial.start = function() {
 	});
 };
 src.view.Tutorial.timeline = function() {
-	TweenMax.set(src.view.Tutorial._jTtl,{ scaleY : 3, scaleX : 3});
-	TweenMax.to(src.view.Tutorial._jTtl,0.8,{ scaleY : 1, scaleX : 1, opacity : 1, ease : Power3.easeOut, delay : 0.8});
-	TweenMax.set(src.view.Tutorial._jImg,{ y : -50});
-	TweenMax.to(src.view.Tutorial._jImg,2,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 1.8});
-	TweenMax.set(src.view.Tutorial._jText,{ y : -50});
-	TweenMax.to(src.view.Tutorial._jText,2,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : 1.8});
-	TweenMax.to(src.view.Tutorial._jBtn,2,{ display : "inline-block", opacity : 1, ease : Expo.easeOut, delay : 2.5});
+	TweenMax.set(src.view.Tutorial._jTtl,{ scaleY : 1.3, scaleX : 1.3});
+	TweenMax.to(src.view.Tutorial._jTtl,1,{ scaleY : 1, scaleX : 1, opacity : 1, ease : Elastic.easeOut, delay : 0.8});
+	TweenMax.set(src.view.Tutorial._jImg,{ y : -30});
+	TweenMax.to(src.view.Tutorial._jImg,1.8,{ opacity : 1, y : 0, ease : Elastic.easeOut, delay : 1.3});
+	TweenMax.set(src.view.Tutorial._jText,{ y : -30});
+	TweenMax.to(src.view.Tutorial._jText,1.8,{ opacity : 1, y : 0, ease : Elastic.easeOut, delay : 1.5});
+	TweenMax.to(src.view.Tutorial._jBtn,2,{ display : "inline-block", opacity : 1, ease : Expo.easeOut, delay : 2.3});
 };
 src.view.Tutorial.hide = function() {
 	TweenMax.to(src.view.Tutorial._jTutorial,20,{ y : 100, ease : Expo.easeOut});
