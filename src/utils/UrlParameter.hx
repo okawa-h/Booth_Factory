@@ -6,6 +6,7 @@ import src.Manager;
 import src.utils.Drag;
 import src.utils.Html;
 import src.utils.ItemData;
+import src.utils.Resize;
 import src.view.Mainboard;
 import src.view.Mainmenu;
 import jp.saken.utils.Dom;
@@ -128,7 +129,7 @@ class UrlParameter {
                     var tarArray : JQuery = Mainboard.getMainboardDom().find('.board').find('.object');
                     for (i in 0 ... tarArray.length) {
 
-                        Manager.resizeDom(tarArray.eq(i),true);
+                        Resize.resizeDom(tarArray.eq(i),true);
 
                     }
 
@@ -184,7 +185,7 @@ class UrlParameter {
                 ========================================================================== */
                 private static function getObjectParam(jTarget:JQuery):String {
 
-                    var ratio : Float  = Manager.getRatio();
+                    var ratio : Float  = Resize.getRatio();
                     var id    : String = jTarget.data('id');
                     var x     : Int    = Math.round(Std.parseInt(jTarget.css('left'))/ratio);
                     var y     : Int    = Math.round(Std.parseInt(jTarget.css('top'))/ratio);

@@ -3,6 +3,7 @@ package src.view;
 import js.JQuery;
 import jp.saken.utils.Dom;
 import src.Manager;
+import src.utils.Resize;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Bounce;
@@ -23,7 +24,7 @@ class Tutorial {
     public static function start():Void {
 
         _jTutorial = new JQuery('#tutorial');
-        _jTtl      = _jTutorial.find('h1');
+        _jTtl      = _jTutorial.find('h2');
         _jBox      = _jTutorial.find('.tutorial');
         _jImg      = _jBox.find('.tutorial-img');
         _jText     = _jBox.find('.tutorial-text');
@@ -31,10 +32,10 @@ class Tutorial {
 
         _jBtn.hide();
 
-        if (Manager.getRatio() < 1) {
+        if (Resize.getRatio() < 1) {
 
             _jTutorial.css({'top':0});
-            TweenMaxHaxe.set(_jTutorial,{scaleX:Manager.getRatio(), scaleY:Manager.getRatio()});
+            TweenMaxHaxe.set(_jTutorial,{scaleX:Resize.getRatio(), scaleY:Resize.getRatio()});
             _jTutorial.css({'top':'-30px'});
 
         }
@@ -48,7 +49,7 @@ class Tutorial {
 
         });
 
-        _jBtn.on('mousedown',function(event:JqEvent) {
+        _jBtn.on('click',function(event:JqEvent) {
 
             hide();
             Dom.jWindow.unbind('keydown');
@@ -65,7 +66,7 @@ class Tutorial {
 
             if (event.keyCode == 32) {
 
-                _jBtn.mousedown();
+                _jBtn.click();
                 _jBtn.mouseover();
             }
 

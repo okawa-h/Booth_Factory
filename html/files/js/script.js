@@ -69,6 +69,8 @@ List.prototype = {
 		}};
 	}
 };
+var IMap = function() { };
+IMap.__name__ = true;
 Math.__name__ = true;
 var Std = function() { };
 Std.__name__ = true;
@@ -190,6 +192,23 @@ haxe.Timer.prototype = {
 	,run: function() {
 	}
 };
+haxe.ds = {};
+haxe.ds.StringMap = function() {
+	this.h = { };
+};
+haxe.ds.StringMap.__name__ = true;
+haxe.ds.StringMap.__interfaces__ = [IMap];
+haxe.ds.StringMap.prototype = {
+	set: function(key,value) {
+		this.h["$" + key] = value;
+	}
+	,get: function(key) {
+		return this.h["$" + key];
+	}
+	,exists: function(key) {
+		return this.h.hasOwnProperty("$" + key);
+	}
+};
 var jp = {};
 jp.okawa = {};
 jp.okawa.utils = {};
@@ -306,7 +325,7 @@ src.Main.main = function() {
 src.Manager = function() { };
 src.Manager.__name__ = true;
 src.Manager.init = function(event) {
-	src.Manager.getWindowRatio();
+	src.utils.Resize.init();
 	src.view.Tutorial.start();
 	src.utils.ItemData.set(src.Manager.start);
 	src.utils.Log.write();
@@ -347,62 +366,6 @@ src.Manager.setCounter = function() {
 	src.view.Price.change(price);
 	src.utils.UrlParameter.change("?" + src.utils.UrlParameter.getParameter(jBoardObj,length,price));
 };
-src.Manager.getWindowRatio = function() {
-	var maxSize = 810;
-	var winH = jp.saken.utils.Dom.jWindow.height();
-	var jMainboard = new js.JQuery("#mainboard");
-	src.Manager._ratio = 1;
-	if(maxSize > winH) {
-		src.Manager._ratio = 100 * winH / maxSize / 100 * 0.9;
-		src.Manager.resizeDom(jMainboard,false,true);
-		src.Manager.resizeDom(jMainboard.find(".board .human"),true);
-		src.Manager.resizeDom(jMainboard.find(".board .desk"),true);
-		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
-		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
-		src.Manager.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
-		var jTrashDiv = new js.JQuery("#trash").find("div");
-		var _g1 = 0;
-		var _g = jTrashDiv.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			src.Manager.resizeDom(jTrashDiv.eq(i),false,true);
-			if(jTrashDiv.eq(i).hasClass("trash-bg")) {
-				var bottom = Std.parseInt(jTrashDiv.eq(i).css("bottom"));
-				jTrashDiv.eq(i).css({ bottom : Math.round(bottom * src.Manager._ratio)});
-			}
-		}
-		var jSidemenuR = new js.JQuery("#sidemenu-right");
-		var jSidemenuL = new js.JQuery("#sidemenu-left");
-		TweenMax.set(jSidemenuR,{ scaleX : src.Manager._ratio, scaleY : src.Manager._ratio});
-		TweenMax.set(jSidemenuL,{ scaleX : src.Manager._ratio, scaleY : src.Manager._ratio});
-		var topR = Std.parseInt(jSidemenuR.css("top"));
-		jSidemenuR.css({ top : Math.round(topR * src.Manager._ratio)});
-		var topL = Std.parseInt(jSidemenuL.css("top"));
-		jSidemenuL.css({ top : Math.round(topL * src.Manager._ratio)});
-	}
-};
-src.Manager.resizeDom = function(jTarget,isPosi,isMLeft) {
-	if(isMLeft == null) isMLeft = false;
-	if(isPosi == null) isPosi = false;
-	if(src.Manager._ratio == 1) return;
-	if(isPosi) {
-		var left = Std.parseInt(jTarget.css("left"));
-		var top = Std.parseInt(jTarget.css("top"));
-		jTarget.css({ top : Math.round(top * src.Manager._ratio), left : Math.round(left * src.Manager._ratio)});
-	}
-	if(jTarget.hasClass("object")) {
-		jTarget.find("img").css({ width : Math.round(jTarget.width() * src.Manager._ratio), height : Math.round(jTarget.height() * src.Manager._ratio)});
-		return;
-	}
-	var w = Math.round(jTarget.width() * src.Manager._ratio);
-	var h = Math.round(jTarget.height() * src.Manager._ratio);
-	jTarget.width(w);
-	jTarget.height(h);
-	if(isMLeft) jTarget.css({ 'margin-left' : -(w / 2)});
-};
-src.Manager.getRatio = function() {
-	return src.Manager._ratio;
-};
 src.utils = {};
 src.utils.Drag = function() { };
 src.utils.Drag.__name__ = true;
@@ -428,9 +391,6 @@ src.utils.Drag.grab = function(event) {
 	src.utils.Drag._jGrabObj = $(this);
 	if(src.utils.Drag._jGrabObj.hasClass("drop") || src.utils.Drag._posiAnimate) return;
 	src.utils.Drag.getDiff(event);
-	var w;
-	if(src.utils.Drag._jGrabObj.hasClass("img")) w = Math.round((src.utils.Drag._jGrabObj.parent().parent("li").width() - src.utils.Drag._jGrabObj.find("img").width()) / 2); else w = 0;
-	src.utils.Drag._diffX = src.utils.Drag._diffX - w;
 	src.utils.Drag.setPosition(event,0,0);
 	src.utils.Drag._isGrabbed = true;
 	src.view.Trash.getGrabPosi(event);
@@ -512,7 +472,7 @@ src.utils.Drag.listToObj = function(jTarget,event) {
 	var left;
 	if(event.pageX != null) left = event.pageX - w - src.utils.Drag._diffX; else left = event.originalEvent.changedTouches[0].pageX - w - src.utils.Drag._diffX;
 	if(type == "accessory" || type == "clothes") {
-		var ratio = src.Manager.getRatio();
+		var ratio = src.utils.Resize.getRatio();
 		var abs = jTarget.data("abs").split(",");
 		top = Std.parseInt(abs[0]) * ratio;
 		left = Std.parseInt(abs[1]) * ratio;
@@ -527,23 +487,24 @@ src.utils.Drag.listToObj = function(jTarget,event) {
 	src.utils.Drag._jGrabObj = jBoard.find(".object." + id);
 	TweenMax.set(src.utils.Drag._jGrabObj,{ scaleX : 1.4, scaleY : 1.4});
 	TweenMax.to(src.utils.Drag._jGrabObj,0.3,{ scaleX : 1, scaleY : 1, ease : Elastic.easeOut, delay : 0.1, onComplete : function() {
-		src.Manager.resizeDom(jBoard.find(".object." + id),false);
+		src.utils.Resize.resizeDom(jBoard.find(".object." + id),false);
 	}});
 };
 src.utils.Drag.judgeOnBoard = function(jTarget) {
+	var ratio = src.utils.Resize.getRatio();
 	var top = Std.parseInt(jTarget.css("top"));
 	var left = Std.parseInt(jTarget.css("left"));
 	var bottom = top + jTarget.height();
 	var right = left + jTarget.width();
 	var areaB = src.utils.Drag._jMainboard.height();
-	var areaR = 698;
+	var areaR = Math.floor(698 * ratio);
 	var judge = false;
 	if(top < 53) {
-		top = 53;
+		top = Math.floor(53 * ratio);
 		judge = true;
 	}
 	if(left < 53) {
-		left = 53;
+		left = Math.floor(53 * ratio);
 		judge = true;
 	}
 	if(bottom > areaB) {
@@ -554,12 +515,12 @@ src.utils.Drag.judgeOnBoard = function(jTarget) {
 		left = areaR - jTarget.width();
 		judge = true;
 	}
-	if(jTarget.hasClass("accessory") || jTarget.hasClass("clothes")) {
+	if(jTarget.hasClass("accessory") || jTarget.hasClass("clothes") || jTarget.hasClass("tableCover")) {
 		if(src.view.Trash.isOnObj(jTarget)) return;
-		var ratio = src.Manager.getRatio();
+		var ratio1 = src.utils.Resize.getRatio();
 		var abs = src.utils.Drag.getAbsPoint(jTarget);
-		top = Math.round(Std.parseInt(abs[0]) * ratio);
-		left = Math.round(Std.parseInt(abs[1]) * ratio);
+		top = Math.round(Std.parseInt(abs[0]) * ratio1);
+		left = Math.round(Std.parseInt(abs[1]) * ratio1);
 		judge = true;
 	}
 	if(judge) {
@@ -636,7 +597,7 @@ src.utils.Html.getList = function(id,type,cat,icon,price,bgImg,img,name,length,a
 	html += "data-icon=\"" + icon + "\" ";
 	html += "data-price=\"" + price + "\">";
 	html += "<div class=\"revertObj\"></div>";
-	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + bgImg + ") no-repeat center center;\">";
+	html += "<div class=\"img-box\" style=\"background: url(files/img/product/bg/" + bgImg + ") no-repeat center center;background-size:contain;\">";
 	html += "<div class=\"img\">";
 	html += "<img src=\"files/img/product/image/" + img + "\">";
 	html += "</div>";
@@ -707,6 +668,127 @@ src.utils.Log.write = function() {
 	request.setParameter("user",user);
 	request.request(true);
 };
+src.utils.Resize = function() { };
+src.utils.Resize.__name__ = true;
+src.utils.Resize.init = function() {
+	src.utils.Resize._MaxWinHeight = 810;
+	src.utils.Resize._objStateArray = new haxe.ds.StringMap();
+	src.utils.Resize.setObjStateMap();
+	src.utils.Resize.getWindowRatio();
+	jp.saken.utils.Dom.jWindow.on("resize",function(event) {
+		if(src.utils.Resize._resizeTimer != null) src.utils.Resize._resizeTimer.stop();
+		src.utils.Resize._resizeTimer = new haxe.Timer(200);
+		src.utils.Resize._resizeTimer.run = function() {
+			src.utils.Resize.getWindowRatio();
+			var jMainboard = new js.JQuery("#mainboard");
+			var obj = jMainboard.find(".object");
+			var _g1 = 0;
+			var _g = obj.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				src.utils.Resize.resizeDom(obj.eq(i),true);
+			}
+			src.utils.Resize._resizeTimer.stop();
+		};
+	});
+};
+src.utils.Resize.setObjStateMap = function() {
+	var jMainboard = new js.JQuery("#mainboard");
+	src.utils.Resize.setObjState(jMainboard);
+	src.utils.Resize.setObjState(jMainboard.find(".board .human"));
+	src.utils.Resize.setObjState(jMainboard.find(".board .chair"));
+	src.utils.Resize.setObjState(jMainboard.find(".board .desk"));
+	src.utils.Resize.setObjState(jMainboard.find(".board .desk .desk-table"));
+	src.utils.Resize.setObjState(jMainboard.find(".board .desk .desk-left"));
+	src.utils.Resize.setObjState(jMainboard.find(".board .desk .desk-right"));
+	src.utils.Resize.setObjState(new js.JQuery("#sidemenu-right"));
+	src.utils.Resize.setObjState(new js.JQuery("#sidemenu-left"));
+};
+src.utils.Resize.setObjState = function(jTarget) {
+	var name;
+	if(jTarget.prop("id")) name = jTarget.prop("id"); else name = jTarget.prop("class");
+	var array = new Array();
+	array.push(jTarget.width());
+	array.push(jTarget.height());
+	array.push(Std.parseInt(jTarget.css("top")));
+	array.push(Std.parseInt(jTarget.css("left")));
+	src.utils.Resize._objStateArray.set(name,array);
+};
+src.utils.Resize.getRatio = function() {
+	return src.utils.Resize._ratio;
+};
+src.utils.Resize.setRatio = function() {
+	var winH = jp.saken.utils.Dom.jWindow.height();
+	src.utils.Resize._ratio = 100 * winH / src.utils.Resize._MaxWinHeight / 100 * 0.9;
+};
+src.utils.Resize.getWindowRatio = function() {
+	var jMainboard = new js.JQuery("#mainboard");
+	src.utils.Resize._ratio = 1;
+	src.utils.Resize.setRatio();
+	src.utils.Resize.resizeDom(jMainboard,false,true);
+	src.utils.Resize.resizeDom(jMainboard.find(".board .human"),true);
+	src.utils.Resize.resizeDom(jMainboard.find(".board .chair"),true);
+	src.utils.Resize.resizeDom(jMainboard.find(".board .desk"),true);
+	src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
+	src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
+	src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
+	var jTrashDiv = new js.JQuery("#trash").find("div");
+	var _g1 = 0;
+	var _g = jTrashDiv.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var jTrashTar = jTrashDiv.eq(i);
+		src.utils.Resize.resizeDom(jTrashTar,false,true);
+		if(jTrashTar.hasClass("trash-bg")) {
+			var bottom = Std.parseInt(jTrashTar.css("bottom"));
+			jTrashTar.css({ bottom : Math.round(bottom * src.utils.Resize._ratio)});
+		}
+	}
+	var jSidemenuR = new js.JQuery("#sidemenu-right");
+	var jSidemenuL = new js.JQuery("#sidemenu-left");
+	TweenMax.set(jSidemenuR,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
+	TweenMax.set(jSidemenuL,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
+	var topR = Std.parseInt(jSidemenuR.css("top"));
+	var topL = Std.parseInt(jSidemenuL.css("top"));
+	jSidemenuR.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-right")[2] * src.utils.Resize._ratio)});
+	jSidemenuL.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-left")[2] * src.utils.Resize._ratio)});
+};
+src.utils.Resize.resizeDom = function(jTarget,isPosi,isMLeft) {
+	if(isMLeft == null) isMLeft = false;
+	if(isPosi == null) isPosi = false;
+	if(src.utils.Resize._ratio == 1) return;
+	if(isPosi) {
+		var name;
+		if(jTarget.prop("id")) name = jTarget.prop("id"); else name = jTarget.prop("class");
+		var top = 0;
+		var left = 0;
+		if(src.utils.Resize._objStateArray.exists(name)) {
+			top = src.utils.Resize._objStateArray.get(name)[2];
+			left = src.utils.Resize._objStateArray.get(name)[3];
+		} else {
+			var r = new EReg("[^0-9^\\.]","g");
+			var id = Std.parseInt(r.replace(name,""));
+			top = src.utils.UrlParameter.getParamOption((id == null?"null":"" + id) + "_y");
+			left = src.utils.UrlParameter.getParamOption((id == null?"null":"" + id) + "_x");
+		}
+		jTarget.css({ top : top * src.utils.Resize._ratio, left : left * src.utils.Resize._ratio});
+	}
+	if(jTarget.hasClass("object")) {
+		var img = new Image();
+		img.src = jTarget.find("img").prop("src");
+		jTarget.find("img").css({ width : Math.round(img.width * src.utils.Resize._ratio), height : Math.round(img.height * src.utils.Resize._ratio)});
+		return;
+	}
+	if(jTarget.css("background-image") != "none") {
+		var img1 = new Image();
+		img1.src = jTarget.css("background-image").split("url(\"")[1].split("\")")[0];
+		var w = Math.round(img1.width * src.utils.Resize._ratio);
+		var h = Math.round(img1.height * src.utils.Resize._ratio);
+		jTarget.width(w);
+		jTarget.height(h);
+		if(isMLeft) jTarget.css({ 'margin-left' : -(w / 2)});
+	}
+};
 src.utils.UrlParameter = function() { };
 src.utils.UrlParameter.__name__ = true;
 src.utils.UrlParameter.init = function() {
@@ -776,7 +858,7 @@ src.utils.UrlParameter.resizeObj = function() {
 	var _g = tarArray.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		src.Manager.resizeDom(tarArray.eq(i),true);
+		src.utils.Resize.resizeDom(tarArray.eq(i),true);
 	}
 };
 src.utils.UrlParameter.getParameter = function(jTarget,length,price) {
@@ -803,7 +885,7 @@ src.utils.UrlParameter.getColorParam = function() {
 	return "color=" + color;
 };
 src.utils.UrlParameter.getObjectParam = function(jTarget) {
-	var ratio = src.Manager.getRatio();
+	var ratio = src.utils.Resize.getRatio();
 	var id = jTarget.data("id");
 	var x = Math.round(Std.parseInt(jTarget.css("left")) / ratio);
 	var y = Math.round(Std.parseInt(jTarget.css("top")) / ratio);
@@ -880,7 +962,7 @@ src.view.Mainmenu.__name__ = true;
 src.view.Mainmenu.init = function() {
 	src.view.Mainmenu._jMainmenu = new js.JQuery("#mainmenu");
 	src.view.Mainmenu._jBtn = src.view.Mainmenu._jMainmenu.find(".ttl").find("p");
-	if(src.Manager.getRatio() < 0.75) src.view.Mainmenu._jMainmenu.addClass("ratio");
+	if(src.utils.Resize.getRatio() < 0.75) src.view.Mainmenu._jMainmenu.addClass("ratio");
 	var jRevertBtn = src.view.Mainmenu._jMainmenu.find(".slider").find("ul li").find(".revertObj");
 	src.view.mainmenu.Scrollbar.init(src.view.Mainmenu._jMainmenu);
 	src.view.Mainmenu._jBtn.on("mousedown",function(event) {
@@ -1238,15 +1320,15 @@ src.view.Tutorial = function() { };
 src.view.Tutorial.__name__ = true;
 src.view.Tutorial.start = function() {
 	src.view.Tutorial._jTutorial = new js.JQuery("#tutorial");
-	src.view.Tutorial._jTtl = src.view.Tutorial._jTutorial.find("h1");
+	src.view.Tutorial._jTtl = src.view.Tutorial._jTutorial.find("h2");
 	src.view.Tutorial._jBox = src.view.Tutorial._jTutorial.find(".tutorial");
 	src.view.Tutorial._jImg = src.view.Tutorial._jBox.find(".tutorial-img");
 	src.view.Tutorial._jText = src.view.Tutorial._jBox.find(".tutorial-text");
 	src.view.Tutorial._jBtn = src.view.Tutorial._jTutorial.find(".start-btn");
 	src.view.Tutorial._jBtn.hide();
-	if(src.Manager.getRatio() < 1) {
+	if(src.utils.Resize.getRatio() < 1) {
 		src.view.Tutorial._jTutorial.css({ top : 0});
-		TweenMax.set(src.view.Tutorial._jTutorial,{ scaleX : src.Manager.getRatio(), scaleY : src.Manager.getRatio()});
+		TweenMax.set(src.view.Tutorial._jTutorial,{ scaleX : src.utils.Resize.getRatio(), scaleY : src.utils.Resize.getRatio()});
 		src.view.Tutorial._jTutorial.css({ top : "-30px"});
 	}
 	src.view.Tutorial.timeline();
@@ -1254,7 +1336,7 @@ src.view.Tutorial.start = function() {
 		src.view.Tutorial.hide();
 		jp.saken.utils.Dom.jWindow.unbind("touchstart");
 	});
-	src.view.Tutorial._jBtn.on("mousedown",function(event1) {
+	src.view.Tutorial._jBtn.on("click",function(event1) {
 		src.view.Tutorial.hide();
 		jp.saken.utils.Dom.jWindow.unbind("keydown");
 	});
@@ -1263,7 +1345,7 @@ src.view.Tutorial.start = function() {
 	});
 	jp.saken.utils.Dom.jWindow.on("keydown",function(event3) {
 		if(event3.keyCode == 32) {
-			src.view.Tutorial._jBtn.mousedown();
+			src.view.Tutorial._jBtn.click();
 			src.view.Tutorial._jBtn.mouseover();
 		}
 	});
@@ -1418,21 +1500,22 @@ src.view.mainmenu.Scrollbar.init = function(jMainmenu) {
 	var mouseevent;
 	if(browser == "Firefox") mouseevent = "wheel"; else mouseevent = "mousewheel";
 	if(mouseevent.indexOf("IE") > -1) mouseevent = "mousewheel"; else mouseevent = mouseevent;
-	src.view.mainmenu.Scrollbar.set();
-	jp.saken.utils.Dom.jWindow.on("resize",src.view.mainmenu.Scrollbar.set);
+	src.view.mainmenu.Scrollbar.setBarSize();
+	jp.saken.utils.Dom.jWindow.on("resize",src.view.mainmenu.Scrollbar.setBarSize);
 	src.view.mainmenu.Scrollbar._jSlider.on(mouseevent,src.view.mainmenu.Scrollbar.onMousewheel);
 	src.view.mainmenu.Scrollbar._jSlider.on("touchstart",src.view.mainmenu.Scrollbar.setTouchPosition);
 	src.view.mainmenu.Scrollbar._jSlider.on("touchmove",src.view.mainmenu.Scrollbar.onMousewheel);
 	src.view.mainmenu.Scrollbar._jMainmenu.find(".scroll-navi").on("mousedown touchstart",src.view.mainmenu.Scrollbar.onMousedown);
 };
-src.view.mainmenu.Scrollbar.set = function(event) {
+src.view.mainmenu.Scrollbar.setBarSize = function(event) {
 	var length = src.view.mainmenu.Scrollbar._jSlider.length;
 	var _g = 0;
 	while(_g < length) {
 		var i = _g++;
 		src.view.mainmenu.Scrollbar.getDom(src.view.mainmenu.Scrollbar._jSlider.eq(i));
 		var scale = src.view.mainmenu.Scrollbar.getScale();
-		var nH = Math.round(src.view.mainmenu.Scrollbar._jScroll.height() * scale / 100);
+		var nH;
+		if(scale >= 100) nH = src.view.mainmenu.Scrollbar._jScroll.height(); else nH = Math.round(src.view.mainmenu.Scrollbar._jScroll.height() * scale / 100);
 		src.view.mainmenu.Scrollbar._jNavi.height(nH);
 	}
 };
@@ -1446,7 +1529,7 @@ src.view.mainmenu.Scrollbar.getDom = function(jTarget) {
 };
 src.view.mainmenu.Scrollbar.getScale = function() {
 	var vH = src.view.mainmenu.Scrollbar._jSlider.height();
-	var tH = src.view.mainmenu.Scrollbar._jInner.height() - 20;
+	var tH = src.view.mainmenu.Scrollbar._jInner.height() + 10;
 	var sH = src.view.mainmenu.Scrollbar._jScroll.height();
 	var scale = vH * 100 / tH;
 	return scale;
@@ -1480,10 +1563,13 @@ src.view.mainmenu.Scrollbar.onMousedown = function(event) {
 	jp.saken.utils.Dom.jBody.on({ mousemove : onMousemove, mouseup : onMouseup});
 };
 src.view.mainmenu.Scrollbar.move = function(delta) {
+	if(src.view.mainmenu.Scrollbar._ratio >= 100) return;
 	delta = Math.round(delta * .3);
 	var val = src.view.mainmenu.Scrollbar._posi + delta;
 	if(0 < val) val = 0;
-	if(src.view.mainmenu.Scrollbar._max > val) val = src.view.mainmenu.Scrollbar._max;
+	var adjustment;
+	if(src.view.mainmenu.Scrollbar._jMainmenu.hasClass("ratio")) adjustment = -10; else adjustment = -30;
+	if(src.view.mainmenu.Scrollbar._max >= val) val = src.view.mainmenu.Scrollbar._max + adjustment;
 	TweenMax.to(src.view.mainmenu.Scrollbar._jInner,0.1,{ marginTop : val, ease : "linear"});
 	val = (val * src.view.mainmenu.Scrollbar._ratio / 100 | 0) * -1;
 	TweenMax.to(src.view.mainmenu.Scrollbar._jNavi,0.1,{ marginTop : val, ease : "linear"});

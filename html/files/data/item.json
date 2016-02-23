@@ -135,21 +135,21 @@
             "name" : "A4・折りパンフレット",
             "price": "10,400",
             "length": "100部",
-            "type" : "poster",
+            "type" : "paper",
             "cat"  : "paper",
             "icon" : "pamphlet_a4.png",
-            "img"  : "dammy.png",
-            "bgImg": "dammy.png"
+            "img"  : "pamphlet.png",
+            "bgImg": "pamphlet.png"
         }, {
             "id"   : "15",
             "name" : "A5・折りパンフレット",
             "price": "6,440",
             "length": "100部",
-            "type" : "poster",
+            "type" : "paper",
             "cat"  : "paper",
             "icon" : "pamphlet_a5.png",
-            "img"  : "dammy.png",
-            "bgImg": "dammy.png"
+            "img"  : "pamphlet.png",
+            "bgImg": "pamphlet.png"
         }, {
             "id"   : "16",
             "name" : "A1・貼り合わせパネル",
@@ -218,8 +218,8 @@
             "type" : "paper",
             "cat" : "paper",
             "icon" : "tablepop.png",
-            "img"  : "dammy.png",
-            "bgImg": "dammy.png"
+            "img"  : "tablepop.png",
+            "bgImg": "tablepop.png"
         }, {
             "id"   : "23",
             "name" : "A1・タペストリー",
@@ -267,7 +267,7 @@
             "length": "1式",
             "type" : "panel",
             "cat"  : "banner",
-            "icon" : "board_a.png",
+            "icon" : "banner.png",
             "img"  : "banner.png",
             "bgImg": "banner.png"
         }, {
@@ -327,7 +327,7 @@
             "price": "30,000",
             "length": "500部",
             "type" : "accessory",
-            "abs" : ["222","-33"],
+            "abs" : ["218","-30"],
             "cat" : "accessory",
             "icon" : "utiwa.png",
             "img"  : "utiwa.png",
@@ -345,17 +345,28 @@
             "bgImg": "megaphone.png"
         }, {
             "id"   : "35",
+            "name" : "ファッションバッグ",
+            "price": "170,000",
+            "length": "1000枚",
+            "type" : "accessory",
+            "abs" : ["284","-30"],
+            "cat" : "accessory",
+            "icon" : "bag.png",
+            "img"  : "bag.png",
+            "bgImg": "bag.png"
+        }, {
+            "id"   : "36",
             "name" : "イベントハッピ",
             "price": "11,700",
             "length": "3着",
             "type" : "clothes",
-            "abs" : ["232","-130"],
+            "abs" : ["232","-132"],
             "cat" : "accessory",
             "icon" : "happi.png",
             "img"  : "happi.png",
             "bgImg": "happi.png"
         }, {
-            "id"   : "36",
+            "id"   : "37",
             "name" : "イベントブルゾン",
             "price": "9,600",
             "length": "3着",
@@ -366,7 +377,7 @@
             "img"  : "blouson.png",
             "bgImg": "blouson.png"
         }, {
-            "id"   : "37",
+            "id"   : "38",
             "name" : "イベントTシャツ",
             "price": "6,000",
             "length": "3着",
@@ -377,7 +388,7 @@
             "img"  : "tshirt.png",
             "bgImg": "tshirt.png"
         }, {
-            "id"   : "38",
+            "id"   : "39",
             "name" : "イベントベスト",
             "price": "9,000",
             "length": "3着",
@@ -387,6 +398,28 @@
             "icon" : "vest.png",
             "img"  : "vest.png",
             "bgImg": "vest.png"
+        }, {
+            "id"   : "40",
+            "name" : "椅子カバー",
+            "price": "22,800",
+            "length": "6個",
+            "type" : "accessory",
+            "abs" : ["367","731"],
+            "cat" : "banner",
+            "icon" : "chair_cover.png",
+            "img"  : "chair.png",
+            "bgImg": "chair.png"
+        }, {
+            "id"   : "41",
+            "name" : "テーブルカバー",
+            "price": "16,500",
+            "length": "1枚",
+            "type" : "tableCover",
+            "abs" : ["349","340"],
+            "cat" : "banner",
+            "icon" : "table_cover.png",
+            "img"  : "table.png",
+            "bgImg": "table.png"
         }],
 
     "set": [

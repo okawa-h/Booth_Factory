@@ -5,6 +5,7 @@ import haxe.Timer;
 import src.Manager;
 import src.utils.Html;
 import src.utils.ItemData;
+import src.utils.Resize;
 import src.utils.UrlParameter;
 import src.view.Mainboard;
 import src.view.Mainmenu;
@@ -80,8 +81,6 @@ class Drag {
 
                 if (_jGrabObj.hasClass('drop') || _posiAnimate) return;
                 getDiff(event);
-                var w : Int = (_jGrabObj.hasClass('img')) ? Math.round((_jGrabObj.parent().parent('li').width() - _jGrabObj.find('img').width())/2) : 0;
-                _diffX = _diffX - w;
 
                 setPosition(event,0,0);
                 _isGrabbed = true;
@@ -219,7 +218,7 @@ class Drag {
 
                 if (type == "accessory" || type == "clothes") {
 
-                    var ratio : Float         = Manager.getRatio();
+                    var ratio : Float         = Resize.getRatio();
                     var abs   : Array<String> = jTarget.data('abs').split(',');
                     top  = Std.parseInt(abs[0]) * ratio;
                     left = Std.parseInt(abs[1]) * ratio;
@@ -245,7 +244,7 @@ class Drag {
                 TweenMaxHaxe.to(_jGrabObj, 0.3,{scaleX:1, scaleY:1, ease:Elastic.easeOut,delay:0.1,
                     onComplete:function() {
 
-                        Manager.resizeDom(jBoard.find('.object.' + id),false);
+                        Resize.resizeDom(jBoard.find('.object.' + id),false);
                     }
                 });
 
@@ -256,23 +255,25 @@ class Drag {
             ========================================================================== */
             private static function judgeOnBoard(jTarget:JQuery):Void {
 
+                var ratio  : Float = Resize.getRatio();
+
                 var top    : Int  = Std.parseInt(jTarget.css('top'));
                 var left   : Int  = Std.parseInt(jTarget.css('left'));
                 var bottom : Int  = top + jTarget.height();
                 var right  : Int  = left + jTarget.width();
                 var areaB  : Int  = _jMainboard.height();
-                var areaR  : Int  = 698;//_jMainboard.width();
+                var areaR  : Int  = Math.floor(698 * ratio);
                 var judge  : Bool = false;
 
-                if (top < 53)  { top = 53; judge = true; }
-                if (left < 53) { left = 53; judge = true; }
-                if (bottom > areaB) { top = areaB - jTarget.height(); judge = true; }
+                if (top < 53)  { top  = Math.floor(53 * ratio); judge = true; }
+                if (left < 53) { left = Math.floor(53 * ratio); judge = true; }
+                if (bottom > areaB) { top  = areaB - jTarget.height(); judge = true; }
                 if (right > areaR)  { left = areaR - jTarget.width(); judge = true; }
 
-                if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes')) {
+                if (jTarget.hasClass('accessory') || jTarget.hasClass('clothes') || jTarget.hasClass('tableCover')) {
 
                     if (Trash.isOnObj(jTarget)) return;
-                    var ratio : Float         = Manager.getRatio();
+                    var ratio : Float         = Resize.getRatio();
                     var abs   : Array<String> = getAbsPoint(jTarget);
                     top  = Math.round(Std.parseInt(abs[0]) * ratio);
                     left = Math.round(Std.parseInt(abs[1]) * ratio);

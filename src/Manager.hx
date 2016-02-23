@@ -5,6 +5,7 @@ import haxe.Json;
 import src.utils.Drag;
 import src.utils.ItemData;
 import src.utils.Log;
+import src.utils.Resize;
 import src.utils.UrlParameter;
 import src.view.Mainboard;
 import src.view.Mainmenu;
@@ -18,14 +19,12 @@ import tween.TweenMaxHaxe;
 
 class Manager {
 
-    private static var _ratio : Float;
-
     /* =======================================================================
     Init
     ========================================================================== */
     public static function init(event:JqEvent):Void {
 
-        getWindowRatio();
+        Resize.init();
         Tutorial.start();
         ItemData.set(start);
         Log.write();
@@ -60,7 +59,7 @@ class Manager {
     }
 
     /* =======================================================================
-    Set Price Length URL パラメタ書き換え、左サイド書き換え
+    Set Price Length パラメタ書き換え、左サイド書き換え
     ========================================================================== */
     public static function setCounter():Void {
 
@@ -83,96 +82,6 @@ class Manager {
         ProductLength.change(accessoryLength,bannerlength,paperLength);
         Price.change(price);
         UrlParameter.change('?' + UrlParameter.getParameter(jBoardObj,length,price));
-
-    }
-
-            /* =======================================================================
-            Get Window Ratio
-            ========================================================================== */
-            private static function getWindowRatio():Void {
-
-                var maxSize    : Int    = 810;
-                var winH       : Int    = Dom.jWindow.height();
-                var jMainboard : JQuery = new JQuery('#mainboard');
-                _ratio = 1;
-
-                if (maxSize > winH) {
-
-                    _ratio = ((100 * winH)/maxSize)/100 * 0.9;
-                    resizeDom(jMainboard,false,true);
-                    resizeDom(jMainboard.find('.board .human'),true);
-                    resizeDom(jMainboard.find('.board .desk'),true);
-                    resizeDom(jMainboard.find('.board .desk .desk-table'),true);
-                    resizeDom(jMainboard.find('.board .desk .desk-left'),true);
-                    resizeDom(jMainboard.find('.board .desk .desk-right'),true);
-                    var jTrashDiv = new JQuery('#trash').find('div');
-                    for (i in 0 ... jTrashDiv.length) {
-
-                        resizeDom(jTrashDiv.eq(i),false,true);
-
-                        if (jTrashDiv.eq(i).hasClass('trash-bg')) {
-
-                            var bottom  : Int = Std.parseInt(jTrashDiv.eq(i).css('bottom'));
-                            jTrashDiv.eq(i).css({'bottom': Math.round(bottom * _ratio)});
-                            
-                        }
-
-                    }
-                    
-                    var jSidemenuR : JQuery = new JQuery('#sidemenu-right');
-                    var jSidemenuL : JQuery = new JQuery('#sidemenu-left');
-                    TweenMaxHaxe.set(jSidemenuR,{scaleX:_ratio, scaleY:_ratio});
-                    TweenMaxHaxe.set(jSidemenuL,{scaleX:_ratio, scaleY:_ratio});
-                    var topR : Int = Std.parseInt(jSidemenuR.css('top'));
-                    jSidemenuR.css({'top': Math.round(topR * _ratio)});
-                    var topL : Int = Std.parseInt(jSidemenuL.css('top'));
-                    jSidemenuL.css({'top': Math.round(topL * _ratio)});
-
-                }
-
-            }
-
-    /* =======================================================================
-    Resize Dom
-    ========================================================================== */
-    public static function resizeDom(jTarget:JQuery,isPosi:Bool = false,isMLeft:Bool = false):Void {
-
-        if (_ratio == 1) return;
-
-        if (isPosi) {
-
-            var left : Int = Std.parseInt(jTarget.css('left'));
-            var top  : Int = Std.parseInt(jTarget.css('top'));
-            jTarget.css({'top': Math.round(top * _ratio),'left': Math.round(left * _ratio)});
-
-        }
-
-        if (jTarget.hasClass('object')) {
-
-            jTarget.find('img').css({
-                width : Math.round(jTarget.width() * _ratio),
-                height: Math.round(jTarget.height() * _ratio)
-            });
-            return;
-
-        }
-
-        var w : Int = Math.round(jTarget.width() * _ratio);
-        var h : Int = Math.round(jTarget.height() * _ratio);
-
-        jTarget.width(w);
-        jTarget.height(h);
-
-        if (isMLeft) jTarget.css({'margin-left': -(w/2)});
-
-    }
-
-    /* =======================================================================
-    Get Ratio
-    ========================================================================== */
-    public static function getRatio():Float {
-
-        return _ratio;
 
     }
 

@@ -29,8 +29,9 @@ class Scrollbar {
         var mouseevent : String = ( browser == "Firefox") ? "wheel" : "mousewheel";
         mouseevent = (mouseevent.indexOf('IE') > -1) ? "mousewheel" :  mouseevent;
 
-        set();
-        Dom.jWindow.on("resize",set);
+        setBarSize();
+        Dom.jWindow.on("resize",setBarSize);
+
         _jSlider.on(mouseevent,onMousewheel);
         _jSlider.on("touchstart",setTouchPosition);
         _jSlider.on("touchmove",onMousewheel);
@@ -41,7 +42,7 @@ class Scrollbar {
             /* =======================================================================
             Set
             ========================================================================== */
-            private static function set(event:JqEvent = null):Void {
+            private static function setBarSize(event:JqEvent = null):Void {
 
                 var length : Int = _jSlider.length;
 
@@ -49,7 +50,7 @@ class Scrollbar {
 
                     getDom(_jSlider.eq(i));
                     var scale : Float = getScale();
-                    var nH    : Int   = Math.round((_jScroll.height() * scale)/100);
+                    var nH    : Int   = (scale >= 100) ? _jScroll.height() : Math.round((_jScroll.height() * scale)/100);
 
                     _jNavi.height(nH);
 
@@ -65,7 +66,7 @@ class Scrollbar {
                 _jInner  = jTarget.find('ul');
                 _jScroll = jTarget.siblings('.slider-scroll');
                 _jNavi   = _jScroll.find('.scroll-navi');
-                _max     = (_jInner.height() - _jSlider.height()) * -1 + 20; //Std.parseInt(_jInner.find('li').css('margin-bottom'));
+                _max     = (_jInner.height() - _jSlider.height()) * -1 + 20;
                 _posi    = Std.parseInt(_jInner.css('margin-top'));
                 _ratio   = getScale();
 
@@ -77,7 +78,7 @@ class Scrollbar {
             private static function getScale():Float {
 
                 var vH    : Int   = _jSlider.height();
-                var tH    : Int   = _jInner.height() - 20;
+                var tH    : Int   = _jInner.height() + 10;
                 var sH    : Int   = _jScroll.height();
                 var scale : Float = (vH * 100)/tH;
 
@@ -95,7 +96,7 @@ class Scrollbar {
                 if (delta == null) delta = Math.round(event.originalEvent.deltaY * -120);//Firefox
                 if (event.type == "touchmove") {
 
-                    var y = (_touchPosiY > event.originalEvent.touches[0].pageY) ? -1 : 1;
+                    var y : Int = (_touchPosiY > event.originalEvent.touches[0].pageY) ? -1 : 1;
                     delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
                 }
 
@@ -137,11 +138,14 @@ class Scrollbar {
             ========================================================================== */
             private static function move(delta:Int):Void {
 
+                if (_ratio >= 100) return;
+
                 delta = Math.round(delta * .3);
                 var val : Int = _posi + delta;
 
                 if (0 < val) val = 0;
-                if (_max > val) val = _max;
+                var adjustment : Int = (_jMainmenu.hasClass('ratio')) ? -10 : -30;
+                if (_max >= val) val = _max + adjustment;
 
                 TweenMaxHaxe.to(_jInner,0.1,{marginTop: val,ease:'linear'});
                 val = Std.int((val * _ratio)/100) * -1;
@@ -149,7 +153,7 @@ class Scrollbar {
 
             }
             /* =======================================================================
-            Move
+            Set Touch Position
             ========================================================================== */
             private static function setTouchPosition(event:Dynamic):Void {
 
