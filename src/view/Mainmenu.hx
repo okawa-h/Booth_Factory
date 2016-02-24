@@ -31,6 +31,14 @@ class Mainmenu {
 
         Scrollbar.init(_jMainmenu);
 
+        adjustBoxHeight();
+
+        Dom.jWindow.on('resize',function(event:JqEvent) {
+
+            adjustBoxHeight();
+
+        });
+
         _jBtn.on('mousedown',function(event:JqEvent) {
 
             clickBtn(JQuery.cur,event);
@@ -63,6 +71,66 @@ class Mainmenu {
         });
 
     }
+
+            /* =======================================================================
+            Adjust Box Height
+            ========================================================================== */
+            private static function adjustBoxHeight():Void {
+
+                var jSlider = _jMainmenu.find('.slider');
+
+                for (i in 0 ... jSlider.length) {
+
+                    setBoxHeight(jSlider.eq(i).find('ul'));
+                    
+                }
+            }
+
+            /* =======================================================================
+            Adjust Box Height
+            ========================================================================== */
+            private static function setBoxHeight(jTarget:JQuery):Void {
+
+                var jList    : JQuery = jTarget.find('li');
+                var length   : Int = jList.length;
+                var parWidth : Int = jTarget.width();
+                var width    : Int = jList.width() + Std.parseInt(jList.css('margin-left'));
+                var column   : Int = Math.floor(parWidth / width);
+                var height   : Int = 0;
+                var point    : Int = 0;
+
+                jList.removeAttr('style');
+
+                for (i in 0 ... length) {
+
+                    var jTar : JQuery = jList.eq(i);
+                    var h    : Int    = jTar.height();
+
+                    if (h > height) height = h;
+
+                    // if (i % column == 0) {
+
+                    //     var k : Int = point + column - 1;
+
+                    //     for (j in 0 ... column) {
+                    //         trace(k);
+
+                    //         var paddingTop : Int = (height - jList.eq(k).height());
+                    //         jList.eq(k).css({"padding-bottom": paddingTop});
+                    //         k--;
+                            
+                    //     }
+
+                    //     height = 0;
+                    //     point  = i;
+
+                    // }
+                    
+                }
+
+                jList.height(height);
+
+            }
 
             /* =======================================================================
             Set Scroll Btn

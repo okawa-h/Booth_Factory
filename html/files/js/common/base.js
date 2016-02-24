@@ -40,7 +40,7 @@
 		fade       : false,
 		rollover   : true,
 		tooltip    : false,
-		showcase   : false,
+		showcase   : true,
 		tab        : false,
 		selfLink   : true,
 		external   : false,

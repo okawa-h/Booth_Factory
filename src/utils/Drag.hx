@@ -40,11 +40,11 @@ class Drag {
 
         _jMainmenu.find('.slider').find('li').find('.img').on({ 'mousedown touchstart' : grab });
 
-        Dom.jWindow.on('mousedown touchstart',function(event:JqEvent) {
+        //Dom.jWindow.on('mousedown touchstart',function(event:JqEvent) {
 
-            touchAnimate(event);
+            //touchAnimate(event);
 
-        });
+        //});
 
         Dom.jWindow.on({
 
@@ -170,7 +170,6 @@ class Drag {
 
                         t = event.originalEvent.changedTouches[0].pageY;
                         l = event.originalEvent.changedTouches[0].pageX;
-                        return;
 
                     } else {
 

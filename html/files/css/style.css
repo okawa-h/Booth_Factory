@@ -88,9 +88,8 @@
 
 				#tutorial .tutorial .tutorial-text h3 img {
 					width: 100%;
-					max-width: 297px;
+					max-width: 506px;
 					height: auto;
-					max-height: 70px;
 				}
 
 			#tutorial .tutorial .tutorial-text p {
@@ -100,9 +99,16 @@
 	#tutorial .start-btn {
 		display: inline-block;
 		position: relative;
+		margin: 0 20px;
 		opacity: 0;
 		cursor: pointer;
 	}
+
+		#tutorial .start-btn img {
+			width: 100%;
+			max-width: 627px;
+			height: auto;
+		}
 
 		#tutorial .start-btn span {
 			display: block;
@@ -813,7 +819,7 @@
 			}
 
 			#mainmenu.ratio div .slider ul {
-				margin-left: -5%;
+				margin-left: -2%;
 			}
 
 /*-------------------------------------------------------------------------
@@ -833,8 +839,8 @@
 				}
 
 				#mainmenu.ratio div .slider ul li {
-					width: 20%;
-					margin: 0 0 10px 5%;
+					width: 23%;
+					margin: 0 0 10px 2%;
 				}
 
 				@media screen and (max-width: 1500px) {
@@ -851,18 +857,6 @@
 					}
 
 						#mainmenu div .slider ul li {
-							width: 20%;
-							margin: 0 0 10px 5%;
-						}	
-				}
-
-				@media screen and (max-width: 1400px) {
-
-					#mainmenu.ratio div .slider ul {
-						margin-left: -5%;
-					}
-
-						#mainmenu.ratio div .slider ul li {
 							width: 20%;
 							margin: 0 0 10px 5%;
 						}	
@@ -935,7 +929,6 @@
 						float: left;
 						width: 50%;
 						max-width: 110px;
-						/*margin-left: 10px;*/
 					}
 
 						#mainmenu div .slider ul li .img {
@@ -1052,11 +1045,10 @@
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0,0,0,0.3);
-		z-index: 0;
+		z-index: -1;
 	}
 
 	#lightbox .lightbox-content {
-		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
@@ -1124,14 +1116,14 @@
 
 	#lightbox .help {
 		display: none;
-		width: 800px;
-		height: 450px;
+		position: relative;
+		top: 50%;
+		bottom: 50%;
+		width: 100%;
+		max-width: 800px;
+		height: 420px;
+		margin-top: -225px;
 		border: 6px solid #4c3410;
 		border-radius: 8px;
 		background-color: #fff;
 	}
-
-
-
-
-

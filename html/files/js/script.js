@@ -375,9 +375,6 @@ src.utils.Drag.init = function() {
 	src.utils.Drag._jMainboard = src.view.Mainboard.getMainboardDom();
 	src.utils.Drag._jMainmenu = src.view.Mainmenu.getMainmenuDom();
 	src.utils.Drag._jMainmenu.find(".slider").find("li").find(".img").on({ 'mousedown touchstart' : src.utils.Drag.grab});
-	jp.saken.utils.Dom.jWindow.on("mousedown touchstart",function(event) {
-		src.utils.Drag.touchAnimate(event);
-	});
 	jp.saken.utils.Dom.jWindow.on({ mousemove : src.utils.Drag.mousemove, touchmove : src.utils.Drag.mousemove, mouseup : src.utils.Drag.mouseup, touchend : src.utils.Drag.mouseup});
 	src.utils.Drag.setBoardObj();
 };
@@ -443,7 +440,6 @@ src.utils.Drag.setPosition = function(event,top,left) {
 	} else if(type == "touchend") {
 		t = event.originalEvent.changedTouches[0].pageY;
 		l = event.originalEvent.changedTouches[0].pageX;
-		return;
 	} else {
 		t = event.originalEvent.touches[0].pageY;
 		l = event.originalEvent.touches[0].pageX;
@@ -675,21 +671,16 @@ src.utils.Resize.init = function() {
 	src.utils.Resize._objStateArray = new haxe.ds.StringMap();
 	src.utils.Resize.setObjStateMap();
 	src.utils.Resize.getWindowRatio();
+	var jMainboard = new js.JQuery("#mainboard");
 	jp.saken.utils.Dom.jWindow.on("resize",function(event) {
-		if(src.utils.Resize._resizeTimer != null) src.utils.Resize._resizeTimer.stop();
-		src.utils.Resize._resizeTimer = new haxe.Timer(200);
-		src.utils.Resize._resizeTimer.run = function() {
-			src.utils.Resize.getWindowRatio();
-			var jMainboard = new js.JQuery("#mainboard");
-			var obj = jMainboard.find(".object");
-			var _g1 = 0;
-			var _g = obj.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				src.utils.Resize.resizeDom(obj.eq(i),true);
-			}
-			src.utils.Resize._resizeTimer.stop();
-		};
+		src.utils.Resize.getWindowRatio();
+		var obj = jMainboard.find(".object");
+		var _g1 = 0;
+		var _g = obj.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			src.utils.Resize.resizeDom(obj.eq(i),true);
+		}
 	});
 };
 src.utils.Resize.setObjStateMap = function() {
@@ -719,39 +710,41 @@ src.utils.Resize.getRatio = function() {
 };
 src.utils.Resize.setRatio = function() {
 	var winH = jp.saken.utils.Dom.jWindow.height();
-	src.utils.Resize._ratio = 100 * winH / src.utils.Resize._MaxWinHeight / 100 * 0.9;
+	src.utils.Resize._ratio = 100 * winH / src.utils.Resize._MaxWinHeight / 100;
 };
 src.utils.Resize.getWindowRatio = function() {
 	var jMainboard = new js.JQuery("#mainboard");
 	src.utils.Resize._ratio = 1;
-	src.utils.Resize.setRatio();
-	src.utils.Resize.resizeDom(jMainboard,false,true);
-	src.utils.Resize.resizeDom(jMainboard.find(".board .human"),true);
-	src.utils.Resize.resizeDom(jMainboard.find(".board .chair"),true);
-	src.utils.Resize.resizeDom(jMainboard.find(".board .desk"),true);
-	src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
-	src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
-	src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
-	var jTrashDiv = new js.JQuery("#trash").find("div");
-	var _g1 = 0;
-	var _g = jTrashDiv.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var jTrashTar = jTrashDiv.eq(i);
-		src.utils.Resize.resizeDom(jTrashTar,false,true);
-		if(jTrashTar.hasClass("trash-bg")) {
-			var bottom = Std.parseInt(jTrashTar.css("bottom"));
-			jTrashTar.css({ bottom : Math.round(bottom * src.utils.Resize._ratio)});
+	if(src.utils.Resize._MaxWinHeight > jp.saken.utils.Dom.jWindow.height()) {
+		src.utils.Resize.setRatio();
+		src.utils.Resize.resizeDom(jMainboard,false,true);
+		src.utils.Resize.resizeDom(jMainboard.find(".board .human"),true);
+		src.utils.Resize.resizeDom(jMainboard.find(".board .chair"),true);
+		src.utils.Resize.resizeDom(jMainboard.find(".board .desk"),true);
+		src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
+		src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
+		src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
+		var jTrashDiv = new js.JQuery("#trash").find("div");
+		var _g1 = 0;
+		var _g = jTrashDiv.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var jTrashTar = jTrashDiv.eq(i);
+			src.utils.Resize.resizeDom(jTrashTar,false,true);
+			if(jTrashTar.hasClass("trash-bg")) {
+				var bottom = Std.parseInt(jTrashTar.css("bottom"));
+				jTrashTar.css({ bottom : Math.round(bottom * src.utils.Resize._ratio)});
+			}
 		}
+		var jSidemenuR = new js.JQuery("#sidemenu-right");
+		var jSidemenuL = new js.JQuery("#sidemenu-left");
+		TweenMax.set(jSidemenuR,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
+		TweenMax.set(jSidemenuL,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
+		var topR = Std.parseInt(jSidemenuR.css("top"));
+		var topL = Std.parseInt(jSidemenuL.css("top"));
+		jSidemenuR.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-right")[2] * src.utils.Resize._ratio)});
+		jSidemenuL.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-left")[2] * src.utils.Resize._ratio)});
 	}
-	var jSidemenuR = new js.JQuery("#sidemenu-right");
-	var jSidemenuL = new js.JQuery("#sidemenu-left");
-	TweenMax.set(jSidemenuR,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
-	TweenMax.set(jSidemenuL,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
-	var topR = Std.parseInt(jSidemenuR.css("top"));
-	var topL = Std.parseInt(jSidemenuL.css("top"));
-	jSidemenuR.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-right")[2] * src.utils.Resize._ratio)});
-	jSidemenuL.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-left")[2] * src.utils.Resize._ratio)});
 };
 src.utils.Resize.resizeDom = function(jTarget,isPosi,isMLeft) {
 	if(isMLeft == null) isMLeft = false;
@@ -787,6 +780,11 @@ src.utils.Resize.resizeDom = function(jTarget,isPosi,isMLeft) {
 		jTarget.width(w);
 		jTarget.height(h);
 		if(isMLeft) jTarget.css({ 'margin-left' : -(w / 2)});
+	}
+	if(jTarget.hasClass("trash-bg")) {
+		jTarget.width(Math.round(200 * src.utils.Resize._ratio));
+		jTarget.height(Math.round(200 * src.utils.Resize._ratio));
+		jTarget.css({ 'margin-left' : -100 * src.utils.Resize._ratio + "px", bottom : -60 * src.utils.Resize._ratio + "px"});
 	}
 };
 src.utils.UrlParameter = function() { };
@@ -965,24 +963,55 @@ src.view.Mainmenu.init = function() {
 	if(src.utils.Resize.getRatio() < 0.75) src.view.Mainmenu._jMainmenu.addClass("ratio");
 	var jRevertBtn = src.view.Mainmenu._jMainmenu.find(".slider").find("ul li").find(".revertObj");
 	src.view.mainmenu.Scrollbar.init(src.view.Mainmenu._jMainmenu);
-	src.view.Mainmenu._jBtn.on("mousedown",function(event) {
-		src.view.Mainmenu.clickBtn($(this),event);
+	src.view.Mainmenu.adjustBoxHeight();
+	jp.saken.utils.Dom.jWindow.on("resize",function(event) {
+		src.view.Mainmenu.adjustBoxHeight();
 	});
-	src.view.Mainmenu._jMainmenu.on("mouseleave",function(event1) {
+	src.view.Mainmenu._jBtn.on("mousedown",function(event1) {
+		src.view.Mainmenu.clickBtn($(this),event1);
+	});
+	src.view.Mainmenu._jMainmenu.on("mouseleave",function(event2) {
 		src.view.Mainmenu._Timer = new haxe.Timer(1000);
 		src.view.Mainmenu._Timer.run = src.view.Mainmenu.close;
 	});
-	src.view.Mainmenu._jMainmenu.on("mouseover",function(event2) {
+	src.view.Mainmenu._jMainmenu.on("mouseover",function(event3) {
 		if(src.view.Mainmenu._Timer == null) return;
 		src.view.Mainmenu._Timer.stop();
 	});
-	jRevertBtn.on("mousedown",function(event3) {
+	jRevertBtn.on("mousedown",function(event4) {
 		var jTar = $(this).parent();
 		var id = jTar.prop("id");
 		src.view.Mainboard.clear(id);
 		jTar.removeClass("drop");
 		return false;
 	});
+};
+src.view.Mainmenu.adjustBoxHeight = function() {
+	var jSlider = src.view.Mainmenu._jMainmenu.find(".slider");
+	var _g1 = 0;
+	var _g = jSlider.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		src.view.Mainmenu.setBoxHeight(jSlider.eq(i).find("ul"));
+	}
+};
+src.view.Mainmenu.setBoxHeight = function(jTarget) {
+	var jList = jTarget.find("li");
+	var length = jList.length;
+	var parWidth = jTarget.width();
+	var width = jList.width() + Std.parseInt(jList.css("margin-left"));
+	var column = Math.floor(parWidth / width);
+	var height = 0;
+	var point = 0;
+	jList.removeAttr("style");
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		var jTar = jList.eq(i);
+		var h = jTar.height();
+		if(h > height) height = h;
+	}
+	jList.height(height);
 };
 src.view.Mainmenu.setScrollBtn = function(jUp,jDw,scrollTop,height) {
 	if(scrollTop > 0) jUp.show(); else jUp.hide();
@@ -1540,7 +1569,7 @@ src.view.mainmenu.Scrollbar.onMousewheel = function(event) {
 	if(event.type == "touchmove") {
 		var y;
 		if(src.view.mainmenu.Scrollbar._touchPosiY > event.originalEvent.touches[0].pageY) y = -1; else y = 1;
-		delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
+		delta = Math.round(event.originalEvent.touches[0].pageY / 10 * y);
 	}
 	src.view.mainmenu.Scrollbar.getDom($(this));
 	src.view.mainmenu.Scrollbar.move(delta);

@@ -19,22 +19,23 @@ class Resize {
     ========================================================================== */
     public static function init():Void {
 
-        _MaxWinHeight = 810;
+        _MaxWinHeight  = 810;
         _objStateArray = new Map();
         setObjStateMap();
         getWindowRatio();
 
+        var jMainboard : JQuery = new JQuery('#mainboard');
+
         Dom.jWindow.on('resize',function(event:JqEvent) {
 
-            if (_resizeTimer != null) _resizeTimer.stop();
+            // if (_resizeTimer != null) _resizeTimer.stop();
             
-            _resizeTimer     = new Timer(200);
-            _resizeTimer.run = function() {
+            // _resizeTimer     = new Timer(200);
+            // _resizeTimer.run = function() {
 
                 getWindowRatio();
 
-                var jMainboard : JQuery = new JQuery('#mainboard');
-                var obj        : JQuery = jMainboard.find('.object');
+                var obj : JQuery = jMainboard.find('.object');
 
                 for (i in 0 ... obj.length) {
 
@@ -42,9 +43,9 @@ class Resize {
                     
                 }
                 
-                _resizeTimer.stop();
+            //     _resizeTimer.stop();
 
-            };
+            // };
 
         });
 
@@ -100,7 +101,7 @@ class Resize {
     public static function setRatio():Void {
 
         var winH : Int = Dom.jWindow.height();
-        _ratio = ((100 * winH)/_MaxWinHeight)/100 * 0.9;
+        _ratio = ((100 * winH)/_MaxWinHeight)/100;
 
     }
 
@@ -112,7 +113,7 @@ class Resize {
         var jMainboard : JQuery = new JQuery('#mainboard');
         _ratio = 1;
 
-        //if (_MaxWinHeight > Dom.jWindow.height()) {
+        if (_MaxWinHeight > Dom.jWindow.height()) {
 
             setRatio();
             resizeDom(jMainboard,false,true);
@@ -147,7 +148,7 @@ class Resize {
             jSidemenuR.css({'top': Math.round(_objStateArray.get('sidemenu-right')[2] * _ratio)});
             jSidemenuL.css({'top': Math.round(_objStateArray.get('sidemenu-left')[2] * _ratio)});
 
-        //}
+        }
 
     }
 
@@ -211,6 +212,17 @@ class Resize {
             jTarget.width(w);
             jTarget.height(h);
             if (isMLeft) jTarget.css({'margin-left': -(w/2)});
+            
+        }
+
+        if (jTarget.hasClass('trash-bg')) {
+
+            jTarget.width(Math.round(200 * _ratio));
+            jTarget.height(Math.round(200 * _ratio));
+            jTarget.css({
+                "margin-left": -100 * _ratio + "px",
+                "bottom"     : -60 * _ratio + "px"
+            });
             
         }
 

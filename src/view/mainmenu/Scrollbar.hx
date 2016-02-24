@@ -97,7 +97,7 @@ class Scrollbar {
                 if (event.type == "touchmove") {
 
                     var y : Int = (_touchPosiY > event.originalEvent.touches[0].pageY) ? -1 : 1;
-                    delta = Math.round(-(event.originalEvent.touches[0].pageY / 10) * y);
+                    delta = Math.round((event.originalEvent.touches[0].pageY / 10) * y);
                 }
 
                 getDom(JQuery.cur);
