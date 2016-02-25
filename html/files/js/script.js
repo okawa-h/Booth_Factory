@@ -774,7 +774,10 @@ src.utils.Resize.resizeDom = function(jTarget,isPosi,isMLeft) {
 	}
 	if(jTarget.css("background-image") != "none") {
 		var img1 = new Image();
-		img1.src = jTarget.css("background-image").split("url(\"")[1].split("\")")[0];
+		var a = jTarget.css("background-image");
+		var src1;
+		if(a.indexOf("url(\"") > -1) src1 = a.split("url(\"")[1].split("\")")[0]; else src1 = a.split("url(")[1].split(")")[0];
+		img1.src = src1;
 		var w = Math.round(img1.width * src.utils.Resize._ratio);
 		var h = Math.round(img1.height * src.utils.Resize._ratio);
 		jTarget.width(w);

@@ -204,8 +204,10 @@ class Resize {
 
         if (jTarget.css('background-image') != "none") {
 
-            var img = new Image();
-            img.src = jTarget.css('background-image').split('url("')[1].split('")')[0];
+            var img : Image = new Image();
+            var a = jTarget.css('background-image');
+            var src : String = (a.indexOf('url("') > -1) ? a.split('url("')[1].split('")')[0]: a.split('url(')[1].split(')')[0];
+            img.src = src;
             var w : Int = Math.round(img.width * _ratio);
             var h : Int = Math.round(img.height * _ratio);
 
