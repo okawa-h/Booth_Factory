@@ -295,22 +295,12 @@ class Drag {
             }
 
             /* =======================================================================
-            Absolute Position
+            Get Absolute Position
             ========================================================================== */
             private static function getAbsPoint(jTarget:JQuery):Array<String> {
 
-                var id    : String        = jTarget.data('id');
-                var data  : Dynamic       = ItemData.getObjData();
-                var length: Int           = data.length;
-                var array : Array<String> = [];
-
-                for (i in 0 ... length) {
-
-                    if (data[i].id == id) array = data[i].abs;
-
-                }
-
-                return array;
+                var id : String = jTarget.data('id');
+                return ItemData.getObjectData(id).abs;
             }
 
             /* =======================================================================

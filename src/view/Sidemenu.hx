@@ -50,11 +50,9 @@ class Sidemenu {
             ========================================================================== */
             private static function setRightMenu():Void {
 
-                var data : Dynamic = ItemData.getSetData();
-
                 _jBtnMatu.on('mousedown',function(event:JqEvent):Void {
 
-                    setPacage(data[0].url);
+                    setPacage(ItemData.getSetData("matu").url);
 
                 });
 
@@ -66,7 +64,7 @@ class Sidemenu {
 
                 _jBtnTake.on('mousedown',function(event:JqEvent):Void {
 
-                    setPacage(data[1].url);
+                    setPacage(ItemData.getSetData("take").url);
 
                 });
 
@@ -78,7 +76,7 @@ class Sidemenu {
 
                 _jBtnUme.on('mousedown',function(event:JqEvent):Void {
 
-                    setPacage(data[2].url);
+                    setPacage(ItemData.getSetData("ume").url);
 
                 });
 

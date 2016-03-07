@@ -69,7 +69,6 @@ class UrlParameter {
 
                     var paramArray : Array<String> = param.split('&');
                     var length     : Int           = paramArray.length;
-                    var data       : Dynamic       = ItemData.getObjData();
                     var color      : String        = getColorParam().split('color=').join('');
                     var x          : Float         = 0;
 
@@ -80,8 +79,8 @@ class UrlParameter {
                         if (item[0].indexOf('_x') > -1) x = Std.parseFloat(item[1]);
                         if (item[0].indexOf('_y') > -1) {
 
-                            var id = item[0].split('_');
-                            addHtml(id[0],data,color,x,Std.parseFloat(item[1]));
+                            var id = item[0].split('_')[0];
+                            addHtml(id,color,x,Std.parseFloat(item[1]));
 
                         }
 
@@ -92,30 +91,21 @@ class UrlParameter {
                 /* =======================================================================
                 Make HTML
                 ========================================================================== */
-                private static function addHtml(id:String,data:Dynamic,color:String,x:Float,y:Float) {
+                private static function addHtml(id:String,color:String,x:Float,y:Float) {
 
-                    var target : String = id;
-                    var length : Int    = data.length;
-                    var html   : String = "";
+                    var html  : String  = "";
+                    var data  : Dynamic = ItemData.getObjectData(id);
+                    var type  : String  = data.type;
+                    var cat   : String  = data.cat;
+                    var icon  : String  = data.icon;
+                    var price : String  = data.price;
+                    if (price.indexOf(',') > -1) price = price.split(',').join('');
+                    var length: String  = data.length;
+                    var top   : Float   = y;
+                    var left  : Float   = x;
 
-                    for (i in 0 ... length) {
-
-                        if (data[i].id == id) {
-
-                            var type  : String = data[i].type;
-                            var cat   : String = data[i].cat;
-                            var icon  : String = data[i].icon;
-                            var price : String = data[i].price;
-                            if (price.indexOf(',') > -1) price = price.split(',').join('');
-                            var length: String = data[i].length;
-                            var top   : Float  = y;
-                            var left  : Float  = x;
-
-                            html += Html.getObj(id,top,left,type,cat,Std.parseInt(price),length,icon,color);
-                            Mainmenu.addDrop(id);
-
-                        }
-                    }
+                    html += Html.getObj(id,top,left,type,cat,Std.parseInt(price),length,icon,color);
+                    Mainmenu.addDrop(id);
 
                     Mainboard.getMainboardDom().find('.board').append(html);
 
@@ -126,10 +116,11 @@ class UrlParameter {
                 ========================================================================== */
                 private static function resizeObj() {
 
-                    var tarArray : JQuery = Mainboard.getMainboardDom().find('.board').find('.object');
-                    for (i in 0 ... tarArray.length) {
+                    var targetArray : JQuery = Mainboard.getMainboardDom().find('.board').find('.object');
+                    var length      : Int    = targetArray.length;
+                    for (i in 0 ... length) {
 
-                        Resize.resizeDom(tarArray.eq(i),true);
+                        Resize.resizeDom(targetArray.eq(i),true);
 
                     }
 

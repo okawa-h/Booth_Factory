@@ -1,23 +1,25 @@
 package src.utils;
 
 import js.JQuery;
+import js.html.Image;
 import haxe.Http;
 import haxe.Json;
 import src.utils.Html;
 
 class ItemData {
 
-    private static var _itemData(default,null) : Dynamic;
-    private static var _objData(default,null)  : Dynamic;
-    private static var _setData(default,null)  : Dynamic;
-    private static var _callback               : Dynamic;
+    private static var _itemData(default,null)  : Dynamic;
+    private static var _objectMap(default,null) : Map<String,Dynamic>;
+    private static var _setMap(default,null)    : Map<String,Dynamic>;
+    private static var _setData(default,null)   : Dynamic;
+    private static var _callback                : Dynamic;
 
     /* =======================================================================
     Set
     ========================================================================== */
     public static function set(callback):Void {
 
-        _callback  = callback;
+        _callback = callback;
 
         var request : Http = new Http("files/data/item.json");
 
@@ -32,36 +34,43 @@ class ItemData {
             private static function onData(data:Dynamic):Void {
 
                 _itemData = Json.parse(data);
-                _objData  = _itemData.object;
                 _setData  = _itemData.set;
-                setList(_objData);
+
+                _objectMap = new Map();
+
+                for (i in 0 ... _itemData.object.length) {
+
+                    _objectMap.set(_itemData.object[i].id,_itemData.object[i]);
+                    
+                }
+
+                _setMap = new Map();
+
+                for (i in 0 ... _itemData.set.length) {
+
+                    _setMap.set(_itemData.set[i].name,_itemData.set[i]);
+                    
+                }
+
+                setList(_itemData.object);
 
             }
 
     /* =======================================================================
-    Get
-    ========================================================================== */
-    public static function getItemData():Dynamic {
-
-        return _itemData;
-
-    }
-
-    /* =======================================================================
     Get Obj Data
     ========================================================================== */
-    public static function getObjData():Dynamic {
+    public static function getObjectData(id:String):Dynamic {
 
-        return _objData;
+        return _objectMap.get(id);
 
     }
 
     /* =======================================================================
     Get Set Data
     ========================================================================== */
-    public static function getSetData():Dynamic {
+    public static function getSetData(name:String):Dynamic {
 
-        return _setData;
+        return _setMap.get(name);
 
     }
 
@@ -80,6 +89,9 @@ class ItemData {
                     var t    : Dynamic = data[i];
                     var abs  : String  = (t.type == "accessory" || t.type == "clothes") ? t.abs : "";
                     var html : String  = Html.getList(t.id,t.type,t.cat,t.icon,t.price,t.bgImg,t.img,t.name,t.length,abs);
+
+                    // var roadimage : Image = new Image();
+                    // roadimage.src = 'files/img/product/icon/blue/' + t.icon;
 
                     if (t.cat == "paper") {
 

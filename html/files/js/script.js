@@ -529,15 +529,7 @@ src.utils.Drag.judgeOnBoard = function(jTarget) {
 };
 src.utils.Drag.getAbsPoint = function(jTarget) {
 	var id = jTarget.data("id");
-	var data = src.utils.ItemData.getObjData();
-	var length = data.length;
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		if(data[i].id == id) array = data[i].abs;
-	}
-	return array;
+	return src.utils.ItemData.getObjectData(id).abs;
 };
 src.utils.Drag.showOption = function(event) {
 	var jTarget = $(this);
@@ -616,18 +608,28 @@ src.utils.ItemData.set = function(callback) {
 };
 src.utils.ItemData.onData = function(data) {
 	src.utils.ItemData._itemData = JSON.parse(data);
-	src.utils.ItemData._objData = src.utils.ItemData._itemData.object;
 	src.utils.ItemData._setData = src.utils.ItemData._itemData.set;
-	src.utils.ItemData.setList(src.utils.ItemData._objData);
+	src.utils.ItemData._objectMap = new haxe.ds.StringMap();
+	var _g1 = 0;
+	var _g = src.utils.ItemData._itemData.object.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		src.utils.ItemData._objectMap.set(src.utils.ItemData._itemData.object[i].id,src.utils.ItemData._itemData.object[i]);
+	}
+	src.utils.ItemData._setMap = new haxe.ds.StringMap();
+	var _g11 = 0;
+	var _g2 = src.utils.ItemData._itemData.set.length;
+	while(_g11 < _g2) {
+		var i1 = _g11++;
+		src.utils.ItemData._setMap.set(src.utils.ItemData._itemData.set[i1].name,src.utils.ItemData._itemData.set[i1]);
+	}
+	src.utils.ItemData.setList(src.utils.ItemData._itemData.object);
 };
-src.utils.ItemData.getItemData = function() {
-	return src.utils.ItemData._itemData;
+src.utils.ItemData.getObjectData = function(id) {
+	return src.utils.ItemData._objectMap.get(id);
 };
-src.utils.ItemData.getObjData = function() {
-	return src.utils.ItemData._objData;
-};
-src.utils.ItemData.getSetData = function() {
-	return src.utils.ItemData._setData;
+src.utils.ItemData.getSetData = function(name) {
+	return src.utils.ItemData._setMap.get(name);
 };
 src.utils.ItemData.setList = function(data) {
 	var length = data.length;
@@ -817,7 +819,6 @@ src.utils.UrlParameter.getLocation = function() {
 src.utils.UrlParameter.createObject = function(param) {
 	var paramArray = param.split("&");
 	var length = paramArray.length;
-	var data = src.utils.ItemData.getObjData();
 	var color = src.utils.UrlParameter.getColorParam().split("color=").join("");
 	var x = 0;
 	var _g = 0;
@@ -826,40 +827,33 @@ src.utils.UrlParameter.createObject = function(param) {
 		var item = paramArray[i].split("=");
 		if(item[0].indexOf("_x") > -1) x = Std.parseFloat(item[1]);
 		if(item[0].indexOf("_y") > -1) {
-			var id = item[0].split("_");
-			src.utils.UrlParameter.addHtml(id[0],data,color,x,Std.parseFloat(item[1]));
+			var id = item[0].split("_")[0];
+			src.utils.UrlParameter.addHtml(id,color,x,Std.parseFloat(item[1]));
 		}
 	}
 };
-src.utils.UrlParameter.addHtml = function(id,data,color,x,y) {
-	var target = id;
-	var length = data.length;
+src.utils.UrlParameter.addHtml = function(id,color,x,y) {
 	var html = "";
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		if(data[i].id == id) {
-			var type = data[i].type;
-			var cat = data[i].cat;
-			var icon = data[i].icon;
-			var price = data[i].price;
-			if(price.indexOf(",") > -1) price = price.split(",").join("");
-			var length1 = data[i].length;
-			var top = y;
-			var left = x;
-			html += src.utils.Html.getObj(id,top,left,type,cat,Std.parseInt(price),length1,icon,color);
-			src.view.Mainmenu.addDrop(id);
-		}
-	}
+	var data = src.utils.ItemData.getObjectData(id);
+	var type = data.type;
+	var cat = data.cat;
+	var icon = data.icon;
+	var price = data.price;
+	if(price.indexOf(",") > -1) price = price.split(",").join("");
+	var length = data.length;
+	var top = y;
+	var left = x;
+	html += src.utils.Html.getObj(id,top,left,type,cat,Std.parseInt(price),length,icon,color);
+	src.view.Mainmenu.addDrop(id);
 	src.view.Mainboard.getMainboardDom().find(".board").append(html);
 };
 src.utils.UrlParameter.resizeObj = function() {
-	var tarArray = src.view.Mainboard.getMainboardDom().find(".board").find(".object");
-	var _g1 = 0;
-	var _g = tarArray.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		src.utils.Resize.resizeDom(tarArray.eq(i),true);
+	var targetArray = src.view.Mainboard.getMainboardDom().find(".board").find(".object");
+	var length = targetArray.length;
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		src.utils.Resize.resizeDom(targetArray.eq(i),true);
 	}
 };
 src.utils.UrlParameter.getParameter = function(jTarget,length,price) {
@@ -973,15 +967,23 @@ src.view.Mainmenu.init = function() {
 	src.view.Mainmenu._jBtn.on("mousedown",function(event1) {
 		src.view.Mainmenu.clickBtn($(this),event1);
 	});
-	src.view.Mainmenu._jMainmenu.on("mouseleave",function(event2) {
+	src.view.Mainmenu._jBtn.on("mouseover",function(event2) {
+		if(src.view.Mainmenu._jMainmenu.hasClass("open")) return;
+		TweenMax.to(src.view.Mainmenu._jMainmenu,.3,{ 'margin-bottom' : "30px"});
+		src.view.Mainmenu._jBtn.on("mouseleave",function(event3) {
+			TweenMax.to(src.view.Mainmenu._jMainmenu,.3,{ 'margin-bottom' : "0"});
+			src.view.Mainmenu._jBtn.unbind("mouseleave");
+		});
+	});
+	src.view.Mainmenu._jMainmenu.on("mouseleave",function(event4) {
 		src.view.Mainmenu._Timer = new haxe.Timer(1000);
 		src.view.Mainmenu._Timer.run = src.view.Mainmenu.close;
 	});
-	src.view.Mainmenu._jMainmenu.on("mouseover",function(event3) {
+	src.view.Mainmenu._jMainmenu.on("mouseover",function(event5) {
 		if(src.view.Mainmenu._Timer == null) return;
 		src.view.Mainmenu._Timer.stop();
 	});
-	jRevertBtn.on("mousedown",function(event4) {
+	jRevertBtn.on("mousedown",function(event6) {
 		var jTar = $(this).parent();
 		var id = jTar.prop("id");
 		src.view.Mainboard.clear(id);
@@ -1185,21 +1187,20 @@ src.view.Sidemenu.init = function() {
 	src.view.Sidemenu.setRightMenu();
 };
 src.view.Sidemenu.setRightMenu = function() {
-	var data = src.utils.ItemData.getSetData();
 	src.view.Sidemenu._jBtnMatu.on("mousedown",function(event) {
-		src.view.Sidemenu.setPacage(data[0].url);
+		src.view.Sidemenu.setPacage(src.utils.ItemData.getSetData("matu").url);
 	});
 	src.view.Sidemenu._jBtnMatu.on("mouseover",function(event1) {
 		src.view.Mainboard.talkHuman("松セットです。/高いです。");
 	});
 	src.view.Sidemenu._jBtnTake.on("mousedown",function(event2) {
-		src.view.Sidemenu.setPacage(data[1].url);
+		src.view.Sidemenu.setPacage(src.utils.ItemData.getSetData("take").url);
 	});
 	src.view.Sidemenu._jBtnTake.on("mouseover",function(event3) {
 		src.view.Mainboard.talkHuman("竹セットです。/やや高いです。");
 	});
 	src.view.Sidemenu._jBtnUme.on("mousedown",function(event4) {
-		src.view.Sidemenu.setPacage(data[2].url);
+		src.view.Sidemenu.setPacage(src.utils.ItemData.getSetData("ume").url);
 	});
 	src.view.Sidemenu._jBtnUme.on("mouseover",function(event5) {
 		src.view.Mainboard.talkHuman("梅セットです。/お手頃ですね。");
@@ -1346,17 +1347,18 @@ src.view.Trash.isOnObj = function(jTarget) {
 };
 src.view.Trash.getGrabPosi = function(event) {
 	src.view.Trash._grabPosition = event.pageY;
-	console.log(src.view.Trash._grabPosition);
 };
 src.view.Tutorial = function() { };
 src.view.Tutorial.__name__ = true;
 src.view.Tutorial.start = function() {
 	src.view.Tutorial._jTutorial = new js.JQuery("#tutorial");
 	src.view.Tutorial._jTtl = src.view.Tutorial._jTutorial.find("h2");
-	src.view.Tutorial._jBox = src.view.Tutorial._jTutorial.find(".tutorial");
+	src.view.Tutorial._jBox = src.view.Tutorial._jTutorial.find("#tutorial-how");
 	src.view.Tutorial._jImg = src.view.Tutorial._jBox.find(".tutorial-img");
 	src.view.Tutorial._jText = src.view.Tutorial._jBox.find(".tutorial-text");
 	src.view.Tutorial._jBtn = src.view.Tutorial._jTutorial.find(".start-btn");
+	new js.JQuery("#header").hide();
+	new js.JQuery("#footer").hide();
 	src.view.Tutorial._jBtn.hide();
 	if(src.utils.Resize.getRatio() < 1) {
 		src.view.Tutorial._jTutorial.css({ top : 0});
@@ -1393,6 +1395,9 @@ src.view.Tutorial.timeline = function() {
 };
 src.view.Tutorial.hide = function() {
 	TweenMax.to(src.view.Tutorial._jTutorial,20,{ y : 100, ease : Expo.easeOut});
+	new js.JQuery("#header").show();
+	new js.JQuery("#mainboard").show();
+	new js.JQuery("#footer").show();
 	src.view.Tutorial._jTutorial.fadeOut(1000,function() {
 		src.view.Tutorial._jTutorial.remove();
 		src.view.Tutorial.domEffect();

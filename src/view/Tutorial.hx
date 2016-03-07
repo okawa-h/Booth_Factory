@@ -25,11 +25,14 @@ class Tutorial {
 
         _jTutorial = new JQuery('#tutorial');
         _jTtl      = _jTutorial.find('h2');
-        _jBox      = _jTutorial.find('.tutorial');
+        _jBox      = _jTutorial.find('#tutorial-how');
         _jImg      = _jBox.find('.tutorial-img');
         _jText     = _jBox.find('.tutorial-text');
         _jBtn      = _jTutorial.find('.start-btn');
 
+        new JQuery('#header').hide();
+        //new JQuery('#mainboard').hide();
+        new JQuery('#footer').hide();
         _jBtn.hide();
 
         if (Resize.getRatio() < 1) {
@@ -98,6 +101,9 @@ class Tutorial {
             private static function hide():Void {
 
                 TweenMaxHaxe.to(_jTutorial,20,{y:100,ease:Expo.easeOut});
+                new JQuery('#header').show();
+                new JQuery('#mainboard').show();
+                new JQuery('#footer').show();
                 _jTutorial.fadeOut(1000,function() {
 
                     _jTutorial.remove();

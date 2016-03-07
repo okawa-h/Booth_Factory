@@ -228,7 +228,6 @@ class Trash {
     public static function getGrabPosi(event:Dynamic):Void {
 
         _grabPosition = event.pageY;
-        trace(_grabPosition);
 
     }
 

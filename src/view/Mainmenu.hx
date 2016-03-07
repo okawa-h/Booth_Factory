@@ -45,6 +45,21 @@ class Mainmenu {
 
         });
 
+        _jBtn.on('mouseover',function(event:JqEvent) {
+
+            if (_jMainmenu.hasClass('open')) return; 
+
+            TweenMaxHaxe.to(_jMainmenu,.3,{'margin-bottom':'30px'});
+
+            _jBtn.on('mouseleave',function(event:JqEvent) {
+
+                TweenMaxHaxe.to(_jMainmenu,.3,{'margin-bottom':'0'});
+                _jBtn.unbind('mouseleave');
+
+            });
+
+        });
+
         _jMainmenu.on('mouseleave',function(event:JqEvent) {
 
             _Timer     = new Timer(1000);
