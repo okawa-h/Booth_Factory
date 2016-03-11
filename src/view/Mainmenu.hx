@@ -14,6 +14,7 @@ import tween.easing.Expo;
 class Mainmenu {
 
     private static var _jMainmenu  : JQuery;
+    private static var _jFooter    : JQuery;
     private static var _jBtn       : JQuery;
     private static var _Timer      : Timer;
 
@@ -23,6 +24,7 @@ class Mainmenu {
     public static function init():Void {
 
         _jMainmenu = new JQuery('#mainmenu');
+        _jFooter   = new JQuery('#footer');
         _jBtn      = _jMainmenu.find('.ttl').find('p');
 
         if (Resize.getRatio() < 0.75) _jMainmenu.addClass('ratio');
@@ -45,18 +47,9 @@ class Mainmenu {
 
         });
 
-        _jBtn.on('mouseover',function(event:JqEvent) {
+        Dom.jWindow.on('mousemove',function(event:JqEvent) {
 
-            if (_jMainmenu.hasClass('open')) return; 
-
-            TweenMaxHaxe.to(_jMainmenu,.3,{'margin-bottom':'30px'});
-
-            _jBtn.on('mouseleave',function(event:JqEvent) {
-
-                TweenMaxHaxe.to(_jMainmenu,.3,{'margin-bottom':'0'});
-                _jBtn.unbind('mouseleave');
-
-            });
+            moveUpMenu(event);
 
         });
 
@@ -86,6 +79,28 @@ class Mainmenu {
         });
 
     }
+
+            /* =======================================================================
+            Move Up Menu
+            ========================================================================== */
+            private static function moveUpMenu(event:JqEvent):Void {
+
+                var menuTop : Int = _jMainmenu.offset().top - _jBtn.height() - 20;
+                var footTop : Int = _jFooter.offset().top;
+                var y       : Int = event.pageY;
+
+                if (_jMainmenu.hasClass('open')) {
+                    TweenMaxHaxe.to(_jMainmenu,.1,{'margin-bottom':'0'});
+                    return;
+                };
+
+                if (menuTop < y && footTop > y) {
+                    TweenMaxHaxe.to(_jMainmenu,.3,{'margin-bottom':'30px'});
+                } else {
+                    TweenMaxHaxe.to(_jMainmenu,.3,{'margin-bottom':'0'});
+                }
+
+            }
 
             /* =======================================================================
             Adjust Box Height
@@ -197,6 +212,7 @@ class Mainmenu {
                 clickClose();
                 _jMainmenu.removeClass('close');
                 _jMainmenu.addClass('open');
+                TweenMaxHaxe.to(_jMainmenu,.1,{'margin-bottom':'0'});
                 TweenMaxHaxe.to(jTarget, 0.3, { top : h, ease:Expo.easeOut});
 
             }

@@ -19,7 +19,6 @@ body,html {
 	-khtml-user-drag:none;
 }
 
-
 #all {
   min-width: 960px;
 }
@@ -111,7 +110,6 @@ body,html {
 /*-----------------------------------------------------------------------*/
 #footer {
 	width: 100%;
-	min-width: 960px;
 	position: fixed;
 	bottom: 0;
 	background-color: #6f4809;
@@ -119,9 +117,9 @@ body,html {
 }
 
 	#footer .wrap {
-		width: 80%;
+		width: auto;
 		margin: 0 auto;
-		padding: 10px 0;
+		padding: 10px 10px;
 		text-align: left;
 	}
 

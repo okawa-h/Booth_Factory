@@ -22,6 +22,7 @@ class Resize {
         _MaxWinHeight  = 810;
         _objStateArray = new Map();
         setObjStateMap();
+        
         getWindowRatio();
 
         var jMainboard : JQuery = new JQuery('#mainboard');

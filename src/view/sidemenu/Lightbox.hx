@@ -1,5 +1,6 @@
 package src.view.sidemenu;
 
+import haxe.Timer;
 import js.JQuery;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
@@ -29,7 +30,6 @@ class Lightbox extends Sidemenu {
         _jLightBoxBg = _jLightBox.find('.lightbox-bg');
         _jLightText  = _jLightBox.find('.caution');
         _jLightSub   = _jLightBox.find('h3');
-        _jLightText.hide();
 
     }
 
@@ -41,18 +41,22 @@ class Lightbox extends Sidemenu {
         var jBox : JQuery = _jLightBox.find('.' + cls);
         var sPEED: Int    = 300;
 
+        _jLightText.hide();
+        _jLightSub.hide();
         jBox.width(50);
         _jLightBox.fadeIn(sPEED,function() {
-            _jLightText.hide();
-            _jLightSub.hide();
 
             jBox.show();
-            TweenMaxHaxe.to(jBox, 1, { width : 800 , ease:Elastic.easeOut,
-                onComplete:function() {
-                    _jLightText.fadeIn(100);
-                    _jLightSub.fadeIn(100);
-                }
-            });
+
+            var time : Timer = new Timer(500);
+            time.run = function() {
+
+                _jLightText.fadeIn(100);
+                _jLightSub.fadeIn(100);
+                time.stop();
+
+            }
+            TweenMaxHaxe.to(jBox, 1, { width : 800 , ease:Elastic.easeOut });
 
         });
 
@@ -69,8 +73,6 @@ class Lightbox extends Sidemenu {
 
         });
 
-
-
     }
 
     /* =======================================================================
@@ -80,7 +82,8 @@ class Lightbox extends Sidemenu {
 
         jBox.fadeOut(sPEED);
         _jLightBox.fadeOut(sPEED);
-
+        _jLightText.hide();
+        _jLightSub.hide();
         jBox.find('.close-btn').unbind('mousedown');
 
     }

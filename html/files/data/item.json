@@ -192,24 +192,24 @@
             "bgImg": "panel.png"
         }, {
             "id"   : "20",
-            "name" : "封筒・長（刷込）",
-            "price": "4,300",
-            "length": "100部",
-            "type" : "paper",
-            "cat" : "paper",
-            "icon" : "envelope_long.png",
-            "img"  : "envelope_long.png",
-            "bgImg": "envelope_long.png"
-        }, {
-            "id"   : "21",
             "name" : "封筒・角（刷込）",
-            "price": "3,400",
+            "price": "4,300",
             "length": "100部",
             "type" : "paper",
             "cat" : "paper",
             "icon" : "envelope_corner.png",
             "img"  : "envelope.png",
             "bgImg": "envelope.png"
+        }, {
+            "id"   : "21",
+            "name" : "封筒・長（刷込）",
+            "price": "3,400",
+            "length": "100部",
+            "type" : "paper",
+            "cat" : "paper",
+            "icon" : "envelope_long.png",
+            "img"  : "envelope_long.png",
+            "bgImg": "envelope_long.png"
         }, {
             "id"   : "22",
             "name" : "三角POP大",
@@ -425,12 +425,12 @@
     "set": [
         {
             "name": "matu",
-            "url" : "?color=blue&33_x=-29&33_y=217&39_x=-124&39_y=230&35_x=-29&35_y=284&30_x=349&30_y=121&29_x=340&29_y=239&31_x=644&31_y=117&25_x=139&25_y=145&26_x=607&26_y=222&28_x=441&28_y=214&13_x=591&13_y=62&14_x=472&14_y=89&price=420020"
+            "url" : "?color=blue&01_x=450&01_y=295&04_x=522&04_y=292&40_x=731&40_y=367&08_x=80&08_y=82&41_x=340&41_y=349&29_x=619&29_y=296&20_x=393&20_y=291&27_x=215&27_y=219&33_x=-30&33_y=218&36_x=-132&36_y=232&price=190920"
         }, {
             "name": "take",
-            "url" : "?color=blue&23_x=150&23_y=153&26_x=405&26_y=204&02_x=464&02_y=131&price=14910"
+            "url" : "?color=blue&01_x=450&01_y=295&04_x=522&04_y=292&40_x=731&40_y=367&08_x=80&08_y=82&41_x=340&41_y=349&29_x=619&29_y=296&price=135020"
         }, {
             "name": "ume",
-            "url" : "?color=blue&41_x=340&41_y=349&01_x=623&01_y=283&price=22240"
+            "url" : "?color=blue&01_x=450&01_y=295&04_x=522&04_y=292&40_x=731&40_y=367&price=58090"
         }]
 }
