@@ -216,24 +216,24 @@ body,html {
 			font-weight: bold;
 		}
 
-	#tutorial .start-btn {
+	#tutorial #start-btn {
 		display: inline-block;
 		position: relative;
 		margin: 0 20px;
 		cursor: pointer;
 	}
 
-		#tutorial .start-btn a:hover {
+		#tutorial #start-btn a:hover {
 			opacity: .7;
 		}
 
-		#tutorial .start-btn img {
+		#tutorial #start-btn img {
 			width: 100%;
 			max-width: 627px;
 			height: auto;
 		}
 
-		#tutorial .start-btn span {
+		#tutorial #start-btn span {
 			display: block;
 			position: absolute;
 			top: 12px;
@@ -244,17 +244,17 @@ body,html {
 			background-size: contain;
 		}
 
-		#tutorial .start-btn span:nth-child(2) {
+		#tutorial #start-btn span:nth-child(2) {
 			top: 72px;
 		}
 
-		#tutorial .start-btn span:nth-child(3) {
+		#tutorial #start-btn span:nth-child(3) {
 			top: 12px;
 			right: 12px;
 			left: auto;
 		}
 
-		#tutorial .start-btn span:nth-child(4) {
+		#tutorial #start-btn span:nth-child(4) {
 			top: 72px;
 			right: 12px;
 			left: auto;

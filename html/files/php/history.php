@@ -11,7 +11,7 @@
         die();
     }
     
-    #リファラーを使いたいので、入っていなければノーカウント
+    #リファラー、入っていなければノーカウント
     $referer = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8');
     if (!(isset($referer))) {
         exit;
@@ -35,6 +35,10 @@
         $output   = json_decode($json, true);
         $userId   = $_SERVER["REMOTE_ADDR"];
 
+        if ($_POST["user"] == "none") {
+            $_POST["user"] = $userId;
+        }
+
         foreach($output as $value){
             $members[] = (array)$value;
         }
@@ -54,7 +58,7 @@
 
         foreach ($array as $key => $value) {
 
-            if ($value['id'] == $userId) {
+            if ($value['utm'] == $_POST["user"]) {
 
                 $point = $value['point'];
                 $current = $i;
