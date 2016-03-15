@@ -1,7 +1,6 @@
 package src;
 
 import js.JQuery;
-import haxe.Json;
 import src.utils.Drag;
 import src.utils.ItemData;
 import src.utils.Log;
@@ -13,9 +12,8 @@ import src.view.Price;
 import src.view.ProductLength;
 import src.view.Sidemenu;
 import src.view.Trash;
-import src.view.Tutorial;
+import src.view.Intro;
 import jp.saken.utils.Dom;
-import tween.TweenMaxHaxe;
 
 class Manager {
 
@@ -25,7 +23,7 @@ class Manager {
     public static function init(event:JqEvent):Void {
 
         Resize.init();
-        Tutorial.start();
+        Intro.start();
         ItemData.set(start);
         Log.write();
 

@@ -3,8 +3,6 @@
 @import "common/layout.css";
 
 #header,
-#header .caution,
-#contact,
 #footer,
 #mainmenu,
 #sidemenu-left,
@@ -1340,7 +1338,7 @@
 			text-align: center;
 		}
 
-		#lightbox .lightbox-content h3 {
+		#lightbox .lightbox-content h2 {
 			margin: 10px;
 			color: #3b3b3b;
 			font-size: 20px;
@@ -1353,12 +1351,12 @@
 			width: 800px;
 		}
 
-			#lightbox .lightbox-content h3 img {
+			#lightbox .lightbox-content h2 img {
 				width: 200px;
 				height: auto;
 			}
 
-			#lightbox .lightbox-content h3 span {
+			#lightbox .lightbox-content h2 span {
 				margin-left: 20px;
 				line-height: 40px;
 			}

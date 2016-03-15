@@ -326,7 +326,7 @@ src.Manager = function() { };
 src.Manager.__name__ = true;
 src.Manager.init = function(event) {
 	src.utils.Resize.init();
-	src.view.Tutorial.start();
+	src.view.Intro.start();
 	src.utils.ItemData.set(src.Manager.start);
 	src.utils.Log.write();
 };
@@ -671,31 +671,45 @@ src.utils.Resize.__name__ = true;
 src.utils.Resize.init = function() {
 	src.utils.Resize._MaxWinHeight = 810;
 	src.utils.Resize._objStateArray = new haxe.ds.StringMap();
+	src.utils.Resize._jMainboard = new js.JQuery("#mainboard");
+	src.utils.Resize._jSidemenuLeft = new js.JQuery("#sidemenu-left");
+	src.utils.Resize._jSidemenuRight = new js.JQuery("#sidemenu-right");
 	src.utils.Resize.setObjStateMap();
 	src.utils.Resize.getWindowRatio();
-	var jMainboard = new js.JQuery("#mainboard");
 	jp.saken.utils.Dom.jWindow.on("resize",function(event) {
 		src.utils.Resize.getWindowRatio();
-		var obj = jMainboard.find(".object");
+		var obj = src.utils.Resize._jMainboard.find(".object");
 		var _g1 = 0;
 		var _g = obj.length;
 		while(_g1 < _g) {
 			var i = _g1++;
 			src.utils.Resize.resizeDom(obj.eq(i),true);
 		}
+		if(src.utils.Resize._resizeTimer != null) src.utils.Resize._resizeTimer.stop();
+		src.utils.Resize._resizeTimer = new haxe.Timer(200);
+		src.utils.Resize._resizeTimer.run = function() {
+			src.utils.Resize.getWindowRatio(true);
+			var obj1 = src.utils.Resize._jMainboard.find(".object");
+			var _g11 = 0;
+			var _g2 = obj1.length;
+			while(_g11 < _g2) {
+				var i1 = _g11++;
+				src.utils.Resize.resizeDom(obj1.eq(i1),true);
+			}
+			src.utils.Resize._resizeTimer.stop();
+		};
 	});
 };
 src.utils.Resize.setObjStateMap = function() {
-	var jMainboard = new js.JQuery("#mainboard");
-	src.utils.Resize.setObjState(jMainboard);
-	src.utils.Resize.setObjState(jMainboard.find(".board .human"));
-	src.utils.Resize.setObjState(jMainboard.find(".board .chair"));
-	src.utils.Resize.setObjState(jMainboard.find(".board .desk"));
-	src.utils.Resize.setObjState(jMainboard.find(".board .desk .desk-table"));
-	src.utils.Resize.setObjState(jMainboard.find(".board .desk .desk-left"));
-	src.utils.Resize.setObjState(jMainboard.find(".board .desk .desk-right"));
-	src.utils.Resize.setObjState(new js.JQuery("#sidemenu-right"));
-	src.utils.Resize.setObjState(new js.JQuery("#sidemenu-left"));
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard);
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard.find(".board .human"));
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard.find(".board .chair"));
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard.find(".board .desk"));
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard.find(".board .desk .desk-table"));
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard.find(".board .desk .desk-left"));
+	src.utils.Resize.setObjState(src.utils.Resize._jMainboard.find(".board .desk .desk-right"));
+	src.utils.Resize.setObjState(src.utils.Resize._jSidemenuRight);
+	src.utils.Resize.setObjState(src.utils.Resize._jSidemenuLeft);
 };
 src.utils.Resize.setObjState = function(jTarget) {
 	var name;
@@ -713,19 +727,20 @@ src.utils.Resize.getRatio = function() {
 src.utils.Resize.setRatio = function() {
 	var winH = jp.saken.utils.Dom.jWindow.height();
 	src.utils.Resize._ratio = 100 * winH / src.utils.Resize._MaxWinHeight / 100;
+	if(src.utils.Resize._ratio > 1) src.utils.Resize._ratio = 0.999; else src.utils.Resize._ratio = src.utils.Resize._ratio;
 };
-src.utils.Resize.getWindowRatio = function() {
-	var jMainboard = new js.JQuery("#mainboard");
+src.utils.Resize.getWindowRatio = function(flag) {
+	if(flag == null) flag = false;
 	src.utils.Resize._ratio = 1;
-	if(src.utils.Resize._MaxWinHeight > jp.saken.utils.Dom.jWindow.height()) {
+	if(src.utils.Resize._MaxWinHeight > jp.saken.utils.Dom.jWindow.height() || flag) {
 		src.utils.Resize.setRatio();
-		src.utils.Resize.resizeDom(jMainboard,false,true);
-		src.utils.Resize.resizeDom(jMainboard.find(".board .human"),true);
-		src.utils.Resize.resizeDom(jMainboard.find(".board .chair"),true);
-		src.utils.Resize.resizeDom(jMainboard.find(".board .desk"),true);
-		src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-table"),true);
-		src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-left"),true);
-		src.utils.Resize.resizeDom(jMainboard.find(".board .desk .desk-right"),true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard,false,true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard.find(".board .human"),true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard.find(".board .chair"),true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard.find(".board .desk"),true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard.find(".board .desk .desk-table"),true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard.find(".board .desk .desk-left"),true);
+		src.utils.Resize.resizeDom(src.utils.Resize._jMainboard.find(".board .desk .desk-right"),true);
 		var jTrashDiv = new js.JQuery("#trash").find("div");
 		var _g1 = 0;
 		var _g = jTrashDiv.length;
@@ -738,14 +753,12 @@ src.utils.Resize.getWindowRatio = function() {
 				jTrashTar.css({ bottom : Math.round(bottom * src.utils.Resize._ratio)});
 			}
 		}
-		var jSidemenuR = new js.JQuery("#sidemenu-right");
-		var jSidemenuL = new js.JQuery("#sidemenu-left");
-		TweenMax.set(jSidemenuR,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
-		TweenMax.set(jSidemenuL,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
-		var topR = Std.parseInt(jSidemenuR.css("top"));
-		var topL = Std.parseInt(jSidemenuL.css("top"));
-		jSidemenuR.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-right")[2] * src.utils.Resize._ratio)});
-		jSidemenuL.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-left")[2] * src.utils.Resize._ratio)});
+		TweenMax.set(src.utils.Resize._jSidemenuRight,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
+		TweenMax.set(src.utils.Resize._jSidemenuLeft,{ scaleX : src.utils.Resize._ratio, scaleY : src.utils.Resize._ratio});
+		var topR = Std.parseInt(src.utils.Resize._jSidemenuRight.css("top"));
+		var topL = Std.parseInt(src.utils.Resize._jSidemenuLeft.css("top"));
+		src.utils.Resize._jSidemenuRight.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-right")[2] * src.utils.Resize._ratio)});
+		src.utils.Resize._jSidemenuLeft.css({ top : Math.round(src.utils.Resize._objStateArray.get("sidemenu-left")[2] * src.utils.Resize._ratio)});
 	}
 };
 src.utils.Resize.resizeDom = function(jTarget,isPosi,isMLeft) {
@@ -914,6 +927,43 @@ src.utils.UrlParameter.getParamOption = function(string) {
 	return param;
 };
 src.view = {};
+src.view.Intro = function() { };
+src.view.Intro.__name__ = true;
+src.view.Intro.start = function() {
+	src.view.Intro.fadeIn(new js.JQuery("#header"),0.4);
+	src.view.Intro.fadeLeft(new js.JQuery("#sidemenu-left"),0.6);
+	src.view.Intro.fadeRight(new js.JQuery("#sidemenu-right"),0.6);
+	src.view.Intro.fadeUp(new js.JQuery("#footer"),0.8);
+	src.view.Intro.fadeUp(new js.JQuery("#mainmenu"),0.8);
+	src.view.Intro.fadeDown(new js.JQuery("#mainboard"),1);
+};
+src.view.Intro.fadeIn = function(target,i) {
+	if(i == null) i = 0;
+	TweenMax.set(target,{ y : "-50px"});
+	TweenMax.to(target,1,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : i});
+};
+src.view.Intro.fadeDown = function(target,i) {
+	if(i == null) i = 0;
+	TweenMax.set(target,{ marginTop : "-50px"});
+	TweenMax.to(target,1,{ opacity : 1, marginTop : 0, ease : Expo.easeOut, delay : i});
+};
+src.view.Intro.fadeUp = function(target,i) {
+	if(i == null) i = 0;
+	TweenMax.set(target,{ marginBottom : "-50px"});
+	TweenMax.to(target,1,{ opacity : 1, marginBottom : 0, ease : Expo.easeOut, delay : i});
+};
+src.view.Intro.fadeLeft = function(target,i) {
+	if(i == null) i = 0;
+	TweenMax.set(target,{ marginLeft : "-50px"});
+	TweenMax.to(target,1,{ opacity : 1, marginLeft : 0, ease : Expo.easeOut, delay : i});
+};
+src.view.Intro.fadeRight = function(target,i) {
+	if(i == null) i = 0;
+	TweenMax.set(target,{ marginRight : "-50px"});
+	TweenMax.to(target,1,{ opacity : 1, marginRight : 0, ease : Expo.easeOut, delay : i});
+};
+src.view.Intro.onBtn = function() {
+};
 src.view.Mainboard = function() { };
 src.view.Mainboard.__name__ = true;
 src.view.Mainboard.init = function() {
@@ -1354,48 +1404,6 @@ src.view.Trash.isOnObj = function(jTarget) {
 };
 src.view.Trash.getGrabPosi = function(event) {
 	src.view.Trash._grabPosition = event.pageY;
-};
-src.view.Tutorial = function() { };
-src.view.Tutorial.__name__ = true;
-src.view.Tutorial.start = function() {
-	src.view.Tutorial.domEffect();
-};
-src.view.Tutorial.domEffect = function() {
-	src.view.Tutorial.fadeIn(new js.JQuery("#header"));
-	src.view.Tutorial.fadeIn(new js.JQuery("#header .caution"));
-	src.view.Tutorial.fadeIn(new js.JQuery("#contact"));
-	src.view.Tutorial.fadeUp(new js.JQuery("#footer"),0.4);
-	src.view.Tutorial.fadeUp(new js.JQuery("#mainmenu"),0.4);
-	src.view.Tutorial.fadeLeft(new js.JQuery("#sidemenu-left"),0.2);
-	src.view.Tutorial.fadeRight(new js.JQuery("#sidemenu-right"),0.2);
-	src.view.Tutorial.fadeDown(new js.JQuery("#mainboard"),0.6);
-};
-src.view.Tutorial.fadeIn = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ y : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, y : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Tutorial.fadeDown = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginTop : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginTop : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Tutorial.fadeUp = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginBottom : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginBottom : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Tutorial.fadeLeft = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginLeft : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginLeft : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Tutorial.fadeRight = function(target,i) {
-	if(i == null) i = 0;
-	TweenMax.set(target,{ marginRight : "-50px"});
-	TweenMax.to(target,1,{ opacity : 1, marginRight : 0, ease : Expo.easeOut, delay : i});
-};
-src.view.Tutorial.onBtn = function() {
 };
 src.view.mainboard = {};
 src.view.mainboard.Human = function() { };

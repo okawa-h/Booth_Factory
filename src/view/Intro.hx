@@ -1,40 +1,24 @@
 package src.view;
 
 import js.JQuery;
-import jp.saken.utils.Dom;
-import src.Manager;
-import src.utils.Resize;
 import tween.TweenMaxHaxe;
-import tween.easing.Elastic;
-import tween.easing.Bounce;
 import tween.easing.Expo;
 
-class Tutorial {
+class Intro {
 
     /* =======================================================================
     Start
     ========================================================================== */
     public static function start():Void {
 
-        domEffect();
+        fadeIn(new JQuery('#header'),0.4);
+        fadeLeft(new JQuery('#sidemenu-left'),0.6);
+        fadeRight(new JQuery('#sidemenu-right'),0.6);
+        fadeUp(new JQuery('#footer'),0.8);
+        fadeUp(new JQuery('#mainmenu'),0.8);
+        fadeDown(new JQuery('#mainboard'),1);
 
     }
-
-            /* =======================================================================
-            Dom Effect
-            ========================================================================== */
-            private static function domEffect():Void {
-
-                fadeIn(new JQuery('#header'));
-                fadeIn(new JQuery('#header .caution'));
-                fadeIn(new JQuery('#contact'));
-                fadeUp(new JQuery('#footer'),0.4);
-                fadeUp(new JQuery('#mainmenu'),0.4);
-                fadeLeft(new JQuery('#sidemenu-left'),0.2);
-                fadeRight(new JQuery('#sidemenu-right'),0.2);
-                fadeDown(new JQuery('#mainboard'),0.6);
-
-            }
 
             /* =======================================================================
             Fade In

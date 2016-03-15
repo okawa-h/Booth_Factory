@@ -13,19 +13,24 @@ class Resize {
     private static var _ratio         : Float;
     private static var _MaxWinHeight  : Int;
     private static var _objStateArray : Map<String,Array<Int>>;
+    private static var _jMainboard    : JQuery;
+    private static var _jSidemenuLeft : JQuery;
+    private static var _jSidemenuRight: JQuery;
 
     /* =======================================================================
     Init
     ========================================================================== */
     public static function init():Void {
 
-        _MaxWinHeight  = 810;
-        _objStateArray = new Map();
+        _MaxWinHeight   = 810;
+        _objStateArray  = new Map();
+        _jMainboard     = new JQuery('#mainboard');
+        _jSidemenuLeft  = new JQuery('#sidemenu-left');
+        _jSidemenuRight = new JQuery('#sidemenu-right');
         setObjStateMap();
         
         getWindowRatio();
 
-        var jMainboard : JQuery = new JQuery('#mainboard');
 
         Dom.jWindow.on('resize',function(event:JqEvent) {
 
@@ -36,7 +41,7 @@ class Resize {
 
                 getWindowRatio();
 
-                var obj : JQuery = jMainboard.find('.object');
+                var obj : JQuery = _jMainboard.find('.object');
 
                 for (i in 0 ... obj.length) {
 
@@ -48,6 +53,25 @@ class Resize {
 
             // };
 
+
+            if (_resizeTimer != null) _resizeTimer.stop();
+            
+            _resizeTimer     = new Timer(200);
+            _resizeTimer.run = function() {
+
+                getWindowRatio(true);
+                var obj : JQuery = _jMainboard.find('.object');
+
+                for (i in 0 ... obj.length) {
+
+                    resizeDom(obj.eq(i),true);
+                    
+                }
+                
+                _resizeTimer.stop();
+
+            };
+
         });
 
     }
@@ -57,16 +81,15 @@ class Resize {
             ========================================================================== */
             private static function setObjStateMap():Void {
 
-                var jMainboard : JQuery = new JQuery('#mainboard');
-                setObjState(jMainboard);
-                setObjState(jMainboard.find('.board .human'));
-                setObjState(jMainboard.find('.board .chair'));
-                setObjState(jMainboard.find('.board .desk'));
-                setObjState(jMainboard.find('.board .desk .desk-table'));
-                setObjState(jMainboard.find('.board .desk .desk-left'));
-                setObjState(jMainboard.find('.board .desk .desk-right'));
-                setObjState(new JQuery('#sidemenu-right'));
-                setObjState(new JQuery('#sidemenu-left'));
+                setObjState(_jMainboard);
+                setObjState(_jMainboard.find('.board .human'));
+                setObjState(_jMainboard.find('.board .chair'));
+                setObjState(_jMainboard.find('.board .desk'));
+                setObjState(_jMainboard.find('.board .desk .desk-table'));
+                setObjState(_jMainboard.find('.board .desk .desk-left'));
+                setObjState(_jMainboard.find('.board .desk .desk-right'));
+                setObjState(_jSidemenuRight);
+                setObjState(_jSidemenuLeft);
 
             }
 
@@ -103,27 +126,27 @@ class Resize {
 
         var winH : Int = Dom.jWindow.height();
         _ratio = ((100 * winH)/_MaxWinHeight)/100;
+        _ratio = (_ratio > 1) ? 0.999 : _ratio;
 
     }
 
     /* =======================================================================
     Get Window Ratio
     ========================================================================== */
-    public static function getWindowRatio():Void {
+    public static function getWindowRatio(flag : Bool = false):Void {
 
-        var jMainboard : JQuery = new JQuery('#mainboard');
         _ratio = 1;
 
-        if (_MaxWinHeight > Dom.jWindow.height()) {
+        if (_MaxWinHeight > Dom.jWindow.height() || flag) {
 
             setRatio();
-            resizeDom(jMainboard,false,true);
-            resizeDom(jMainboard.find('.board .human'),true);
-            resizeDom(jMainboard.find('.board .chair'),true);
-            resizeDom(jMainboard.find('.board .desk'),true);
-            resizeDom(jMainboard.find('.board .desk .desk-table'),true);
-            resizeDom(jMainboard.find('.board .desk .desk-left'),true);
-            resizeDom(jMainboard.find('.board .desk .desk-right'),true);
+            resizeDom(_jMainboard,false,true);
+            resizeDom(_jMainboard.find('.board .human'),true);
+            resizeDom(_jMainboard.find('.board .chair'),true);
+            resizeDom(_jMainboard.find('.board .desk'),true);
+            resizeDom(_jMainboard.find('.board .desk .desk-table'),true);
+            resizeDom(_jMainboard.find('.board .desk .desk-left'),true);
+            resizeDom(_jMainboard.find('.board .desk .desk-right'),true);
             var jTrashDiv = new JQuery('#trash').find('div');
             for (i in 0 ... jTrashDiv.length) {
 
@@ -140,14 +163,12 @@ class Resize {
 
             }
             
-            var jSidemenuR : JQuery = new JQuery('#sidemenu-right');
-            var jSidemenuL : JQuery = new JQuery('#sidemenu-left');
-            TweenMaxHaxe.set(jSidemenuR,{scaleX:_ratio, scaleY:_ratio});
-            TweenMaxHaxe.set(jSidemenuL,{scaleX:_ratio, scaleY:_ratio});
-            var topR : Int = Std.parseInt(jSidemenuR.css('top'));
-            var topL : Int = Std.parseInt(jSidemenuL.css('top'));
-            jSidemenuR.css({'top': Math.round(_objStateArray.get('sidemenu-right')[2] * _ratio)});
-            jSidemenuL.css({'top': Math.round(_objStateArray.get('sidemenu-left')[2] * _ratio)});
+            TweenMaxHaxe.set(_jSidemenuRight,{ scaleX:_ratio, scaleY:_ratio });
+            TweenMaxHaxe.set(_jSidemenuLeft,{ scaleX:_ratio, scaleY:_ratio });
+            var topR : Int = Std.parseInt(_jSidemenuRight.css('top'));
+            var topL : Int = Std.parseInt(_jSidemenuLeft.css('top'));
+            _jSidemenuRight.css({'top': Math.round(_objStateArray.get('sidemenu-right')[2] * _ratio)});
+            _jSidemenuLeft.css({'top': Math.round(_objStateArray.get('sidemenu-left')[2] * _ratio)});
 
         }
 

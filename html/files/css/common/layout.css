@@ -37,10 +37,7 @@ body,html {
 	#header h1 {
 		position: relative;
 		display: inline-block;
-		width: 261px;
-		height: 139px;
 		margin: 10px 0 0 10px;
-		background: url(../../img/logo.png) no-repeat center center;
 		z-index: 2000;
 	}
 
