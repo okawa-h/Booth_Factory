@@ -225,7 +225,7 @@ jp.okawa.utils.Ua.getBrowserName = function() {
 	var user = jp.okawa.utils.Ua.userAgent.toLowerCase();
 	var appVersion = jp.okawa.utils.Ua.window.navigator.appVersion.toLowerCase();
 	if(user.indexOf("msie") != -1 || user.indexOf("trident") != -1) {
-		_ua = "IE6～11（おそらく）";
+		_ua = "IE6or11";
 		if(appVersion.indexOf("msie 6.") != -1) _ua = "IE6"; else if(appVersion.indexOf("msie 7.") != -1) _ua = "IE7"; else if(appVersion.indexOf("msie 8.") != -1) _ua = "IE8"; else if(appVersion.indexOf("msie 9.") != -1) _ua = "IE9";
 	} else if(user.indexOf("chrome") != -1) _ua = "Chrome"; else if(user.indexOf("safari") != -1) _ua = "Safari"; else if(user.indexOf("firefox") != -1) _ua = "Firefox";
 	return _ua;
@@ -808,6 +808,7 @@ src.utils.Resize.resizeDom = function(jTarget,isPosi,isMLeft) {
 src.utils.UrlParameter = function() { };
 src.utils.UrlParameter.__name__ = true;
 src.utils.UrlParameter.init = function() {
+	src.utils.UrlParameter._title = new js.JQuery("title").text();
 	var location = src.utils.UrlParameter.getLocation();
 	if(location.indexOf("&color=") > -1) {
 		var logColor = location.split("&color=")[1].split("&")[0];
@@ -909,7 +910,7 @@ src.utils.UrlParameter.change = function(string) {
 		string = string.split("?")[1];
 	}
 	param += string;
-	History.replaceState("","",param);
+	History.replaceState("",src.utils.UrlParameter._title,param);
 };
 src.utils.UrlParameter.getParamOption = function(string) {
 	if(string == null) string = "price";

@@ -2,7 +2,6 @@
  
     setlocale(LC_ALL,'ja_JP.UTF-8');
     
-    #Ajax通信ではなく、直接URLを叩かれた場合は処理をしないようにしたい
     if (!(isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
         && (!empty($_SERVER['SCRIPT_FILENAME']) 
@@ -11,13 +10,11 @@
         die();
     }
     
-    #リファラー、入っていなければノーカウント
     $referer = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8');
     if (!(isset($referer))) {
         exit;
     }
     
-    #処理を判別(GET)
     $action = htmlspecialchars($_POST['act'], ENT_QUOTES, 'UTF-8');
     switch ($action) {
         case 'write':

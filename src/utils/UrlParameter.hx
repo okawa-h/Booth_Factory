@@ -13,12 +13,15 @@ import jp.saken.utils.Dom;
 
 class UrlParameter {
 
-    private static var _user : String;
+    private static var _user  : String;
+    private static var _title : String;
 
     /* =======================================================================
     Init
     ========================================================================== */
     public static function init():Void {
+
+        _title = new JQuery('title').text();
 
         var location : String = getLocation();
         
@@ -210,7 +213,7 @@ class UrlParameter {
 
         param += string;
 
-        untyped History.replaceState('','',param);//ie
+        untyped History.replaceState('',_title,param);//ie
 
     }
 
