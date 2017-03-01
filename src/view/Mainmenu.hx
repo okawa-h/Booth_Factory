@@ -1,12 +1,13 @@
 package src.view;
 
-import js.JQuery;
 import haxe.Timer;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import src.Manager;
 import src.utils.Resize;
 import src.view.Mainboard;
 import src.view.mainmenu.Scrollbar;
-import jp.saken.utils.Dom;
+import src.utils.Dom;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 import tween.easing.Expo;
@@ -35,41 +36,41 @@ class Mainmenu {
 
         adjustBoxHeight();
 
-        Dom.jWindow.on('resize',function(event:JqEvent) {
+        Dom.jWindow.on('resize',function(event:Event) {
 
             adjustBoxHeight();
 
         });
 
-        _jBtn.on('mousedown',function(event:JqEvent) {
+        _jBtn.on('mousedown',function(event:Event) {
 
-            clickBtn(JQuery.cur,event);
+            clickBtn(new JQuery(event.currentTarget),event);
 
         });
 
-        Dom.jWindow.on('mousemove',function(event:JqEvent) {
+        Dom.jWindow.on('mousemove',function(event:Event) {
 
             moveUpMenu(event);
 
         });
 
-        _jMainmenu.on('mouseleave',function(event:JqEvent) {
+        _jMainmenu.on('mouseleave',function(event:Event) {
 
             _Timer     = new Timer(1000);
             _Timer.run = close;
 
         });
 
-        _jMainmenu.on('mouseover',function(event:JqEvent) {
+        _jMainmenu.on('mouseover',function(event:Event) {
 
             if (_Timer == null) return;
             _Timer.stop();
 
         });
 
-        jRevertBtn.on('mousedown',function(event:JqEvent) {
+        jRevertBtn.on('mousedown',function(event:Event) {
 
-            var jTar : JQuery = JQuery.cur.parent();
+            var jTar : JQuery = new JQuery(event.currentTarget).parent();
             var id   : String = jTar.prop('id');
             Mainboard.clear(id);
             jTar.removeClass('drop');
@@ -83,11 +84,11 @@ class Mainmenu {
             /* =======================================================================
             Move Up Menu
             ========================================================================== */
-            private static function moveUpMenu(event:JqEvent):Void {
+            private static function moveUpMenu(event:Event):Void {
 
-                var menuTop : Int = _jMainmenu.offset().top - _jBtn.height() - 20;
-                var footTop : Int = _jFooter.offset().top;
-                var y       : Int = event.pageY;
+                var menuTop : Float = _jMainmenu.offset().top - _jBtn.height() - 20;
+                var footTop : Float = _jFooter.offset().top;
+                var y       : Float = event.pageY;
 
                 if (_jMainmenu.hasClass('open')) {
                     TweenMaxHaxe.to(_jMainmenu,.1,{'margin-bottom':'0'});
@@ -123,10 +124,10 @@ class Mainmenu {
 
                 var jList    : JQuery = jTarget.find('li');
                 var length   : Int = jList.length;
-                var parWidth : Int = jTarget.width();
-                var width    : Int = jList.width() + Std.parseInt(jList.css('margin-left'));
+                var parWidth : Float = jTarget.width();
+                var width    : Float = jList.width() + Std.parseInt(jList.css('margin-left'));
                 var column   : Int = Math.floor(parWidth / width);
-                var height   : Int = 0;
+                var height   : Float = 0;
                 var point    : Int = 0;
 
                 jList.removeAttr('style');
@@ -134,7 +135,7 @@ class Mainmenu {
                 for (i in 0 ... length) {
 
                     var jTar : JQuery = jList.eq(i);
-                    var h    : Int    = jTar.height();
+                    var h    : Float    = jTar.height();
 
                     if (h > height) height = h;
 
@@ -192,11 +193,11 @@ class Mainmenu {
             /* =======================================================================
             Click Btn
             ========================================================================== */
-            private static function clickBtn(jThis:JQuery,event:JqEvent):Void {
+            private static function clickBtn(jThis:JQuery,event:Event):Void {
 
                 var cls     : String = jThis.prop('class');
                 var jTarget : JQuery = _jMainmenu.find('.inner');
-                var h       : Int    = jTarget.find('#' + cls).outerHeight() * (-1) + 1;
+                var h       : Float  = jTarget.find('#' + cls).outerHeight() * (-1) + 1;
 
                 addCurrent(cls);
 
@@ -207,7 +208,7 @@ class Mainmenu {
             /* =======================================================================
             Open
             ========================================================================== */
-            private static function open(jTarget:JQuery,h:Int):Void {
+            private static function open(jTarget:JQuery,h:Float):Void {
 
                 clickClose();
                 _jMainmenu.removeClass('close');

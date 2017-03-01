@@ -1,7 +1,8 @@
 package src.view;
 
-import js.JQuery;
 import haxe.Json;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import src.Manager;
 import src.utils.Drag;
 import src.utils.ItemData;
@@ -10,7 +11,7 @@ import src.view.Mainboard;
 import src.view.Mainmenu;
 import src.view.sidemenu.Lightbox;
 import src.view.sidemenu.Color;
-import jp.saken.utils.Dom;
+import src.utils.Dom;
 
 class Sidemenu {
 
@@ -50,67 +51,67 @@ class Sidemenu {
             ========================================================================== */
             private static function setRightMenu():Void {
 
-                _jBtnMatu.on('mousedown',function(event:JqEvent):Void {
+                _jBtnMatu.on('mousedown',function(event:Event):Void {
 
                     setPacage(ItemData.getSetData("matu").url);
 
                 });
 
-                _jBtnMatu.on('mouseover',function(event:JqEvent):Void {
+                _jBtnMatu.on('mouseover',function(event:Event):Void {
 
                     Mainboard.talkHuman('松セットです。/高いです。');
 
                 });
 
-                _jBtnTake.on('mousedown',function(event:JqEvent):Void {
+                _jBtnTake.on('mousedown',function(event:Event):Void {
 
                     setPacage(ItemData.getSetData("take").url);
 
                 });
 
-                _jBtnTake.on('mouseover',function(event:JqEvent):Void {
+                _jBtnTake.on('mouseover',function(event:Event):Void {
 
                     Mainboard.talkHuman('竹セットです。/やや高いです。');
 
                 });
 
-                _jBtnUme.on('mousedown',function(event:JqEvent):Void {
+                _jBtnUme.on('mousedown',function(event:Event):Void {
 
                     setPacage(ItemData.getSetData("ume").url);
 
                 });
 
-                _jBtnUme.on('mouseover',function(event:JqEvent):Void {
+                _jBtnUme.on('mouseover',function(event:Event):Void {
 
                     Mainboard.talkHuman('梅セットです。/お手頃ですね。');
 
                 });
 
-                _jBtnColor.on('mousedown',function(event:JqEvent):Void {
+                _jBtnColor.on('mousedown',function(event:Event):Void {
 
-                    Color.show(JQuery.cur);
+                    Color.show(new JQuery(event.currentTarget));
 
                 });
 
-                _jBtnColor.on('mouseover',function(event:JqEvent):Void {
+                _jBtnColor.on('mouseover',function(event:Event):Void {
 
                     Mainboard.talkHuman('色の変更が出来ます。');
 
                 });
 
-                _jBtnHelp.on('mousedown',function(event:JqEvent) {
+                _jBtnHelp.on('mousedown',function(event:Event) {
 
-                    Lightbox.show('help',JQuery.cur);
+                    Lightbox.show('help',new JQuery(event.currentTarget));
 
                 });
 
-                _jBtnHelp.on('mouseover',function(event:JqEvent):Void {
+                _jBtnHelp.on('mouseover',function(event:Event):Void {
 
                     Mainboard.talkHuman('ヘルプです。');
 
                 });
 
-                _jBtnClear.on('mousedown',function(event:JqEvent):Void {
+                _jBtnClear.on('mousedown',function(event:Event):Void {
 
                     setPacage('?');
                     Price.clear();
@@ -119,7 +120,7 @@ class Sidemenu {
 
                 });
 
-                _jBtnClear.on('mouseover',function(event:JqEvent):Void {
+                _jBtnClear.on('mouseover',function(event:Event):Void {
 
                     Mainboard.talkHuman('全部消せます。');
 

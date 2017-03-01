@@ -1,6 +1,6 @@
 package src.view;
 
-import js.JQuery;
+import js.jquery.JQuery;
 import tween.TweenMaxHaxe;
 import tween.easing.Expo;
 
@@ -78,7 +78,7 @@ class Intro {
                 // var jTar : JQuery = _jBtn.find('span');
                 // TweenMaxHaxe.to(jTar,0.4,{css:{rotation:360},repeat:-1,ease:tween.easing.Power0.easeOut});
 
-                // _jBtn.on('mouseleave',function(event:JqEvent) {
+                // _jBtn.on('mouseleave',function(event:Event) {
 
                 //     TweenMaxHaxe.to(jTar,0,{css:{rotation:0},ease:Expo.easeOut});
                 //     _jBtn.unbind('mouseleave');

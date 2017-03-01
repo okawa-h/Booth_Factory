@@ -1,6 +1,6 @@
 package src.utils;
 
-import js.JQuery;
+import js.jquery.JQuery;
 import js.html.History;
 import src.Manager;
 import src.utils.Drag;
@@ -9,7 +9,9 @@ import src.utils.ItemData;
 import src.utils.Resize;
 import src.view.Mainboard;
 import src.view.Mainmenu;
-import jp.saken.utils.Dom;
+import src.utils.Dom;
+
+using Std;
 
 class UrlParameter {
 
@@ -61,7 +63,7 @@ class UrlParameter {
     ========================================================================== */
     public static function getLocation():String {
 
-        return Dom.window.location.toString();
+        return Dom.window.location.string();
 
     }
 

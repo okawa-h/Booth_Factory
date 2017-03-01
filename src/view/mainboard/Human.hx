@@ -1,7 +1,8 @@
 package src.view.mainboard;
 
-import js.JQuery;
 import haxe.Timer;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import tween.TweenMaxHaxe;
 import tween.easing.Expo;
 
@@ -72,7 +73,7 @@ class Human {
         // _timer.stop();
         talk(str);
 
-        jTarget.on('mouseleave',function(event:JqEvent) {
+        jTarget.on('mouseleave',function(event:Event) {
 
             talk("quiet");
             _jText.children().remove();

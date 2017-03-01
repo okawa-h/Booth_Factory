@@ -1,7 +1,8 @@
 package src.view.sidemenu;
 
 import haxe.Timer;
-import js.JQuery;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
 
@@ -60,13 +61,13 @@ class Lightbox extends Sidemenu {
 
         });
 
-        jBox.find('.close-btn').on('mousedown',function(event:JqEvent) {
+        jBox.find('.close-btn').on('mousedown',function(event:Event) {
 
             hide(jBox,sPEED);
 
         });
 
-        _jLightBoxBg.on('mousedown',function(event:JqEvent) {
+        _jLightBoxBg.on('mousedown',function(event:Event) {
 
             hide(jBox,sPEED);
             _jLightBoxBg.unbind('mousedown');

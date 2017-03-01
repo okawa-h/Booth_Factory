@@ -1,6 +1,7 @@
 package src.view.sidemenu;
 
-import js.JQuery;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import tween.TweenMaxHaxe;
 import tween.easing.Expo;
 
@@ -36,7 +37,7 @@ class Color {
 
         changeColor(jBtn,_jColorConfig);
 
-        _jCloseBtn.on('mousedown',function(event:JqEvent) {
+        _jCloseBtn.on('mousedown',function(event:Event) {
 
             hide(jBtn);
             _jColorConfig.find('.close-btn').unbind('mousedown');
@@ -61,10 +62,10 @@ class Color {
             ========================================================================== */
             private static function changeColor(jBtn:JQuery,jbox:JQuery):Void {
 
-                _jColorList.find('li').on('mousedown',function(event:JqEvent) {
+                _jColorList.find('li').on('mousedown',function(event:Event) {
 
                     var jAreaObj : JQuery = new JQuery('#mainboard').find('.object');
-                    var target   : JQuery = JQuery.cur;
+                    var target   : JQuery = new JQuery(event.currentTarget);
 
                     if (target.hasClass('current')) return;
 

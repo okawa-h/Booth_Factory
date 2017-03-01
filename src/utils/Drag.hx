@@ -1,7 +1,8 @@
 package src.utils;
 
-import js.JQuery;
 import haxe.Timer;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import src.Manager;
 import src.utils.Html;
 import src.utils.ItemData;
@@ -10,7 +11,7 @@ import src.utils.UrlParameter;
 import src.view.Mainboard;
 import src.view.Mainmenu;
 import src.view.Trash;
-import jp.saken.utils.Dom;
+import src.utils.Dom;
 import jp.okawa.utils.Estimate;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
@@ -40,7 +41,7 @@ class Drag {
 
         _jMainmenu.find('.slider').find('li').find('.img').on({ 'mousedown touchstart' : grab });
 
-        //Dom.jWindow.on('mousedown touchstart',function(event:JqEvent) {
+        //Dom.jWindow.on('mousedown touchstart',function(event:Event) {
 
             //touchAnimate(event);
 
@@ -73,11 +74,11 @@ class Drag {
             /* =======================================================================
             Grab
             ========================================================================== */
-            private static function grab(event:JqEvent):Void {
+            private static function grab(event:Event):Void {
 
                 event.preventDefault();
 
-                _jGrabObj = JQuery.cur;
+                _jGrabObj = new JQuery(event.currentTarget);
 
                 if (_jGrabObj.hasClass('drop') || _posiAnimate) return;
                 getDiff(event);
@@ -93,7 +94,7 @@ class Drag {
             /* =======================================================================
             Mouse Move
             ========================================================================== */
-            private static function mousemove(event:JqEvent):Void {
+            private static function mousemove(event:Event):Void {
 
                 if (_isGrabbed) {
 
@@ -108,7 +109,7 @@ class Drag {
             /* =======================================================================
             Mouse Up
             ========================================================================== */
-            private static function mouseup(event:JqEvent):Void {
+            private static function mouseup(event:Event):Void {
 
                 _isGrabbed = false;
                 if (_jGrabObj == null) return;
@@ -116,8 +117,8 @@ class Drag {
                 if (_jGrabObj.hasClass('grab')) {
 
                     Trash.leaveObj(_jGrabObj);
-                    var h : Int = new JQuery('#header').height();
-                    var w : Int = _jMainboard.offset().left;
+                    var h : Float = new JQuery('#header').height();
+                    var w : Float = _jMainboard.offset().left;
                     setPosition(event,-h,-w);
                     _jGrabObj.removeClass('grab');
 
@@ -125,7 +126,7 @@ class Drag {
 
                 if (_jGrabObj.hasClass('img')) {
 
-                    var y : Int = (event.pageY != null) ? event.pageY : untyped event.originalEvent.changedTouches[0].pageY;
+                    var y : Float = (event.pageY != null) ? event.pageY : untyped event.originalEvent.changedTouches[0].pageY;
 
                     if (_jMainmenu.find('.current').offset().top > y) {
 
@@ -148,7 +149,7 @@ class Drag {
             /* =======================================================================
             Set Position
             ========================================================================== */
-            private static function setPosition(event:Dynamic,top:Int = 0,left:Int = 0):Void {
+            private static function setPosition(event:Dynamic,top:Float = 0,left:Float = 0):Void {
 
                 var type : Dynamic = event.type;
                 var t    : Float   = 0;
@@ -210,8 +211,8 @@ class Drag {
                 if (price.indexOf(',') > -1) price = price.split(',').join('');
                 var length: String = jTarget.find('dl').find('dd.length').text();
                 var color : String = UrlParameter.getParamOption('color');
-                var h     : Int    = new JQuery('#header').height();
-                var w     : Int    = _jMainboard.offset().left;
+                var h     : Float    = new JQuery('#header').height();
+                var w     : Float    = _jMainboard.offset().left;
                 var top   : Float  = (event.pageY != null) ? event.pageY - h - _diffY : event.originalEvent.changedTouches[0].pageY - h - _diffY;
                 var left  : Float  = (event.pageX != null) ? event.pageX - w - _diffX : event.originalEvent.changedTouches[0].pageX - w - _diffX;
 
@@ -256,11 +257,11 @@ class Drag {
 
                 var ratio  : Float = Resize.getRatio();
 
-                var top    : Int  = Std.parseInt(jTarget.css('top'));
-                var left   : Int  = Std.parseInt(jTarget.css('left'));
-                var bottom : Int  = top + jTarget.height();
-                var right  : Int  = left + jTarget.width();
-                var areaB  : Int  = _jMainboard.height();
+                var top    : Float  = Std.parseInt(jTarget.css('top'));
+                var left   : Float  = Std.parseInt(jTarget.css('left'));
+                var bottom : Float  = top + jTarget.height();
+                var right  : Float  = left + jTarget.width();
+                var areaB  : Float  = _jMainboard.height();
                 var areaR  : Int  = Math.floor(698 * ratio);
                 var judge  : Bool = false;
 
@@ -306,16 +307,16 @@ class Drag {
             /* =======================================================================
             Show Option
             ========================================================================== */
-            private static function showOption(event:JqEvent):Void {
+            private static function showOption(event:Event):Void {
 
-                var jTarget : JQuery = JQuery.cur;
+                var jTarget : JQuery = new JQuery(event.currentTarget);
                 var length  : String = jTarget.data('length');
                 var price   : String = Estimate.insertComma(Std.string(jTarget.data('price')));
                 var html    : String = '<span class="object-data"><span>' + price + '円<br>';
                 html += length + '</span></span>';
                 jTarget.append(html);
 
-                jTarget.on('mouseleave touchend',function(event:JqEvent) {
+                jTarget.on('mouseleave touchend',function(event:Event) {
 
                     jTarget.find('.object-data').remove();
                     jTarget.unbind('mouseleave touchend');

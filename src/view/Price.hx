@@ -1,6 +1,7 @@
 package src.view;
 
-import js.JQuery;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import jp.okawa.utils.Estimate;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
@@ -24,10 +25,10 @@ class Price {
         _jPrice      = _jContactBox.find('#price').find('span');
         _price       = 0;
 
-        _jImg.on('mousedown',function(event:JqEvent) {
+        _jImg.on('mousedown',function(event:Event) {
             
             event.preventDefault();
-            var jTarget : JQuery = JQuery.cur;
+            var jTarget : JQuery = new JQuery(event.currentTarget);
             jTarget.parent().append(jTarget.clone().addClass('coin').css({position:'absolute',left:'15px'}));
 
             TweenMaxHaxe.to(jTarget.parent().find('.coin'),0.3,{y:-60,opacity:0,

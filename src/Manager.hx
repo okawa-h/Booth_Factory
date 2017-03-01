@@ -1,6 +1,7 @@
 package src;
 
-import js.JQuery;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import src.utils.Drag;
 import src.utils.ItemData;
 import src.utils.Log;
@@ -13,14 +14,14 @@ import src.view.ProductLength;
 import src.view.Sidemenu;
 import src.view.Trash;
 import src.view.Intro;
-import jp.saken.utils.Dom;
+import src.utils.Dom;
 
 class Manager {
 
     /* =======================================================================
     Init
     ========================================================================== */
-    public static function init(event:JqEvent):Void {
+    public static function init(event:Event):Void {
 
         Resize.init();
         Intro.start();
@@ -46,7 +47,7 @@ class Manager {
         setCounter();
         Drag.init();
 
-        Dom.jWindow.on('mouseup touchend',function(event:JqEvent) {
+        Dom.jWindow.on('mouseup touchend',function(event:Event) {
 
             setCounter();
             Log.write();

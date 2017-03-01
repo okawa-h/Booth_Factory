@@ -1,7 +1,8 @@
 package src.view.mainmenu;
 
-import js.JQuery;
-import jp.saken.utils.Dom;
+import js.jquery.JQuery;
+import js.jquery.Event;
+import src.utils.Dom;
 import jp.okawa.utils.Ua;
 import tween.TweenMaxHaxe;
 
@@ -12,7 +13,7 @@ class Scrollbar {
     private static var _jInner    : JQuery;
     private static var _jScroll   : JQuery;
     private static var _jNavi     : JQuery;
-    private static var _max       : Int;
+    private static var _max       : Float;
     private static var _posi      : Int;
     private static var _touchPosiY: Int;
     private static var _ratio     : Float;
@@ -42,7 +43,7 @@ class Scrollbar {
             /* =======================================================================
             Set
             ========================================================================== */
-            private static function setBarSize(event:JqEvent = null):Void {
+            private static function setBarSize(event:Event = null):Void {
 
                 var length : Int = _jSlider.length;
 
@@ -50,7 +51,7 @@ class Scrollbar {
 
                     getDom(_jSlider.eq(i));
                     var scale : Float = getScale();
-                    var nH    : Int   = (scale >= 100) ? _jScroll.height() : Math.round((_jScroll.height() * scale)/100);
+                    var nH    : Float = (scale >= 100) ? _jScroll.height() : Math.round((_jScroll.height() * scale)/100);
 
                     _jNavi.height(nH);
 
@@ -77,9 +78,9 @@ class Scrollbar {
             ========================================================================== */
             private static function getScale():Float {
 
-                var vH    : Int   = _jSlider.height();
-                var tH    : Int   = _jInner.height() + 10;
-                var sH    : Int   = _jScroll.height();
+                var vH    : Float   = _jSlider.height();
+                var tH    : Float   = _jInner.height() + 10;
+                var sH    : Float   = _jScroll.height();
                 var scale : Float = (vH * 100)/tH;
 
                 return scale;
@@ -100,7 +101,7 @@ class Scrollbar {
                     delta = Math.round((event.originalEvent.touches[0].pageY / 10) * y);
                 }
 
-                getDom(JQuery.cur);
+                getDom(new JQuery(event.currentTarget));
                 move(delta);
 
             }
@@ -108,22 +109,22 @@ class Scrollbar {
             /* =======================================================================
             On Mouse
             ========================================================================== */
-            private static function onMousedown(event:Dynamic):Void {
+            private static function onMousedown(event:Event):Void {
 
-                var jTarget : JQuery = JQuery.cur.parent('.slider-scroll').siblings('.slider');
-                var base    : Int    = event.pageY;
+                var jTarget : JQuery = new JQuery(event.currentTarget).parent('.slider-scroll').siblings('.slider');
+                var base    : Float  = event.pageY;
                 getDom(jTarget);
 
-                function onMousemove(event:JqEvent) {
+                function onMousemove(event:Event) {
 
-                    var diff : Int = base - event.pageY;
+                    var diff : Float = base - event.pageY;
 
                     move(diff * 15);
-                    return untyped false;
+                    return false;
 
                 }
 
-                function onMouseup(event:JqEvent) {
+                function onMouseup(event:Event) {
 
                     Dom.jBody.unbind('mousemove',onMousemove).unbind('mouseup',onMouseup);
 
@@ -136,12 +137,12 @@ class Scrollbar {
             /* =======================================================================
             Move
             ========================================================================== */
-            private static function move(delta:Int):Void {
+            private static function move(delta:Float):Void {
 
                 if (_ratio >= 100) return;
 
                 delta = Math.round(delta * .3);
-                var val : Int = _posi + delta;
+                var val : Float = _posi + delta;
 
                 if (0 < val) val = 0;
                 var adjustment : Int = (_jMainmenu.hasClass('ratio')) ? -10 : -30;

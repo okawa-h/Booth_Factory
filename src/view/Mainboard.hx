@@ -1,6 +1,6 @@
 package src.view;
 
-import js.JQuery;
+import js.jquery.JQuery;
 import src.view.mainboard.Human;
 
 class Mainboard {
@@ -91,7 +91,7 @@ class Mainboard {
     ========================================================================== */
     public static function talkHuman(str:String):Void {
 
-        Human.comment(JQuery.cur,str);
+        // Human.comment(new JQuery(event.currentTarget),str);
 
     }
 

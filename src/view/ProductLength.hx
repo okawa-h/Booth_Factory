@@ -1,7 +1,7 @@
 package src.view;
 
-import js.JQuery;
-import jp.saken.utils.Dom;
+import js.jquery.JQuery;
+import src.utils.Dom;
 import jp.okawa.utils.Ua;
 import tween.TweenMaxHaxe;
 import tween.easing.Elastic;
@@ -89,7 +89,7 @@ class ProductLength {
 
                 var jSideL    : JQuery = new JQuery('#sidemenu-left');
                 var jSideR    : JQuery = new JQuery('#sidemenu-right');
-                var winH      : Int    = Dom.jWindow.height();
+                var winH      : Float    = Dom.jWindow.height();
 
                 jSideR.css({top:'auto',bottom:'60px'});
                 jSideL.css({top:jSideR.offset().top});

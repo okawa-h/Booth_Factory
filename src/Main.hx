@@ -1,6 +1,6 @@
 package src;
 
-import js.JQuery;
+import js.jquery.JQuery;
 
 class Main {
 

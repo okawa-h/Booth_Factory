@@ -1,10 +1,10 @@
 package src.view;
 
-import js.JQuery;
+import js.jquery.JQuery;
 import src.Manager;
 import src.utils.Drag;
 import src.view.Mainmenu;
-import jp.saken.utils.Dom;
+import src.utils.Dom;
 import tween.TweenMaxHaxe;
 import tween.easing.Circ;
 import tween.easing.Elastic;
@@ -167,11 +167,11 @@ class Trash {
 
                     if (_jTrashBox.width() < jTarget.width()) TweenMaxHaxe.to(jTarget, 0.2, {scaleX:0.6, scaleY:0.7});
 
-                    var trashTop : Int   = _jTrashBox.offset().top;
-                    var trashBtm : Int   = trashTop + _jTrashBox.height();
-                    var tarBtm   : Int   = jTarget.offset().top + jTarget.height();
-                    var btmDiff  : Int   = trashBtm - tarBtm;
-                    var top      : Int   = -200 - btmDiff;
+                    var trashTop : Float   = _jTrashBox.offset().top;
+                    var trashBtm : Float   = trashTop + _jTrashBox.height();
+                    var tarBtm   : Float   = jTarget.offset().top + jTarget.height();
+                    var btmDiff  : Float   = trashBtm - tarBtm;
+                    var top      : Float   = -200 - btmDiff;
                     var left     : Float = jTarget.parent().width()/2 - jTarget.width()/2;
 
                     TweenMaxHaxe.to(jTarget, 0.2,{y: top,left: left,delay:0.2});

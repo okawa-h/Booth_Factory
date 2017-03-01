@@ -1,6 +1,6 @@
 package src.utils;
 
-import js.JQuery;
+import js.jquery.JQuery;
 import js.html.Image;
 import haxe.Http;
 import haxe.Json;

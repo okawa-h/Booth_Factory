@@ -346,8 +346,8 @@
         }, {
             "id"   : "35",
             "name" : "ファッションバッグ",
-            "price": "170,000",
-            "length": "1000枚",
+            "price": "70,000",
+            "length": "500枚",
             "type" : "accessory",
             "abs" : ["284","-30"],
             "cat" : "accessory",
