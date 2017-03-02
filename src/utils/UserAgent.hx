@@ -10,6 +10,8 @@ class UserAgent {
 		var isMobile : Bool = (Ua.getDevice() == 'sp');
 
 		if (isMobile) {
+			new JQuery('#all').hide();
+			new JQuery('body,html').css({ 'min-width':'100%' });
 			new JQuery('body').append(getHTML());
 		}
 

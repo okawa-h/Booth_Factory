@@ -1149,6 +1149,8 @@ src_utils_UserAgent.__name__ = true;
 src_utils_UserAgent.isMobile = function() {
 	var isMobile = jp_okawa_utils_Ua.getDevice() == "sp";
 	if(isMobile) {
+		$("#all").hide();
+		$("body,html").css({ "min-width" : "100%"});
 		$("body").append(src_utils_UserAgent.getHTML());
 	}
 	return isMobile;
