@@ -1156,7 +1156,7 @@ src_utils_UserAgent.isMobile = function() {
 	return isMobile;
 };
 src_utils_UserAgent.getHTML = function() {
-	return "<div id=\"mobile-view\">\n\t\t\t\t\t<p>申し訳ございません。<br>PCでお楽しみください。</p>\n\t\t\t\t</div>";
+	return "<div id=\"mobile-view\">\n\t\t\t\t\t<p>まるごとブースファクトリーは<br>スマートフォンではご利用できません。<br>PCやタブレットでお楽しみください。</p>\n\t\t\t\t</div>";
 };
 var src_view_Intro = function() { };
 src_view_Intro.__name__ = true;

@@ -23,7 +23,7 @@ class UserAgent {
 
 			return
 				'<div id="mobile-view">
-					<p>申し訳ございません。<br>PCでお楽しみください。</p>
+					<p>まるごとブースファクトリーは<br>スマートフォンではご利用できません。<br>PCやタブレットでお楽しみください。</p>
 				</div>';
 
 		}

@@ -345,7 +345,7 @@
             "bgImg": "megaphone.png"
         }, {
             "id"   : "35",
-            "name" : "ファッションバッグ",
+            "name" : "不織布バッグ",
             "price": "70,000",
             "length": "500枚",
             "type" : "accessory",
