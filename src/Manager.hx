@@ -3,6 +3,7 @@ package src;
 import js.jquery.JQuery;
 import js.jquery.Event;
 import src.utils.Drag;
+import src.utils.UserAgent;
 import src.utils.ItemData;
 import src.utils.Log;
 import src.utils.Resize;
@@ -23,6 +24,8 @@ class Manager {
     ========================================================================== */
     public static function init(event:Event):Void {
 
+    	if (UserAgent.isMobile()) return;
+
         Resize.init();
         Intro.start();
         ItemData.set(start);
@@ -30,32 +33,32 @@ class Manager {
 
     }
 
-    /* =======================================================================
-    Start
-    ========================================================================== */
-    public static function start():Void {
+	/* =======================================================================
+	Start
+	========================================================================== */
+	private static function start():Void {
 
-        Mainboard.init();
-        UrlParameter.init();
-        Price.init();
-        Mainmenu.init();
-        Sidemenu.init();
-        ProductLength.init();
-        Trash.init();
+	    Mainboard.init();
+	    UrlParameter.init();
+	    Price.init();
+	    Mainmenu.init();
+	    Sidemenu.init();
+	    ProductLength.init();
+	    Trash.init();
 
-        UrlParameter.remakeObject();
-        setCounter();
-        Drag.init();
+	    UrlParameter.remakeObject();
+	    setCounter();
+	    Drag.init();
 
-        Dom.jWindow.on('mouseup touchend',function(event:Event) {
+	    Dom.jWindow.on('mouseup touchend',function(event:Event) {
 
-            setCounter();
-            Log.write();
-            Trash.hide();
+	        setCounter();
+	        Log.write();
+	        Trash.hide();
 
-        });
+	    });
 
-    }
+	}
 
     /* =======================================================================
     Set Price Length パラメタ書き換え、左サイド書き換え

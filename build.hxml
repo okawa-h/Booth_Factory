@@ -1,4 +1,4 @@
--cp src
 -main src.Main
 -js html/files/js/script.js
--cp ../../haxe/lib/
+-cp src
+-cp ../../library/
